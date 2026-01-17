@@ -29,16 +29,16 @@ export default function Home() {
           variants={staggerContainer}
           className="text-center"
         >
-          <motion.p variants={fadeInUp} className="serif cursive" style={{ fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--text-dim)' }}>
+          <motion.p variants={fadeInUp} className="serif" style={{ fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--text-dim)' }}>
             The Renaissance of Digital Editorialism
           </motion.p>
           <motion.h1
             variants={fadeInUp}
-            className="high-contrast"
+            className="high-contrast font-accent"
             style={{ marginBottom: '2rem' }}
           >
             The Art of <br />
-            <span className="serif cursive">Relationship</span>
+            <span className="serif font-accent">Relationship</span>
           </motion.h1>
           <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 auto 2rem' }} />
           <motion.p variants={fadeInUp} style={{ maxWidth: '600px', margin: '0 auto 3rem', fontSize: '1.25rem', lineHeight: '1.5', color: 'var(--text-dim)' }}>
@@ -88,7 +88,7 @@ export default function Home() {
               style={{ fontSize: '4rem', lineHeight: '1.1' }}
             >
               Architectural <br />
-              <span className="cursive">Precision</span>
+              <span>Precision</span>
             </motion.h2>
           </div>
           <div className="feature-item" style={{ gridColumn: 'span 7', paddingTop: '4rem' }}>
@@ -150,7 +150,7 @@ export default function Home() {
               </div>
             </div>
             <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '4rem' }}>
-              <span className="serif cursive" style={{ textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.1em' }}>{item.status}</span>
+              <span className="serif" style={{ textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.1em' }}>{item.status}</span>
               <ArrowUpRight strokeWidth={1} size={32} />
             </div>
           </motion.div>
@@ -181,7 +181,7 @@ export default function Home() {
       <section id="contact" style={{ margin: '12rem 0', textAlign: 'center' }}>
         <h2 className="high-contrast serif" style={{ marginBottom: '4rem' }}>
           Begin Your <br />
-          <span className="cursive">Legacy</span>
+          <span>Legacy</span>
         </h2>
         <p style={{ maxWidth: '500px', margin: '0 auto 3rem', fontSize: '1.2rem', color: 'var(--text-dim)' }}>
           Join the exclusive circle of realtors who define the future of the industry through the lens of timeless design.

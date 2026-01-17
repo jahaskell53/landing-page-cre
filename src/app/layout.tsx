@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <nav className="nav">
-          <div className="nav-brand">RENAISSANCE</div>
+          <div className="nav-brand font-accent">RENAISSANCE</div>
           <div className="nav-links">
             <a href="#philosophy">Philosophy</a>
             <a href="#features">Function</a>
