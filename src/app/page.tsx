@@ -31,7 +31,7 @@ export default function Home() {
             className="hero-text-content"
           >
             {/* <motion.p variants={fadeInUp} className="serif" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-dim)' }}>
-              The Renaissance of Digital Editorialism
+              The OM of Digital Editorialism
             </motion.p> */}
             <motion.h1
               variants={fadeInUp}
@@ -80,8 +80,8 @@ export default function Home() {
           style={{ position: 'relative', width: '100%', height: '80vh', overflow: 'hidden', borderRadius: '16px' }}
         >
           <Image
-            src="/images/hero.png"
-            alt="Luxury Living"
+            src="/mockup-2.jpg"
+            alt="Product Interface"
             fill
             style={{ objectFit: 'cover' }}
             priority
@@ -209,7 +209,7 @@ export default function Home() {
       {/* Footer */}
       <footer style={{ padding: '4rem 0', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
         <div style={{ textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-          © 2026 Renaissance CRM. All Rights Reserved.
+          © 2026 OM CRM. All Rights Reserved.
         </div>
         <div style={{ display: 'flex', gap: '2rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
           <a href="#">Privacy</a>

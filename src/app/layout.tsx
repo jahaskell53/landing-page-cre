@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "The Renaissance | Elite CRM for Realtors",
+  title: "OM | Elite CRM for Realtors",
   description: "A profound shift in real estate relationship management. Experience the elegance of architectural precision for the modern agent.",
   keywords: ["CRM", "Realtors", "Real Estate", "Luxury CRM", "Relationship Management"],
   authors: [{ name: "Antigravity Design" }],
@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <nav className="nav">
-          <div className="nav-brand font-accent">RENAISSANCE</div>
+          <div className="nav-brand">OM</div>
           <div className="nav-links">
             <a href="#philosophy">Philosophy</a>
             <a href="#features">Function</a>
