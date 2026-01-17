@@ -46,7 +46,7 @@ export default function Home() {
               A CRM for the modern realtor who values precision, elegance, and the historical depth of meaningful connections.
             </motion.p>
             <motion.div variants={fadeInUp} style={{ display: 'flex', gap: '2rem' }}>
-              <button className="btn-primary">Inquire Now</button>
+              <button className="btn-primary">Get Free</button>
               <button style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 View Portfolio <ArrowUpRight size={16} />
               </button>
