@@ -28,7 +28,7 @@ export default function RootLayout({
             <a href="#features">Function</a>
             <a href="#contact">Connect</a>
           </div>
-          <button className="btn-primary">Get Access</button>
+          <button className="btn-primary">Try Now</button>
         </nav>
         {children}
       </body>
