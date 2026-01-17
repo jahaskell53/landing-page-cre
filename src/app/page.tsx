@@ -30,9 +30,9 @@ export default function Home() {
             variants={staggerContainer}
             className="hero-text-content"
           >
-            <motion.p variants={fadeInUp} className="serif" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-dim)' }}>
+            {/* <motion.p variants={fadeInUp} className="serif" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-dim)' }}>
               The Renaissance of Digital Editorialism
-            </motion.p>
+            </motion.p> */}
             <motion.h1
               variants={fadeInUp}
               className="high-contrast font-kyoto"
@@ -57,14 +57,7 @@ export default function Home() {
             initial={{ opacity: 0, x: 200 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            style={{
-              position: 'relative',
-              width: '180%',
-              height: '900px',
-              marginRight: '-80%',
-              zIndex: 1,
-              transformOrigin: 'left center'
-            }}
+            className="hero-mockup-container"
           >
             <Image
               src="/mockup.jpg"
