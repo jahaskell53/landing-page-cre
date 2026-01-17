@@ -157,6 +157,9 @@ button {
   cursor: pointer;
   background: none;
   border: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
 .container {
@@ -281,10 +284,12 @@ button {
   background-color: var(--foreground);
   color: var(--background);
   padding: 1rem 2rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   letter-spacing: 0.1em;
   transition: all 0.3s ease;
   border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-weight: 600;
 }
 
 .btn-primary:hover {
