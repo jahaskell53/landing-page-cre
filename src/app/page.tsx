@@ -47,7 +47,7 @@ export default function Home() {
             </motion.p>
             <motion.div variants={fadeInUp} style={{ display: 'flex', gap: '2rem' }}>
               <button className="btn-primary">Get Free</button>
-              <button style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: '30px', border: '1px solid 30px', padding: '0.5rem 1.5rem' }}>
+              <button style={{ letterSpacing: '0.1em', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', padding: '0.5rem 1.5rem' }}>
                 View Portfolio <ArrowUpRight size={16} />
               </button>
             </motion.div>
@@ -167,7 +167,7 @@ export default function Home() {
               </div>
             </div>
             <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '4rem' }}>
-              <span className="serif" style={{ textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.1em' }}>{item.status}</span>
+              <span className="serif" style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>{item.status}</span>
               <ArrowUpRight strokeWidth={1} size={32} />
             </div>
           </motion.div>
@@ -208,10 +208,10 @@ export default function Home() {
 
       {/* Footer */}
       <footer style={{ padding: '4rem 0', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-        <div style={{ textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+        <div style={{ letterSpacing: '0.1em' }}>
           © 2026 OM CRM. All Rights Reserved.
         </div>
-        <div style={{ display: 'flex', gap: '2rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+        <div style={{ display: 'flex', gap: '2rem', letterSpacing: '0.1em' }}>
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
           <a href="#">Instagram</a>

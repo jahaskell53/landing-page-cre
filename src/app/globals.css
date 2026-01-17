@@ -274,7 +274,6 @@ button {
   display: flex;
   gap: 2rem;
   font-size: 0.9rem;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
@@ -283,7 +282,6 @@ button {
   color: var(--background);
   padding: 1rem 2rem;
   font-size: 0.8rem;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
   transition: all 0.3s ease;
   border-radius: var(--radius);
