@@ -54,16 +54,23 @@ export default function Home() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 200 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            style={{ position: 'relative', width: '100%', height: '500px' }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            style={{
+              position: 'relative',
+              width: '180%',
+              height: '900px',
+              marginRight: '-80%',
+              zIndex: 1,
+              transformOrigin: 'left center'
+            }}
           >
             <Image
               src="/mockup.jpg"
               alt="Product Mockup"
               fill
-              style={{ objectFit: 'contain' }}
+              style={{ objectFit: 'contain', objectPosition: 'left center' }}
               priority
             />
           </motion.div>
