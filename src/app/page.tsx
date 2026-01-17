@@ -37,7 +37,7 @@ export default function Home() {
             className="high-contrast font-kyoto"
             style={{ marginBottom: '2rem' }}
           >
-            The Art of <br />
+            <span className="font-light">The Art of</span> <br />
             <span className="serif font-kyoto cursive">Relationship</span>
           </motion.h1>
           <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 auto 2rem' }} />
