@@ -79,7 +79,7 @@
 }
 
 :root {
-  --background: #fdfdfd;
+  --background: #fdfaf0;
   --foreground: #0c0c0c;
   --accent: #1a1a1a;
   --text-dim: #666666;
@@ -197,7 +197,7 @@ button {
   justify-content: space-between;
   align-items: center;
   z-index: 100;
-  background-color: rgba(253, 253, 253, 0.8);
+  background-color: rgba(253, 250, 240, 0.8);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
 }
