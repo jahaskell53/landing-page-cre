@@ -179,9 +179,9 @@ export default function Home() {
 
       {/* CTA Section */}
       <section id="contact" style={{ margin: '12rem 0', textAlign: 'center' }}>
-        <h2 className="high-contrast serif" style={{ marginBottom: '4rem' }}>
-          Begin Your <br />
-          <span>Legacy</span>
+        <h2 className="high-contrast font-kyoto" style={{ marginBottom: '4rem' }}>
+          <span className="font-light">Begin Your</span> <br />
+          <span className="cursive">Legacy</span>
         </h2>
         <p style={{ maxWidth: '500px', margin: '0 auto 3rem', fontSize: '1.2rem', color: 'var(--text-dim)' }}>
           Join the exclusive circle of realtors who define the future of the industry through the lens of timeless design.

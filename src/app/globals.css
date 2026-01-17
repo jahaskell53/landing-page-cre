@@ -168,7 +168,7 @@ button {
 
 .high-contrast {
   font-size: clamp(3rem, 10vw, 8rem);
-  line-height: 0.9;
+  line-height: 1.0;
   text-transform: uppercase;
 }
 
