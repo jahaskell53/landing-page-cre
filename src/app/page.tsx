@@ -47,7 +47,7 @@ export default function Home() {
             </motion.p>
             <motion.div variants={fadeInUp} style={{ display: 'flex', gap: '2rem' }}>
               <button className="btn-primary">Get Free</button>
-              <button style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: '30px', border: '1px solid 30px', padding: '0.5rem 1.5rem' }}>
                 View Portfolio <ArrowUpRight size={16} />
               </button>
             </motion.div>
@@ -77,7 +77,7 @@ export default function Home() {
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          style={{ position: 'relative', width: '100%', height: '80vh', overflow: 'hidden', borderRadius: '4px' }}
+          style={{ position: 'relative', width: '100%', height: '80vh', overflow: 'hidden', borderRadius: '16px' }}
         >
           <Image
             src="/images/hero.png"
@@ -180,7 +180,7 @@ export default function Home() {
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          style={{ position: 'relative', overflow: 'hidden', borderRadius: '4px' }}
+          style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px' }}
         >
           <Image src="/images/detail.png" alt="Detail" fill style={{ objectFit: 'cover' }} />
         </motion.div>
@@ -188,7 +188,7 @@ export default function Home() {
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          style={{ position: 'relative', overflow: 'hidden', borderRadius: '4px' }}
+          style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px' }}
         >
           <Image src="/images/office.png" alt="Office" fill style={{ objectFit: 'cover' }} />
         </motion.div>
@@ -219,6 +219,9 @@ export default function Home() {
       </footer>
 
       <style jsx>{`
+        .feature-row {
+          border-radius: 8px;
+        }
         .feature-row:hover {
           background-color: #fafafa;
           cursor: pointer;

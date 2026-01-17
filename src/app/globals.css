@@ -88,6 +88,8 @@
   --font-accent: 'Ogg', serif;
   --font-kyoto: 'Kyoto', serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --radius: 8px;
+  --radius-lg: 16px;
 }
 
 * {
@@ -245,6 +247,10 @@ button {
   border-bottom: 1px solid var(--border);
 }
 
+.nav button {
+  border-radius: var(--radius);
+}
+
 .nav-brand {
   font-family: var(--font-serif);
   font-size: 1.5rem;
@@ -267,6 +273,7 @@ button {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   transition: all 0.3s ease;
+  border-radius: var(--radius);
 }
 
 .btn-primary:hover {
