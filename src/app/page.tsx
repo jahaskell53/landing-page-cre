@@ -34,11 +34,11 @@ export default function Home() {
           </motion.p>
           <motion.h1
             variants={fadeInUp}
-            className="high-contrast font-accent"
+            className="high-contrast font-kyoto"
             style={{ marginBottom: '2rem' }}
           >
             The Art of <br />
-            <span className="serif font-accent">Relationship</span>
+            <span className="serif font-kyoto cursive">Relationship</span>
           </motion.h1>
           <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 auto 2rem' }} />
           <motion.p variants={fadeInUp} style={{ maxWidth: '600px', margin: '0 auto 3rem', fontSize: '1.25rem', lineHeight: '1.5', color: 'var(--text-dim)' }}>
