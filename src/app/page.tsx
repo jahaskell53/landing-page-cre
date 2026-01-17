@@ -23,34 +23,51 @@ export default function Home() {
     <main className="container">
       {/* Hero Section */}
       <section className="hero-section">
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={staggerContainer}
-          className="text-center"
-        >
-          <motion.p variants={fadeInUp} className="serif" style={{ fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--text-dim)' }}>
-            The Renaissance of Digital Editorialism
-          </motion.p>
-          <motion.h1
-            variants={fadeInUp}
-            className="high-contrast font-kyoto"
-            style={{ marginBottom: '2rem' }}
+        <div className="hero-grid">
+          <motion.div
+            initial="initial"
+            animate="animate"
+            variants={staggerContainer}
+            className="hero-text-content"
           >
-            <span className="font-light">The Art of</span> <br />
-            <span className="serif font-kyoto cursive">Relationship</span>
-          </motion.h1>
-          <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 auto 2rem' }} />
-          <motion.p variants={fadeInUp} style={{ maxWidth: '600px', margin: '0 auto 3rem', fontSize: '1.25rem', lineHeight: '1.5', color: 'var(--text-dim)' }}>
-            A CRM for the modern realtor who values precision, elegance, and the historical depth of meaningful connections.
-          </motion.p>
-          <motion.div variants={fadeInUp} style={{ display: 'flex', justifyContent: 'center', gap: '2rem' }}>
-            <button className="btn-primary">Inquire Now</button>
-            <button style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              View Portfolio <ArrowUpRight size={16} />
-            </button>
+            <motion.p variants={fadeInUp} className="serif" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-dim)' }}>
+              The Renaissance of Digital Editorialism
+            </motion.p>
+            <motion.h1
+              variants={fadeInUp}
+              className="high-contrast font-kyoto"
+              style={{ marginBottom: '2rem' }}
+            >
+              <span className="font-light">The Art of</span> <br />
+              <span className="serif font-kyoto cursive">Relationship</span>
+            </motion.h1>
+            <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 0 2rem 0' }} />
+            <motion.p variants={fadeInUp} style={{ maxWidth: '540px', marginBottom: '3rem', fontSize: '1.25rem', lineHeight: '1.6', color: 'var(--text-dim)' }}>
+              A CRM for the modern realtor who values precision, elegance, and the historical depth of meaningful connections.
+            </motion.p>
+            <motion.div variants={fadeInUp} style={{ display: 'flex', gap: '2rem' }}>
+              <button className="btn-primary">Inquire Now</button>
+              <button style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                View Portfolio <ArrowUpRight size={16} />
+              </button>
+            </motion.div>
           </motion.div>
-        </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            style={{ position: 'relative', width: '100%', height: '500px' }}
+          >
+            <Image
+              src="/mockup.jpg"
+              alt="Product Mockup"
+              fill
+              style={{ objectFit: 'contain' }}
+              priority
+            />
+          </motion.div>
+        </div>
       </section>
 
       {/* Imagery Section */}

@@ -182,9 +182,20 @@ button {
 .hero-section {
   min-height: 90vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: 4rem;
+  align-items: center;
+  padding-top: 6rem;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  width: 100%;
+}
+
+.hero-text-content {
+  text-align: left;
 }
 
 .nav {
