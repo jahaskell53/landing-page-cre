@@ -133,15 +133,15 @@ export default function Home() {
             {/* Floating map image */}
             <div style={{ 
               position: 'absolute', 
-              right: '-20%',
-              top: '20%',
-              width: '50%', 
+              left: '10%',
+              top: '30%',
+              width: '40%', 
               height: 'auto',
               zIndex: 2,
               filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
             }}>
               <Image
-                src="/map.png"
+                src="/map-cropped.png"
                 alt="Map"
                 width={1000}
                 height={800}
