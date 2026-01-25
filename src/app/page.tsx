@@ -67,26 +67,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Imagery Section */}
+      {/* Text and Mockup Section */}
       <section style={{ margin: '4rem 0' }}>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          style={{ position: 'relative', width: '100%', height: '80vh', overflow: 'hidden', borderRadius: '16px' }}
-        >
-          <Image
-            src="/mockup-2.jpg"
-            alt="Product Interface"
-            fill
-            style={{ objectFit: 'cover' }}
-            priority
-          />
-          <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', color: 'white' }}>
-            <p className="serif" style={{ fontSize: '1.5rem', opacity: 0.8 }}>Curated Environments for Elite Success</p>
-          </div>
-        </motion.div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+          >
+            <p className="serif" style={{ fontSize: '2.5rem', lineHeight: '1.3' }}>
+              OpenMidmarket <span style={{ fontWeight: 700 }}>empowers</span> CRE brokers
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            style={{ position: 'relative', width: '100%', height: '500px' }}
+          >
+            <Image
+              src="/mockup-2.jpg"
+              alt="Product Interface"
+              fill
+              style={{ objectFit: 'contain', objectPosition: 'center' }}
+            />
+          </motion.div>
+        </div>
       </section>
 
       {/* Philosophy Section */}
