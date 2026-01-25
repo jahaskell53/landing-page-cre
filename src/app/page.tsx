@@ -20,10 +20,31 @@ export default function Home() {
   };
 
   return (
-    <main className="container">
+    <>
       {/* Hero Section */}
-      <section className="hero-section">
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', gap: '1rem', paddingTop: '1rem' }}>
+      <section className="hero-section" style={{ 
+        backgroundImage: 'url(/images/hero.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        position: 'relative',
+        minHeight: '100vh',
+        width: '100vw',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '40%',
+          background: 'linear-gradient(to top, var(--background) 0%, transparent 100%)',
+          pointerEvents: 'none',
+          zIndex: 0
+        }} />
+        <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: '100vh', position: 'relative', zIndex: 1 }}>
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -31,7 +52,7 @@ export default function Home() {
             style={{ position: 'relative', width: '100%', maxWidth: '800px', height: '300px', marginBottom: '0.5rem' }}
           >
             <Image
-              src="/mockup.jpg"
+              src="/computer-mockup-transparent.png"
               alt="Product Mockup"
               fill
               style={{ objectFit: 'contain', objectPosition: 'center' }}
@@ -49,24 +70,25 @@ export default function Home() {
             <motion.h1
               variants={fadeInUp}
               className="high-contrast font-kyoto"
-              style={{ marginBottom: '1rem' }}
+              style={{ marginBottom: '1rem', color: 'white' }}
             >
               OpenMidmarket
             </motion.h1>
-            <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 auto 1rem auto' }} />
+            <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 auto 1rem auto', backgroundColor: 'rgba(255, 255, 255, 0.3)' }} />
             <motion.h2
               variants={fadeInUp}
-              style={{ maxWidth: '540px', marginBottom: '3.5rem', fontSize: '3rem', lineHeight: '1.2', fontWeight: 300, fontFamily: 'var(--font-sans)', fontStyle: 'italic' }}
+              style={{ maxWidth: '540px', marginBottom: '3.5rem', fontSize: '3rem', lineHeight: '1.2', fontWeight: 300, fontFamily: 'var(--font-sans)', fontStyle: 'italic', color: 'white' }}
             >
               Together, stronger
             </motion.h2>
             <motion.div variants={fadeInUp} style={{ display: 'flex', justifyContent: 'center' }}>
-              <button className="btn-primary" style={{ padding: '1.2rem 3rem', fontSize: '1.1rem' }}>Get Started</button>
+              <button className="btn-primary" style={{ padding: '1.2rem 3rem', fontSize: '1.1rem', backgroundColor: 'white', color: 'var(--foreground)' }}>Get Started</button>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
+    <main className="container">
       {/* Text and Mockup Section */}
       <section style={{ margin: '4rem 0' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
@@ -279,5 +301,6 @@ export default function Home() {
         }
       `}</style>
     </main>
+    </>
   );
 }
