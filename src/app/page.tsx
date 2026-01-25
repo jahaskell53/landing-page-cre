@@ -64,7 +64,7 @@ export default function Home() {
                 maxWidth: '600px'
               }}
             >
-              The only professional network built for the midmarket. Find local news, vacancies, and listings, best suited for you.
+              The only professional network built for the midmarket. Find local news, vacancies, and listings, designed for you.
             </motion.p>
           </motion.div>
         </div>
@@ -80,7 +80,7 @@ export default function Home() {
             top: '100px',
             width: '50vw',
             height: 'calc(100vh - 100px)',
-            overflow: 'hidden'
+            overflow: 'visible'
           }}
         >
           <div style={{
@@ -111,21 +111,24 @@ export default function Home() {
               zIndex: 1,
               opacity: 0.6
             }} />
-            {/* Floating mockup container */}
+            {/* Floating article image */}
             <div style={{ 
-              position: 'relative', 
-              width: '80%', 
-              height: '60%',
+              position: 'absolute', 
+              left: '-30%',
+              bottom: '10%',
+              width: '108%', 
+              height: 'auto',
               zIndex: 2,
-              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.15))'
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
             }}>
-              {/* <Image
-                src="/computer-mockup-transparent.png"
-                alt="Product Mockup"
-                fill
-                style={{ objectFit: 'contain', objectPosition: 'center' }}
+              <Image
+                src="/article-cropped.png"
+                alt="Article"
+                width={1200}
+                height={900}
+                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
                 priority
-              /> */}
+              />
             </div>
           </div>
         </motion.div>
