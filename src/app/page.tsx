@@ -93,12 +93,10 @@ export default function Home() {
             zIndex: 0
           }} />
           <div style={{
-            position: 'relative',
+            position: 'absolute',
+            inset: 0,
             width: '100%',
             height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
             zIndex: 2
           }}>
             {/* Glow effect behind the mockup */}
@@ -111,31 +109,31 @@ export default function Home() {
               zIndex: 1,
               opacity: 0.6
             }} />
-            {/* Floating article image */}
+            {/* Floating emails/history component - upper left */}
             <div style={{ 
               position: 'absolute', 
-              left: '-30%',
-              bottom: '10%',
-              width: '108%', 
+              left: '-15%',
+              top: '8%',
+              width: '30%', 
               height: 'auto',
-              zIndex: 2,
+              zIndex: 3,
               filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
             }}>
               <Image
-                src="/article-cropped.png"
-                alt="Article"
-                width={1200}
-                height={900}
+                src="/emails-cropped.png"
+                alt="Emails"
+                width={900}
+                height={700}
                 style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
                 priority
               />
             </div>
-            {/* Floating map image */}
+            {/* Floating map component - center right */}
             <div style={{ 
               position: 'absolute', 
-              left: '10%',
+              left: '15%',
               top: '30%',
-              width: '40%', 
+              width: '35%', 
               height: 'auto',
               zIndex: 2,
               filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
@@ -149,21 +147,21 @@ export default function Home() {
                 priority
               />
             </div>
-            {/* Floating emails image */}
+            {/* Floating article component - bottom left extending past edge */}
             <div style={{ 
               position: 'absolute', 
-              left: '-15%',
-              top: '5%',
-              width: '50%', 
+              left: '-20%',
+              bottom: '5%',
+              width: '70%', 
               height: 'auto',
               zIndex: 2,
               filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
             }}>
               <Image
-                src="/emails-cropped.png"
-                alt="Emails"
-                width={900}
-                height={700}
+                src="/article-cropped.png"
+                alt="Article"
+                width={1200}
+                height={900}
                 style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
                 priority
               />
