@@ -231,31 +231,6 @@ export default function Home() {
                 fosters trust
               </span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{ 
-                width: '48px', 
-                height: '48px', 
-                backgroundColor: 'var(--foreground)', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                borderRadius: '4px'
-              }}>
-                <ArrowUpRight size={24} color="var(--background)" />
-              </div>
-              <button style={{ 
-                background: 'none', 
-                border: 'none', 
-                padding: 0,
-                fontSize: '1rem',
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 400,
-                color: 'var(--foreground)',
-                cursor: 'pointer'
-              }}>
-                Join Us Now
-              </button>
-            </div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 40 }}
@@ -270,7 +245,7 @@ export default function Home() {
               fontFamily: 'var(--font-sans)',
               fontWeight: 400
             }}>
-              Ensures transparency, and levels the playing field in multifamily real estate—increasing market liquidity, sales volume, and maximizing return
+              Ensures transparency, and levels the playing field in multifamily real estate
             </p>
           </motion.div>
         </div>
@@ -352,13 +327,13 @@ export default function Home() {
       {/* CTA Section */}
       <section id="contact" style={{ margin: '12rem 0', textAlign: 'center' }}>
         <h2 className="high-contrast font-kyoto" style={{ marginBottom: '4rem' }}>
-          <span className="font-light">Begin Your</span> <br />
-          <span className="cursive">Legacy</span>
+          <span className="font-light">Join the</span> <br />
+          <span className="cursive">Community</span>
         </h2>
         <p style={{ maxWidth: '500px', margin: '0 auto 3rem', fontSize: '1.2rem', color: 'var(--text-dim)' }}>
-          Join the exclusive circle of realtors who define the future of the industry through the lens of timeless design.
+          Join the exclusive circle of brokers who will define the future of the industry.
         </p>
-        <button className="btn-primary" style={{ padding: '1.5rem 4rem', fontSize: '1rem' }}>Request Invitation</button>
+        <button className="btn-primary" style={{ padding: '1.5rem 4rem', fontSize: '1rem' }}>Join Now</button>
       </section>
 
       {/* Footer */}
