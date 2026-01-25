@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   description: "OM - Together, stronger",
   keywords: ["OpenMidmarket", "News", "Vacancy", "Sales Listing", "Seminars", "Underwriting"],
   authors: [{ name: "OpenMidmarket" }],
+  openGraph: {
+    images: ["/preview.jpeg"],
+  },
 };
 
 export const viewport = {
