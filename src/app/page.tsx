@@ -23,59 +23,46 @@ export default function Home() {
     <main className="container">
       {/* Hero Section */}
       <section className="hero-section">
-        <div className="hero-grid">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', gap: '1rem', paddingTop: '1rem' }}>
           <motion.div
-            initial="initial"
-            animate="animate"
-            variants={staggerContainer}
-            className="hero-text-content"
-          >
-            {/* <motion.p variants={fadeInUp} className="serif" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-dim)' }}>
-              The OM of Digital Editorialism
-            </motion.p> */}
-            <motion.h1
-              variants={fadeInUp}
-              className="high-contrast font-kyoto"
-              style={{ marginBottom: '2rem' }}
-            >
-              OpenMidmarket
-            </motion.h1>
-            <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 0 2rem 0' }} />
-            <motion.p variants={fadeInUp} style={{ maxWidth: '540px', marginBottom: '3rem', fontSize: '1.25rem', lineHeight: '1.6', color: 'var(--text-dim)' }}>
-              Together, stronger
-            </motion.p>
-            <motion.div variants={fadeInUp} style={{ display: 'flex', gap: '1rem', flexDirection: 'column', maxWidth: '400px' }}>
-              <input
-                type="email"
-                placeholder="Email"
-                style={{
-                  padding: '1rem 1.5rem',
-                  borderRadius: 'var(--radius)',
-                  border: '1px solid var(--border)',
-                  fontSize: '1rem',
-                  fontFamily: 'var(--font-sans)',
-                  backgroundColor: 'var(--background)',
-                  color: 'var(--foreground)',
-                  width: '100%'
-                }}
-              />
-              <button className="btn-primary" style={{ width: '100%' }}>Get Started</button>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 200 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="hero-mockup-container"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            style={{ position: 'relative', width: '100%', maxWidth: '800px', height: '300px', marginBottom: '0.5rem' }}
           >
             <Image
               src="/mockup.jpg"
               alt="Product Mockup"
               fill
-              style={{ objectFit: 'contain', objectPosition: 'left center' }}
+              style={{ objectFit: 'contain', objectPosition: 'center' }}
               priority
             />
+          </motion.div>
+
+          <motion.div
+            initial="initial"
+            animate="animate"
+            variants={staggerContainer}
+            className="hero-text-content"
+            style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+          >
+            <motion.h1
+              variants={fadeInUp}
+              className="high-contrast font-kyoto"
+              style={{ marginBottom: '1rem' }}
+            >
+              OpenMidmarket
+            </motion.h1>
+            <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 auto 1rem auto' }} />
+            <motion.h2
+              variants={fadeInUp}
+              style={{ maxWidth: '540px', marginBottom: '1.5rem', fontSize: '3rem', lineHeight: '1.2', fontWeight: 300, fontFamily: 'var(--font-sans)', fontStyle: 'italic' }}
+            >
+              Together, stronger
+            </motion.h2>
+            <motion.div variants={fadeInUp} style={{ display: 'flex', justifyContent: 'center' }}>
+              <button className="btn-primary" style={{ padding: '1.2rem 3rem', fontSize: '1.1rem' }}>Get Started</button>
+            </motion.div>
           </motion.div>
         </div>
       </section>
