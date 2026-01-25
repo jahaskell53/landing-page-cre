@@ -253,8 +253,8 @@ button {
   left: 0;
   width: 100%;
   padding: 1.5rem 2rem;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   z-index: 100;
   background-color: rgba(253, 250, 240, 0.8);
