@@ -25,10 +25,9 @@ export default function RootLayout({
           <div className="nav-brand">OM</div>
           <div className="nav-links" style={{ display: 'flex', justifyContent: 'center' }}>
             <a href="#news">News</a>
-            <a href="#vacancy">Vacancy</a>
             <a href="#sales-listing">Sales Listing</a>
             <a href="#seminars">Seminars</a>
-            <a href="#underwriting">Underwriting</a>
+            <a href="#underwriting">CRM</a>
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'flex-end' }}>
             <a href="#login" style={{ fontSize: '0.9rem', letterSpacing: '0.1em' }}>Login</a>
