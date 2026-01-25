@@ -130,6 +130,44 @@ export default function Home() {
                 priority
               />
             </div>
+            {/* Floating map image */}
+            <div style={{ 
+              position: 'absolute', 
+              right: '-20%',
+              top: '20%',
+              width: '50%', 
+              height: 'auto',
+              zIndex: 2,
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
+            }}>
+              <Image
+                src="/map.png"
+                alt="Map"
+                width={1000}
+                height={800}
+                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
+                priority
+              />
+            </div>
+            {/* Floating emails image */}
+            <div style={{ 
+              position: 'absolute', 
+              left: '-15%',
+              top: '5%',
+              width: '50%', 
+              height: 'auto',
+              zIndex: 2,
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
+            }}>
+              <Image
+                src="/emails-cropped.png"
+                alt="Emails"
+                width={900}
+                height={700}
+                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
+                priority
+              />
+            </div>
           </div>
         </motion.div>
       </section>
