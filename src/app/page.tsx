@@ -38,18 +38,28 @@ export default function Home() {
               className="high-contrast font-kyoto"
               style={{ marginBottom: '2rem' }}
             >
-              <span className="font-light">The Art of</span> <br />
-              <span className="serif font-kyoto cursive">Relationship</span>
+              OpenMidmarket
             </motion.h1>
             <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 0 2rem 0' }} />
             <motion.p variants={fadeInUp} style={{ maxWidth: '540px', marginBottom: '3rem', fontSize: '1.25rem', lineHeight: '1.6', color: 'var(--text-dim)' }}>
-              A CRM for the modern realtor who values precision, elegance, and the historical depth of meaningful connections.
+              Together, stronger
             </motion.p>
-            <motion.div variants={fadeInUp} style={{ display: 'flex', gap: '2rem' }}>
-              <button className="btn-primary">Get Free</button>
-              <button style={{ letterSpacing: '0.1em', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', padding: '0.5rem 1.5rem' }}>
-                View Portfolio <ArrowUpRight size={16} />
-              </button>
+            <motion.div variants={fadeInUp} style={{ display: 'flex', gap: '1rem', flexDirection: 'column', maxWidth: '400px' }}>
+              <input
+                type="email"
+                placeholder="Email"
+                style={{
+                  padding: '1rem 1.5rem',
+                  borderRadius: 'var(--radius)',
+                  border: '1px solid var(--border)',
+                  fontSize: '1rem',
+                  fontFamily: 'var(--font-sans)',
+                  backgroundColor: 'var(--background)',
+                  color: 'var(--foreground)',
+                  width: '100%'
+                }}
+              />
+              <button className="btn-primary" style={{ width: '100%' }}>Get Started</button>
             </motion.div>
           </motion.div>
 

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "OM | Elite CRM for Realtors",
-  description: "A profound shift in real estate relationship management. Experience the elegance of architectural precision for the modern agent.",
-  keywords: ["CRM", "Realtors", "Real Estate", "Luxury CRM", "Relationship Management"],
-  authors: [{ name: "Antigravity Design" }],
+  title: "OM | Together, stronger",
+  description: "OM - Together, stronger",
+  keywords: ["OpenMidmarket", "News", "Vacancy", "Sales Listing", "Seminars", "Underwriting"],
+  authors: [{ name: "OpenMidmarket" }],
 };
 
 export const viewport = {
@@ -24,11 +24,16 @@ export default function RootLayout({
         <nav className="nav">
           <div className="nav-brand">OM</div>
           <div className="nav-links">
-            <a href="#philosophy">Philosophy</a>
-            <a href="#features">Function</a>
-            <a href="#contact">Connect</a>
+            <a href="#news">News</a>
+            <a href="#vacancy">Vacancy</a>
+            <a href="#sales-listing">Sales Listing</a>
+            <a href="#seminars">Seminars</a>
+            <a href="#underwriting">Underwriting</a>
           </div>
-          <button className="btn-primary">Try Now</button>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <a href="#login" style={{ fontSize: '0.9rem', letterSpacing: '0.1em' }}>Login</a>
+            <button className="btn-primary">Sign up</button>
+          </div>
         </nav>
         {children}
       </body>
