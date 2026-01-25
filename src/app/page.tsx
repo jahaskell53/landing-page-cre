@@ -50,7 +50,8 @@ export default function Home() {
                 marginBottom: '2rem'
               }}
             >
-Deals you can't find anywhere else            </motion.h1>
+              <span style={{ fontFamily: 'var(--font-kyoto)', fontStyle: 'italic' }}>Deals</span> you can't find anywhere else
+            </motion.h1>
             <motion.p
               variants={fadeInUp}
               style={{ 
