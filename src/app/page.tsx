@@ -180,7 +180,7 @@ export default function Home() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
           >
-            <p className="serif" style={{ fontSize: '2.5rem', lineHeight: '1.3' }}>
+            <p style={{ fontSize: '2.5rem', lineHeight: '1.3', fontFamily: 'var(--font-sans)' }}>
               OpenMidmarket <span style={{ fontWeight: 700 }}>empowers</span> CRE brokers
             </p>
           </motion.div>

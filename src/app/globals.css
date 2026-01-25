@@ -120,7 +120,12 @@ body {
 h1,
 h2,
 h3,
-h4,
+h4 {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
 .serif {
   font-family: var(--font-serif);
   font-weight: 400;
