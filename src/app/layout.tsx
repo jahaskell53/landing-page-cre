@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <nav className="nav">
-          <div className="nav-brand">OM</div>
+          <div className="nav-brand">OpenMidmarket</div>
           <div className="nav-links" style={{ display: 'flex', justifyContent: 'center' }}>
             <a href="#news">News</a>
             <a href="#sales-listing">Sales Listing</a>
