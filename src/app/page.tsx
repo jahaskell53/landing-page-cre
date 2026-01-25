@@ -173,7 +173,7 @@ export default function Home() {
     <main className="container">
       {/* Text and Mockup Section */}
       <section style={{ margin: '4rem 0' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem', alignItems: 'center' }}>
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -189,10 +189,10 @@ export default function Home() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            style={{ position: 'relative', width: '100%', height: '500px' }}
+            style={{ position: 'relative', width: '120%', height: '500px' }}
           >
             <Image
-              src="/mockup-2.jpg"
+              src="/cre-mockup.png"
               alt="Product Interface"
               fill
               style={{ objectFit: 'contain', objectPosition: 'center' }}

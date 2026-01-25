@@ -31,7 +31,7 @@ export default function RootLayout({
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'flex-end' }}>
             <a href="#login" style={{ fontSize: '0.9rem', letterSpacing: '0.1em' }}>Login</a>
-            <button className="btn-primary">Sign up</button>
+            <button className="btn-primary">Sign Up Free</button>
           </div>
         </nav>
         {children}
