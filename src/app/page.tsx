@@ -97,56 +97,98 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Philosophy Section */}
-      <section id="philosophy" style={{ margin: '12rem 0' }}>
-        <div className="feature-grid">
-          <div className="feature-item" style={{ gridColumn: 'span 5' }}>
-            <motion.h2
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
-              viewport={{ once: true }}
-              className="serif"
-              style={{ fontSize: '4rem', lineHeight: '1.1' }}
-            >
-              Architectural <br />
-              <span>Precision</span>
-            </motion.h2>
-          </div>
-          <div className="feature-item" style={{ gridColumn: 'span 7', paddingTop: '4rem' }}>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.3 }}
-              viewport={{ once: true }}
-              style={{ fontSize: '1.5rem', lineHeight: '1.6', marginBottom: '2rem' }}
-            >
-              We believe that lead management is more than just data. It is the orchestration of human potential. Our platform provides the structural integrity required to build a legacy in real estate.
-            </motion.p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-              <div>
-                <h4 className="serif" style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Heritage</h4>
-                <p style={{ color: 'var(--text-dim)' }}>Built on the principles of classic editorial design and modern technical infrastructure.</p>
-              </div>
-              <div>
-                <h4 className="serif" style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Innovation</h4>
-                <p style={{ color: 'var(--text-dim)' }}>Utilizing high-end animations and responsive scaling to ensure your brand feels premium on every device.</p>
-              </div>
+      {/* Trust and Transparency Section */}
+      <section style={{ margin: '8rem 0' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+          >
+            <h2 style={{ 
+              fontSize: 'clamp(3rem, 10vw, 6rem)',
+              fontWeight: 400, 
+              fontFamily: 'var(--font-sans)',
+              marginBottom: '1.5rem',
+              color: 'var(--foreground)'
+            }}>
+              OpenMidmarket
+            </h2>
+            <div style={{ marginBottom: '3rem' }}>
+              <span style={{ 
+                fontSize: 'clamp(3rem, 10vw, 6rem)',
+                fontWeight: 700,
+                fontFamily: 'var(--font-sans)',
+                display: 'inline-block',
+                lineHeight: '1.1',
+                color: 'var(--foreground)'
+              }}>
+                fosters trust
+              </span>
             </div>
-          </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{ 
+                width: '48px', 
+                height: '48px', 
+                backgroundColor: 'var(--foreground)', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                borderRadius: '4px'
+              }}>
+                <ArrowUpRight size={24} color="var(--background)" />
+              </div>
+              <button style={{ 
+                background: 'none', 
+                border: 'none', 
+                padding: 0,
+                fontSize: '1rem',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 400,
+                color: 'var(--foreground)',
+                cursor: 'pointer'
+              }}>
+                Join Us Now
+              </button>
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+          >
+            <p style={{ 
+              fontSize: '2.0rem', 
+              lineHeight: '1.6', 
+              color: 'var(--foreground)',
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 400
+            }}>
+              Ensures transparency, and levels the playing field in multifamily real estate—increasing market liquidity, sales volume, and maximizing return
+            </p>
+          </motion.div>
         </div>
       </section>
 
-      {/* Features Table / List (EigenLayer Style) */}
+      {/* Built for Everyone Section */}
       <section id="features" style={{ margin: '12rem 0' }}>
-        <h2 className="serif" style={{ fontSize: '3rem', marginBottom: '4rem' }}>Systemic Elegance</h2>
+        <h2 style={{ 
+          fontSize: 'clamp(3rem, 10vw, 6rem)', 
+          marginBottom: '4rem',
+          fontFamily: 'var(--font-sans)',
+          fontWeight: 400,
+          color: 'var(--foreground)'
+        }}>Built for Everyone</h2>
         <div className="divider" />
 
         {[
-          { icon: <Zap size={24} />, title: 'Direct Response', desc: 'Real-time automation that feels personal and crafted.', status: 'Active' },
-          { icon: <Shield size={24} />, title: 'Estate Vault', desc: 'Secure, high-contrast storage for confidential client portfolios.', status: 'Encrypted' },
-          { icon: <Globe size={24} />, title: 'Global Reach', desc: 'Connect with international markets using automated translation.', status: 'Live' },
-          { icon: <CheckCircle2 size={24} />, title: 'Precision Analytics', desc: 'Detailed insights into your network growth and efficiency.', status: 'Verified' },
+          { title: 'For Property Owners', desc: '' },
+          { title: 'For Brokers', desc: '' },
+          { title: 'For Property Managers', desc: '' },
+          { title: 'For Lenders', desc: '' },
+          { title: 'For Insurance Agencies', desc: '' },
         ].map((item, index) => (
           <motion.div
             key={index}
@@ -165,14 +207,18 @@ export default function Home() {
             className="feature-row"
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '3rem' }}>
-              <span style={{ opacity: 0.4 }}>0{index + 1}</span>
+              <span style={{ opacity: 0.4, fontFamily: 'var(--font-sans)' }}>0{index + 1}</span>
               <div>
-                <h3 className="serif" style={{ fontSize: '2rem' }}>{item.title}</h3>
-                <p style={{ color: 'var(--text-dim)' }}>{item.desc}</p>
+                <h3 style={{ 
+                  fontSize: '2rem',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 400,
+                  color: 'var(--foreground)'
+                }}>{item.title}</h3>
+                {item.desc && <p style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-sans)' }}>{item.desc}</p>}
               </div>
             </div>
             <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '4rem' }}>
-              <span className="serif" style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>{item.status}</span>
               <ArrowUpRight strokeWidth={1} size={32} />
             </div>
           </motion.div>
