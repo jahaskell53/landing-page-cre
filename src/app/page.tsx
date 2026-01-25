@@ -147,13 +147,16 @@ export default function Home() {
                 priority
               />
             </div>
-            {/* Floating article component - bottom left extending past edge */}
+            {/* Floating article component - bottom foundation spanning full width */}
             <div style={{ 
               position: 'absolute', 
-              left: '-20%',
-              bottom: '5%',
-              width: '110%', 
+              left: '50%',
+              transform: 'translateX(-50%)',
+              bottom: 0,
+              width: '100%', 
               height: 'auto',
+              marginBottom: 0,
+              paddingBottom: 0,
               zIndex: 2,
               filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
             }}>
@@ -162,7 +165,7 @@ export default function Home() {
                 alt="Article"
                 width={1200}
                 height={900}
-                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
+                style={{ objectFit: 'contain', objectPosition: 'bottom center', width: '100%', height: 'auto', display: 'block', margin: 0, padding: 0 }}
                 priority
               />
             </div>
