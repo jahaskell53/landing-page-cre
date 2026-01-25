@@ -113,8 +113,8 @@ export default function Home() {
             <div style={{ 
               position: 'absolute', 
               left: '-15%',
-              top: '8%',
-              width: '30%', 
+              top: '3%',
+              width: '50%', 
               height: 'auto',
               zIndex: 3,
               filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
@@ -152,7 +152,7 @@ export default function Home() {
               position: 'absolute', 
               left: '-20%',
               bottom: '5%',
-              width: '70%', 
+              width: '110%', 
               height: 'auto',
               zIndex: 2,
               filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
