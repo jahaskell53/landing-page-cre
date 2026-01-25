@@ -55,7 +55,7 @@ export default function Home() {
             <motion.p
               variants={fadeInUp}
               style={{ 
-                fontSize: '1.25rem',
+                fontSize: '1.75rem',
                 lineHeight: '1.6',
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 400,
