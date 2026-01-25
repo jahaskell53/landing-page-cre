@@ -29,7 +29,7 @@ export default function Home() {
         display: 'grid',
         gridTemplateColumns: '50% 50%',
         alignItems: 'center',
-        paddingTop: 0
+        paddingTop: '100px'
       }}>
         {/* Left Side - Text */}
         <div style={{ paddingLeft: '1rem', paddingRight: '2rem' }}>
@@ -76,30 +76,20 @@ Deals you can't find anywhere else            </motion.h1>
           style={{ 
             position: 'absolute',
             right: 0,
-            top: 0,
+            top: '100px',
             width: '50vw',
-            height: '100vh',
+            height: 'calc(100vh - 100px)',
             overflow: 'hidden'
           }}
         >
           <div style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: 'url(/images/hero.png)',
+            backgroundImage: 'url(/images/handshake.jpeg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             zIndex: 0
-          }} />
-          <div style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '40%',
-            background: 'linear-gradient(to top, var(--background) 0%, transparent 100%)',
-            pointerEvents: 'none',
-            zIndex: 1
           }} />
           <div style={{
             position: 'relative',
@@ -110,14 +100,31 @@ Deals you can't find anywhere else            </motion.h1>
             justifyContent: 'center',
             zIndex: 2
           }}>
-            <div style={{ position: 'relative', width: '80%', height: '60%' }}>
-              <Image
+            {/* Glow effect behind the mockup */}
+            <div style={{
+              position: 'absolute',
+              width: '80%',
+              height: '60%',
+              background: 'radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, transparent 70%)',
+              filter: 'blur(40px)',
+              zIndex: 1,
+              opacity: 0.6
+            }} />
+            {/* Floating mockup container */}
+            <div style={{ 
+              position: 'relative', 
+              width: '80%', 
+              height: '60%',
+              zIndex: 2,
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.15))'
+            }}>
+              {/* <Image
                 src="/computer-mockup-transparent.png"
                 alt="Product Mockup"
                 fill
                 style={{ objectFit: 'contain', objectPosition: 'center' }}
                 priority
-              />
+              /> */}
             </div>
           </div>
         </motion.div>
