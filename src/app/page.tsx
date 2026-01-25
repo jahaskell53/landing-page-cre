@@ -20,128 +20,254 @@ export default function Home() {
   };
 
   return (
-    <main className="container">
+    <>
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-grid">
+      <section className="hero-section" style={{ 
+        position: 'relative',
+        minHeight: '100vh',
+        width: '100vw',
+        display: 'grid',
+        gridTemplateColumns: '50% 50%',
+        alignItems: 'center',
+        paddingTop: '100px'
+      }}>
+        {/* Left Side - Text */}
+        <div style={{ paddingLeft: '1rem', paddingRight: '2rem' }}>
           <motion.div
             initial="initial"
             animate="animate"
             variants={staggerContainer}
-            className="hero-text-content"
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', maxWidth: '800px', marginLeft: 'auto' }}
           >
-            {/* <motion.p variants={fadeInUp} className="serif" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-dim)' }}>
-              The OM of Digital Editorialism
-            </motion.p> */}
             <motion.h1
               variants={fadeInUp}
-              className="high-contrast font-kyoto"
-              style={{ marginBottom: '2rem' }}
+              style={{ 
+                fontSize: 'clamp(3rem, 10vw, 6rem)', 
+                lineHeight: '1.1',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 400,
+                color: 'var(--foreground)',
+                marginBottom: '2rem'
+              }}
             >
-              <span className="font-light">The Art of</span> <br />
-              <span className="serif font-kyoto cursive">Relationship</span>
+              <span style={{ fontFamily: 'var(--font-kyoto)', fontStyle: 'italic' }}>Deals</span> you can't find anywhere else
             </motion.h1>
-            <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 0 2rem 0' }} />
-            <motion.p variants={fadeInUp} style={{ maxWidth: '540px', marginBottom: '3rem', fontSize: '1.25rem', lineHeight: '1.6', color: 'var(--text-dim)' }}>
-              A CRM for the modern realtor who values precision, elegance, and the historical depth of meaningful connections.
+            <motion.p
+              variants={fadeInUp}
+              style={{ 
+                fontSize: '1.25rem',
+                lineHeight: '1.6',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 400,
+                color: 'var(--foreground)',
+                opacity: 0.8,
+                maxWidth: '600px'
+              }}
+            >
+              The only professional network built for the midmarket. Find local news, vacancies, and listings, designed for you.
             </motion.p>
-            <motion.div variants={fadeInUp} style={{ display: 'flex', gap: '2rem' }}>
-              <button className="btn-primary">Get Free</button>
-              <button style={{ letterSpacing: '0.1em', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', padding: '0.5rem 1.5rem' }}>
-                View Portfolio <ArrowUpRight size={16} />
-              </button>
-            </motion.div>
           </motion.div>
+        </div>
 
+        {/* Right Side - Background Image with Mockup */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+          style={{ 
+            position: 'absolute',
+            right: 0,
+            top: '100px',
+            width: '50vw',
+            height: 'calc(100vh - 100px)',
+            overflow: 'visible'
+          }}
+        >
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'url(/images/handshake.jpeg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            zIndex: 0
+          }} />
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 2
+          }}>
+            {/* Glow effect behind the mockup */}
+            <div style={{
+              position: 'absolute',
+              width: '80%',
+              height: '60%',
+              background: 'radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, transparent 70%)',
+              filter: 'blur(40px)',
+              zIndex: 1,
+              opacity: 0.6
+            }} />
+            {/* Floating emails/history component - upper left */}
+            <div style={{ 
+              position: 'absolute', 
+              left: '-15%',
+              top: '3%',
+              width: '50%', 
+              height: 'auto',
+              zIndex: 3,
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
+            }}>
+              <Image
+                src="/emails-cropped.png"
+                alt="Emails"
+                width={900}
+                height={700}
+                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
+                priority
+              />
+            </div>
+            {/* Floating map component - center right */}
+            <div style={{ 
+              position: 'absolute', 
+              left: '15%',
+              top: '30%',
+              width: '35%', 
+              height: 'auto',
+              zIndex: 2,
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
+            }}>
+              <Image
+                src="/map-cropped.png"
+                alt="Map"
+                width={1000}
+                height={800}
+                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
+                priority
+              />
+            </div>
+            {/* Floating article component - bottom left extending past edge */}
+            <div style={{ 
+              position: 'absolute', 
+              left: '-20%',
+              bottom: '5%',
+              width: '110%', 
+              height: 'auto',
+              zIndex: 2,
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
+            }}>
+              <Image
+                src="/article-cropped.png"
+                alt="Article"
+                width={1200}
+                height={900}
+                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
+                priority
+              />
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+    <main className="container">
+      {/* Text and Mockup Section */}
+      <section style={{ margin: '4rem 0' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem', alignItems: 'center' }}>
           <motion.div
-            initial={{ opacity: 0, x: 200 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="hero-mockup-container"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+          >
+            <p className="serif" style={{ fontSize: '2.5rem', lineHeight: '1.3' }}>
+              OpenMidmarket <span style={{ fontWeight: 700 }}>empowers</span> CRE brokers
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            style={{ position: 'relative', width: '120%', height: '500px' }}
           >
             <Image
-              src="/mockup.jpg"
-              alt="Product Mockup"
+              src="/cre-mockup.png"
+              alt="Product Interface"
               fill
-              style={{ objectFit: 'contain', objectPosition: 'left center' }}
-              priority
+              style={{ objectFit: 'contain', objectPosition: 'center' }}
             />
           </motion.div>
         </div>
       </section>
 
-      {/* Imagery Section */}
-      <section style={{ margin: '4rem 0' }}>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          style={{ position: 'relative', width: '100%', height: '80vh', overflow: 'hidden', borderRadius: '16px' }}
-        >
-          <Image
-            src="/mockup-2.jpg"
-            alt="Product Interface"
-            fill
-            style={{ objectFit: 'cover' }}
-            priority
-          />
-          <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', color: 'white' }}>
-            <p className="serif" style={{ fontSize: '1.5rem', opacity: 0.8 }}>Curated Environments for Elite Success</p>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Philosophy Section */}
-      <section id="philosophy" style={{ margin: '12rem 0' }}>
-        <div className="feature-grid">
-          <div className="feature-item" style={{ gridColumn: 'span 5' }}>
-            <motion.h2
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
-              viewport={{ once: true }}
-              className="serif"
-              style={{ fontSize: '4rem', lineHeight: '1.1' }}
-            >
-              Architectural <br />
-              <span>Precision</span>
-            </motion.h2>
-          </div>
-          <div className="feature-item" style={{ gridColumn: 'span 7', paddingTop: '4rem' }}>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.3 }}
-              viewport={{ once: true }}
-              style={{ fontSize: '1.5rem', lineHeight: '1.6', marginBottom: '2rem' }}
-            >
-              We believe that lead management is more than just data. It is the orchestration of human potential. Our platform provides the structural integrity required to build a legacy in real estate.
-            </motion.p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-              <div>
-                <h4 className="serif" style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Heritage</h4>
-                <p style={{ color: 'var(--text-dim)' }}>Built on the principles of classic editorial design and modern technical infrastructure.</p>
-              </div>
-              <div>
-                <h4 className="serif" style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Innovation</h4>
-                <p style={{ color: 'var(--text-dim)' }}>Utilizing high-end animations and responsive scaling to ensure your brand feels premium on every device.</p>
-              </div>
+      {/* Trust and Transparency Section */}
+      <section style={{ margin: '8rem 0' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+          >
+            <h2 style={{ 
+              fontSize: 'clamp(3rem, 10vw, 6rem)',
+              fontWeight: 400, 
+              fontFamily: 'var(--font-sans)',
+              marginBottom: '1.5rem',
+              color: 'var(--foreground)'
+            }}>
+              OpenMidmarket
+            </h2>
+            <div style={{ marginBottom: '3rem' }}>
+              <span style={{ 
+                fontSize: 'clamp(3rem, 10vw, 6rem)',
+                fontWeight: 700,
+                fontFamily: 'var(--font-sans)',
+                display: 'inline-block',
+                lineHeight: '1.1',
+                color: 'var(--foreground)'
+              }}>
+                fosters trust
+              </span>
             </div>
-          </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+          >
+            <p style={{ 
+              fontSize: '2.0rem', 
+              lineHeight: '1.6', 
+              color: 'var(--foreground)',
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 400
+            }}>
+              Ensures transparency, and levels the playing field in multifamily real estate
+            </p>
+          </motion.div>
         </div>
       </section>
 
-      {/* Features Table / List (EigenLayer Style) */}
+      {/* Built for Everyone Section */}
       <section id="features" style={{ margin: '12rem 0' }}>
-        <h2 className="serif" style={{ fontSize: '3rem', marginBottom: '4rem' }}>Systemic Elegance</h2>
+        <h2 style={{ 
+          fontSize: 'clamp(3rem, 10vw, 6rem)', 
+          marginBottom: '4rem',
+          fontFamily: 'var(--font-sans)',
+          fontWeight: 400,
+          color: 'var(--foreground)'
+        }}>Built for Everyone</h2>
         <div className="divider" />
 
         {[
-          { icon: <Zap size={24} />, title: 'Direct Response', desc: 'Real-time automation that feels personal and crafted.', status: 'Active' },
-          { icon: <Shield size={24} />, title: 'Estate Vault', desc: 'Secure, high-contrast storage for confidential client portfolios.', status: 'Encrypted' },
-          { icon: <Globe size={24} />, title: 'Global Reach', desc: 'Connect with international markets using automated translation.', status: 'Live' },
-          { icon: <CheckCircle2 size={24} />, title: 'Precision Analytics', desc: 'Detailed insights into your network growth and efficiency.', status: 'Verified' },
+          { title: 'For Property Owners', desc: '' },
+          { title: 'For Brokers', desc: '' },
+          { title: 'For Property Managers', desc: '' },
+          { title: 'For Lenders', desc: '' },
+          { title: 'For Insurance Agencies', desc: '' },
         ].map((item, index) => (
           <motion.div
             key={index}
@@ -160,14 +286,18 @@ export default function Home() {
             className="feature-row"
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '3rem' }}>
-              <span style={{ opacity: 0.4 }}>0{index + 1}</span>
+              <span style={{ opacity: 0.4, fontFamily: 'var(--font-sans)' }}>0{index + 1}</span>
               <div>
-                <h3 className="serif" style={{ fontSize: '2rem' }}>{item.title}</h3>
-                <p style={{ color: 'var(--text-dim)' }}>{item.desc}</p>
+                <h3 style={{ 
+                  fontSize: '2rem',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 400,
+                  color: 'var(--foreground)'
+                }}>{item.title}</h3>
+                {item.desc && <p style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-sans)' }}>{item.desc}</p>}
               </div>
             </div>
             <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '4rem' }}>
-              <span className="serif" style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>{item.status}</span>
               <ArrowUpRight strokeWidth={1} size={32} />
             </div>
           </motion.div>
@@ -197,13 +327,13 @@ export default function Home() {
       {/* CTA Section */}
       <section id="contact" style={{ margin: '12rem 0', textAlign: 'center' }}>
         <h2 className="high-contrast font-kyoto" style={{ marginBottom: '4rem' }}>
-          <span className="font-light">Begin Your</span> <br />
-          <span className="cursive">Legacy</span>
+          <span className="font-light">Join the</span> <br />
+          <span className="cursive">Community</span>
         </h2>
         <p style={{ maxWidth: '500px', margin: '0 auto 3rem', fontSize: '1.2rem', color: 'var(--text-dim)' }}>
-          Join the exclusive circle of realtors who define the future of the industry through the lens of timeless design.
+          Join the exclusive circle of brokers who will define the future of the industry.
         </p>
-        <button className="btn-primary" style={{ padding: '1.5rem 4rem', fontSize: '1rem' }}>Request Invitation</button>
+        <button className="btn-primary" style={{ padding: '1.5rem 4rem', fontSize: '1rem' }}>Join Now For Free</button>
       </section>
 
       {/* Footer */}
@@ -228,5 +358,6 @@ export default function Home() {
         }
       `}</style>
     </main>
+    </>
   );
 }
