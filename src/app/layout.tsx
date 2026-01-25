@@ -32,8 +32,8 @@ export default function RootLayout({
             <a href="#seminars">Seminars</a>
             <a href="#underwriting">CRM</a>
           </div>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <a href="#login" style={{ fontSize: '0.9rem', letterSpacing: '0.1em' }}>Login</a>
+          <div className="nav-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <a className="nav-login" href="#login" style={{ fontSize: '0.9rem', letterSpacing: '0.1em' }}>Login</a>
             <button className="btn-primary">Sign Up Free</button>
           </div>
         </nav>

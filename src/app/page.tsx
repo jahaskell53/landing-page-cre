@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className="hero-section" style={{ 
+      <section className="hero-section hero-section-mobile" style={{
         position: 'relative',
         minHeight: '100vh',
         width: '100vw',
@@ -32,7 +32,7 @@ export default function Home() {
         paddingTop: '100px'
       }}>
         {/* Left Side - Text */}
-        <div style={{ paddingLeft: '1rem', paddingRight: '2rem' }}>
+        <div className="hero-left-mobile" style={{ paddingLeft: '1rem', paddingRight: '2rem' }}>
           <motion.div
             initial="initial"
             animate="animate"
@@ -71,10 +71,11 @@ export default function Home() {
 
         {/* Right Side - Background Image with Mockup */}
         <motion.div
+          className="hero-right-mobile"
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          style={{ 
+          style={{
             position: 'absolute',
             right: 0,
             top: '100px',
@@ -173,18 +174,19 @@ export default function Home() {
     <main className="container">
       {/* Text and Mockup Section */}
       <section style={{ margin: '4rem 0' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem', alignItems: 'center' }}>
+        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem', alignItems: 'center' }}>
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
           >
-            <p style={{ fontSize: '2.5rem', lineHeight: '1.3', fontFamily: 'var(--font-sans)' }}>
+            <p className="text-2xl-mobile" style={{ fontSize: '2.5rem', lineHeight: '1.3', fontFamily: 'var(--font-sans)' }}>
               OpenMidmarket <span style={{ fontWeight: 700 }}>empowers</span> CRE brokers
             </p>
           </motion.div>
           <motion.div
+            className="mockup-container-mobile"
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
@@ -203,16 +205,16 @@ export default function Home() {
 
       {/* Trust and Transparency Section */}
       <section style={{ margin: '8rem 0' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
           >
-            <h2 style={{ 
-              fontSize: 'clamp(3rem, 10vw, 6rem)',
-              fontWeight: 400, 
+            <h2 style={{
+              fontSize: 'clamp(2rem, 8vw, 6rem)',
+              fontWeight: 400,
               fontFamily: 'var(--font-sans)',
               marginBottom: '1.5rem',
               color: 'var(--foreground)'
@@ -220,8 +222,8 @@ export default function Home() {
               OpenMidmarket
             </h2>
             <div style={{ marginBottom: '3rem' }}>
-              <span style={{ 
-                fontSize: 'clamp(3rem, 10vw, 6rem)',
+              <span style={{
+                fontSize: 'clamp(2rem, 8vw, 6rem)',
                 fontWeight: 700,
                 fontFamily: 'var(--font-sans)',
                 display: 'inline-block',
@@ -238,9 +240,9 @@ export default function Home() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
           >
-            <p style={{ 
-              fontSize: '2.0rem', 
-              lineHeight: '1.6', 
+            <p className="text-xl-mobile" style={{
+              fontSize: '2.0rem',
+              lineHeight: '1.6',
               color: 'var(--foreground)',
               fontFamily: 'var(--font-sans)',
               fontWeight: 400
@@ -305,7 +307,7 @@ export default function Home() {
       </section>
 
       {/* Visual Break */}
-      <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', height: '60vh' }}>
+      <section className="visual-break-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', height: '60vh' }}>
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -337,11 +339,11 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer style={{ padding: '4rem 0', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
+      <footer className="footer-mobile" style={{ padding: '4rem 0', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
         <div style={{ letterSpacing: '0.1em' }}>
           © 2026 OM CRM. All Rights Reserved.
         </div>
-        <div style={{ display: 'flex', gap: '2rem', letterSpacing: '0.1em' }}>
+        <div className="footer-links-mobile" style={{ display: 'flex', gap: '2rem', letterSpacing: '0.1em' }}>
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
           <a href="#">Instagram</a>

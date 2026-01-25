@@ -352,4 +352,147 @@ button {
   .feature-item {
     grid-column: span 12;
   }
+
+  .nav {
+    padding: 1rem;
+    grid-template-columns: 1fr auto;
+  }
+
+  .nav-links {
+    display: none !important;
+  }
+
+  .nav-brand {
+    font-size: 1.2rem;
+  }
+
+  .nav .btn-primary {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .nav-login {
+    display: none;
+  }
+
+  .nav-actions {
+    gap: 0.5rem !important;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .high-contrast {
+    font-size: clamp(2rem, 8vw, 4rem);
+  }
+
+  /* Hero section mobile */
+  .hero-section {
+    min-height: auto !important;
+    padding-top: 80px !important;
+    padding-bottom: 2rem;
+  }
+
+  .hero-section-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: unset !important;
+  }
+
+  .hero-left-mobile {
+    padding: 1rem !important;
+    order: 1;
+  }
+
+  .hero-right-mobile {
+    position: relative !important;
+    width: 100% !important;
+    height: 400px !important;
+    top: unset !important;
+    order: 2;
+    margin-top: 2rem;
+  }
+
+  /* Section grids mobile */
+  .section-grid-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2rem !important;
+  }
+
+  .section-grid-mobile > div {
+    width: 100% !important;
+  }
+
+  .mockup-container-mobile {
+    position: relative !important;
+    width: 100% !important;
+    height: 300px !important;
+  }
+
+  /* Visual break section mobile */
+  .visual-break-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    gap: 1rem !important;
+  }
+
+  .visual-break-mobile > div {
+    height: 200px !important;
+    position: relative !important;
+  }
+
+  /* Footer mobile */
+  .footer-mobile {
+    flex-direction: column !important;
+    gap: 2rem !important;
+    text-align: center !important;
+  }
+
+  .footer-links-mobile {
+    justify-content: center !important;
+  }
+
+  /* Feature rows mobile */
+  .feature-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  .feature-row > div:last-child {
+    align-self: flex-end;
+  }
+
+  /* Typography adjustments */
+  .text-2xl-mobile {
+    font-size: 1.5rem !important;
+  }
+
+  .text-xl-mobile {
+    font-size: 1.25rem !important;
+  }
+
+  /* CTA section mobile */
+  section[id="contact"] {
+    margin: 6rem 0 !important;
+  }
+
+  section[id="contact"] .btn-primary {
+    padding: 1rem 2rem !important;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* Built for Everyone section mobile */
+  section[id="features"] {
+    margin: 6rem 0 !important;
+  }
+
+  section[id="features"] h2 {
+    font-size: clamp(2rem, 8vw, 4rem) !important;
+    margin-bottom: 2rem !important;
+  }
 }
