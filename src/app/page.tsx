@@ -56,7 +56,7 @@ export default function Home() {
             <motion.div variants={fadeInUp} className="divider" style={{ maxWidth: '300px', margin: '0 auto 1rem auto' }} />
             <motion.h2
               variants={fadeInUp}
-              style={{ maxWidth: '540px', marginBottom: '1.5rem', fontSize: '3rem', lineHeight: '1.2', fontWeight: 300, fontFamily: 'var(--font-sans)', fontStyle: 'italic' }}
+              style={{ maxWidth: '540px', marginBottom: '3.5rem', fontSize: '3rem', lineHeight: '1.2', fontWeight: 300, fontFamily: 'var(--font-sans)', fontStyle: 'italic' }}
             >
               Together, stronger
             </motion.h2>
