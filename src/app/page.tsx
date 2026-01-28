@@ -1,8 +1,33 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import Image from "next/image";
 import { ArrowUpRight, CheckCircle2, Globe, Shield, Zap } from "lucide-react";
+import { useEffect, useRef } from "react";
+
+function AnimatedNumber({ value, suffix = "", duration = 2 }: { value: number; suffix?: string; duration?: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (latest) => {
+    if (value >= 1000) {
+      return Math.round(latest).toLocaleString();
+    }
+    return Math.round(latest);
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      animate(count, value, { duration, ease: "easeOut" });
+    }
+  }, [isInView, value, duration, count]);
+
+  return (
+    <span ref={ref}>
+      <motion.span>{rounded}</motion.span>{suffix}
+    </span>
+  );
+}
 
 export default function Home() {
   const fadeInUp = {
@@ -250,6 +275,61 @@ export default function Home() {
             </p>
           </motion.div>
         </div>
+      </section>
+
+      {/* Stats Section */}
+      <section style={{ margin: '8rem 0', padding: '4rem 0' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          className="stats-grid-mobile"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '2rem',
+            textAlign: 'center'
+          }}
+        >
+          {[
+            { value: 50000, suffix: '+', label: 'Properties Tracked' },
+            { value: 120, suffix: '+', label: 'Markets Covered' },
+            { value: 2500, suffix: '+', label: 'Active Brokers' },
+            { value: 10, suffix: 'B+', label: 'Deal Volume' },
+          ].map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.8 }}
+              viewport={{ once: true }}
+              style={{
+                padding: '2rem 1rem',
+                borderLeft: index > 0 ? '1px solid var(--border)' : 'none'
+              }}
+              className={index > 0 ? 'stat-border-mobile' : ''}
+            >
+              <div style={{
+                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                fontWeight: 600,
+                fontFamily: 'var(--font-sans)',
+                color: 'var(--foreground)',
+                marginBottom: '0.5rem'
+              }}>
+                <AnimatedNumber value={stat.value} suffix={stat.suffix} />
+              </div>
+              <div style={{
+                fontSize: '1rem',
+                color: 'var(--text-dim)',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 400
+              }}>
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
 
       {/* Built for Everyone Section */}

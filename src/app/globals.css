@@ -495,4 +495,23 @@ button {
     font-size: clamp(2rem, 8vw, 4rem) !important;
     margin-bottom: 2rem !important;
   }
+
+  /* Stats section mobile */
+  .stats-grid-mobile {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  .stat-border-mobile {
+    border-left: none !important;
+  }
+
+  .stats-grid-mobile > div:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+
+  .stats-grid-mobile > div:nth-child(1),
+  .stats-grid-mobile > div:nth-child(2) {
+    border-bottom: 1px solid var(--border);
+  }
 }
