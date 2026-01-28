@@ -216,23 +216,22 @@ export default function Home() {
               fontSize: 'clamp(2rem, 8vw, 6rem)',
               fontWeight: 400,
               fontFamily: 'var(--font-sans)',
-              marginBottom: '1.5rem',
+              marginBottom: '0',
+              lineHeight: '1.1',
               color: 'var(--foreground)'
             }}>
               OpenMidmarket
             </h2>
-            <div style={{ marginBottom: '3rem' }}>
-              <span style={{
-                fontSize: 'clamp(2rem, 8vw, 6rem)',
-                fontWeight: 700,
-                fontFamily: 'var(--font-sans)',
-                display: 'inline-block',
-                lineHeight: '1.1',
-                color: 'var(--foreground)'
-              }}>
-                fosters trust
-              </span>
-            </div>
+            <span style={{
+              fontSize: 'clamp(2rem, 8vw, 6rem)',
+              fontWeight: 700,
+              fontFamily: 'var(--font-sans)',
+              display: 'block',
+              lineHeight: '1.1',
+              color: 'var(--foreground)'
+            }}>
+              fosters trust
+            </span>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 40 }}
