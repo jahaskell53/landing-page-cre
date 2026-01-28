@@ -198,39 +198,8 @@ export default function Home() {
       </section>
 
     <main className="container">
-      {/* Text and Mockup Section */}
-      <section style={{ margin: '4rem 0' }}>
-        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem', alignItems: 'center' }}>
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-          >
-            <p className="text-2xl-mobile" style={{ fontSize: '2.5rem', lineHeight: '1.3', fontFamily: 'var(--font-sans)' }}>
-              OpenMidmarket <span style={{ fontWeight: 700 }}>empowers</span> CRE brokers
-            </p>
-          </motion.div>
-          <motion.div
-            className="mockup-container-mobile"
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            style={{ position: 'relative', width: '120%', height: '500px' }}
-          >
-            <Image
-              src="/cre-mockup.png"
-              alt="Product Interface"
-              fill
-              style={{ objectFit: 'contain', objectPosition: 'center' }}
-            />
-          </motion.div>
-        </div>
-      </section>
-
       {/* Trust and Transparency Section */}
-      <section style={{ margin: '8rem 0' }}>
+      <section style={{ margin: '4rem 0' }}>
         <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
           <motion.div
             initial={{ opacity: 0, x: -40 }}
@@ -331,6 +300,37 @@ export default function Home() {
             </motion.div>
           ))}
         </motion.div>
+      </section>
+
+      {/* Text and Mockup Section */}
+      <section style={{ margin: '8rem 0' }}>
+        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem', alignItems: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+          >
+            <p className="text-2xl-mobile" style={{ fontSize: '2.5rem', lineHeight: '1.3', fontFamily: 'var(--font-sans)' }}>
+              OpenMidmarket <span style={{ fontWeight: 700 }}>empowers</span> CRE brokers
+            </p>
+          </motion.div>
+          <motion.div
+            className="mockup-container-mobile"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            style={{ position: 'relative', width: '120%', height: '500px' }}
+          >
+            <Image
+              src="/cre-mockup.png"
+              alt="Product Interface"
+              fill
+              style={{ objectFit: 'contain', objectPosition: 'center' }}
+            />
+          </motion.div>
+        </div>
       </section>
 
       {/* Digitizes Collaboration Section */}
