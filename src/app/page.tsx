@@ -333,6 +333,39 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* Digitizes Collaboration Section */}
+      <section style={{ margin: '10rem 0' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          style={{ maxWidth: '1100px' }}
+        >
+          <h2 style={{
+            fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+            fontWeight: 400,
+            fontFamily: 'var(--font-sans)',
+            lineHeight: '1.15',
+            color: 'var(--foreground)',
+            marginBottom: '2rem'
+          }}>
+            OpenMidmarket{' '}
+            <span style={{ fontWeight: 700 }}>digitizes collaboration</span>
+          </h2>
+          <p className="text-xl-mobile" style={{
+            fontSize: '1.5rem',
+            lineHeight: '1.7',
+            color: 'var(--text-dim)',
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 400,
+            maxWidth: '900px'
+          }}>
+            across property owners, brokers, property managers, lenders, insurers, and trades—creating operational efficiency, building trust, and increasing market liquidity and transaction volumes.
+          </p>
+        </motion.div>
+      </section>
+
       {/* Built for Everyone Section */}
       <section id="features" style={{ margin: '12rem 0' }}>
         <h2 style={{ 
