@@ -419,6 +419,64 @@ export default function Home() {
         ))}
       </section>
 
+      {/* Advocacy Section */}
+      <section style={{
+        margin: '10rem 0',
+        padding: '5rem 4rem',
+        backgroundColor: 'var(--foreground)',
+        color: 'var(--background)',
+        borderRadius: '16px'
+      }}
+      className="advocacy-section-mobile"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          className="section-grid-mobile"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '4rem',
+            alignItems: 'center'
+          }}
+        >
+          <div>
+            <span style={{
+              fontSize: '0.9rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.15em',
+              opacity: 0.6,
+              marginBottom: '1.5rem',
+              display: 'block'
+            }}>
+              Our Commitment
+            </span>
+            <h2 style={{
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+              fontWeight: 400,
+              fontFamily: 'var(--font-sans)',
+              lineHeight: '1.2',
+              marginBottom: '0'
+            }}>
+              <span style={{ fontWeight: 700 }}>5%</span> of profits dedicated to advocacy
+            </h2>
+          </div>
+          <div>
+            <p className="text-xl-mobile" style={{
+              fontSize: '1.35rem',
+              lineHeight: '1.7',
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 400,
+              opacity: 0.9
+            }}>
+              Mid-market property owners lack a unified voice, resulting in unfair rent control and burdensome regulations. OpenMidmarket advocates for its members, dedicating 5% of profits to regulatory initiatives that ensure fair, balanced policy.
+            </p>
+          </div>
+        </motion.div>
+      </section>
+
       {/* Visual Break */}
       <section className="visual-break-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', height: '60vh' }}>
         <motion.div
