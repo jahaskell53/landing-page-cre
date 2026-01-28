@@ -33,8 +33,8 @@ export default function RootLayout({
             <a href="#underwriting">CRM</a>
           </div>
           <div className="nav-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <a className="nav-login" href="#login" style={{ fontSize: '0.9rem', letterSpacing: '0.1em' }}>Login</a>
-            <button className="btn-primary">Sign Up Free</button>
+            <a className="nav-login" href="https://app.openmidmarket.com/login" style={{ fontSize: '0.9rem', letterSpacing: '0.1em' }}>Login</a>
+            <a className="btn-primary" href="https://app.openmidmarket.com/signup">Sign Up Free</a>
           </div>
         </nav>
         {children}

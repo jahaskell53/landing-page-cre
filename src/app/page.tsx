@@ -335,7 +335,7 @@ export default function Home() {
         <p style={{ maxWidth: '500px', margin: '0 auto 3rem', fontSize: '1.2rem', color: 'var(--text-dim)' }}>
           Join the exclusive circle of brokers who will define the future of the industry.
         </p>
-        <button className="btn-primary" style={{ padding: '1.5rem 4rem', fontSize: '1rem' }}>Join Now For Free</button>
+        <a className="btn-primary" href="https://app.openmidmarket.com/signup" style={{ padding: '1.5rem 4rem', fontSize: '1rem', display: 'inline-block', textDecoration: 'none' }}>Join Now For Free</a>
       </section>
 
       {/* Footer */}
