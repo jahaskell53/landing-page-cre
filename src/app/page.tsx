@@ -64,7 +64,7 @@ export default function Home() {
                 maxWidth: '600px'
               }}
             >
-              The only professional network built for the midmarket. Find local news, vacancies, and listings, designed for you.
+              CoStar-level intelligence brought to the midmarket. Find local news, vacancies, and listings, personalized to you.
             </motion.p>
           </motion.div>
         </div>
