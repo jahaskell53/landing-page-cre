@@ -1,30 +1,31 @@
 "use client";
 
-import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
+import { motion, useInView, animate } from "framer-motion";
 import Image from "next/image";
 import { ArrowUpRight, CheckCircle2, Globe, Shield, Zap } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function AnimatedNumber({ value, suffix = "", duration = 2 }: { value: number; suffix?: string; duration?: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => {
-    if (value >= 1000) {
-      return Math.round(latest).toLocaleString();
-    }
-    return Math.round(latest);
-  });
+  const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
     if (isInView) {
-      animate(count, value, { duration, ease: "easeOut" });
+      const controls = animate(0, value, {
+        duration,
+        ease: "easeOut",
+        onUpdate: (latest) => setDisplayValue(Math.round(latest))
+      });
+      return () => controls.stop();
     }
-  }, [isInView, value, duration, count]);
+  }, [isInView, value, duration]);
+
+  const formattedValue = value >= 1000 ? displayValue.toLocaleString() : displayValue;
 
   return (
     <span ref={ref}>
-      <motion.span>{rounded}</motion.span>{suffix}
+      {formattedValue}{suffix}
     </span>
   );
 }
