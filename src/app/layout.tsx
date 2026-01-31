@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Nav from "./Nav";
 
 export const metadata: Metadata = {
   title: "OM | Together, stronger",
@@ -24,19 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <nav className="nav">
-          <div className="nav-brand">OpenMidmarket</div>
-          <div className="nav-links" style={{ display: 'flex', justifyContent: 'center' }}>
-            <a href="#news">News</a>
-            <a href="#sales-listing">Sales Listing</a>
-            <a href="#seminars">Seminars</a>
-            <a href="#underwriting">CRM</a>
-          </div>
-          <div className="nav-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <a className="nav-login" href="https://app.openmidmarket.com/login" style={{ fontSize: '0.9rem', letterSpacing: '0.1em' }}>Login</a>
-            <a className="btn-primary" href="https://app.openmidmarket.com/signup">Sign Up Free</a>
-          </div>
-        </nav>
+        <Nav />
         {children}
       </body>
     </html>
