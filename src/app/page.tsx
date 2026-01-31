@@ -302,34 +302,142 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Text and Mockup Section */}
+      {/* Text and Mockup Section - Feature Peek */}
       <section style={{ margin: '8rem 0' }}>
-        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem', alignItems: 'center' }}>
+        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '4rem', alignItems: 'center' }}>
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
           >
-            <p className="text-2xl-mobile" style={{ fontSize: '2.5rem', lineHeight: '1.3', fontFamily: 'var(--font-sans)' }}>
+            <p className="text-2xl-mobile" style={{ fontSize: '2.5rem', lineHeight: '1.3', fontFamily: 'var(--font-sans)', marginBottom: '1.5rem' }}>
               OpenMidmarket <span style={{ fontWeight: 700 }}>empowers</span> CRE brokers
             </p>
+            <p style={{
+              fontSize: '1.1rem',
+              lineHeight: '1.7',
+              color: 'var(--text-dim)',
+              fontFamily: 'var(--font-sans)',
+              maxWidth: '400px'
+            }}>
+              Track every touchpoint with your network. See relationship history, recent interactions, and next best actions at a glance.
+            </p>
           </motion.div>
-          <motion.div
+
+          {/* Layered UI Cards */}
+          <div
             className="mockup-container-mobile"
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            style={{ position: 'relative', width: '120%', height: '500px' }}
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: '480px'
+            }}
           >
-            <Image
-              src="/cre-mockup.png"
-              alt="Product Interface"
-              fill
-              style={{ objectFit: 'contain', objectPosition: 'center' }}
-            />
-          </motion.div>
+            {/* Background Card - Contacts List */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true }}
+              style={{
+                position: 'absolute',
+                left: '0',
+                top: '10%',
+                width: '70%',
+                height: 'auto',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.12), 0 10px 30px -10px rgba(0, 0, 0, 0.08)',
+                zIndex: 1,
+                background: 'white'
+              }}
+            >
+              <Image
+                src="/mockups/cropped/contacts.png"
+                alt="Contacts List"
+                width={600}
+                height={700}
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
+            </motion.div>
+
+            {/* Foreground Card - Person Detail / Timeline */}
+            <motion.div
+              initial={{ opacity: 0, y: 40, x: 20 }}
+              whileInView={{ opacity: 1, y: 0, x: 0 }}
+              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true }}
+              style={{
+                position: 'absolute',
+                left: '40%',
+                top: '25%',
+                width: '55%',
+                height: 'auto',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 35px 100px -15px rgba(0, 0, 0, 0.18), 0 15px 40px -10px rgba(0, 0, 0, 0.12)',
+                zIndex: 2,
+                background: 'white'
+              }}
+            >
+              <Image
+                src="/mockups/cropped/person-detail.png"
+                alt="Contact Timeline"
+                width={700}
+                height={500}
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
+            </motion.div>
+
+            {/* Callout badge - Your Network */}
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true }}
+              style={{
+                position: 'absolute',
+                left: '-3%',
+                top: '8%',
+                background: 'var(--foreground)',
+                color: 'var(--background)',
+                padding: '0.5rem 0.9rem',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 500,
+                fontFamily: 'var(--font-sans)',
+                zIndex: 3,
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+              }}
+            >
+              Your Network
+            </motion.div>
+
+            {/* Callout badge - Full History */}
+            <motion.div
+              initial={{ opacity: 0, x: 10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true }}
+              style={{
+                position: 'absolute',
+                right: '-5%',
+                top: '55%',
+                background: 'var(--foreground)',
+                color: 'var(--background)',
+                padding: '0.5rem 0.9rem',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 500,
+                fontFamily: 'var(--font-sans)',
+                zIndex: 3,
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+              }}
+            >
+              Full History
+            </motion.div>
+          </div>
         </div>
       </section>
 
