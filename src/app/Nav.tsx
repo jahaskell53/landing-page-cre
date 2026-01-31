@@ -6,6 +6,7 @@ export default function Nav() {
   const pathname = usePathname();
   const isBrokers = pathname?.startsWith("/brokers");
   const isOwners = pathname?.startsWith("/owners");
+  const isLenders = pathname?.startsWith("/lenders");
 
   return (
     <nav className="nav">
@@ -23,10 +24,16 @@ export default function Nav() {
             <a href="#valuations">Valuations</a>
             <a href="#insights">Insights</a>
           </>
+        ) : isLenders ? (
+          <>
+            <a href="/">Home</a>
+            <a href="#dealflow">Deal Flow</a>
+            <a href="#underwriting">Underwriting</a>
+          </>
         ) : (
           <>
             <a href="/brokers">Brokers</a>
-            <a href="#lenders">Lenders</a>
+            <a href="/lenders">Lenders</a>
             <a href="/owners">Owners</a>
           </>
         )}

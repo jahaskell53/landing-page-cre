@@ -397,7 +397,7 @@ export default function Home() {
           { title: 'For Property Owners', desc: '', href: '/owners' },
           { title: 'For Brokers', desc: '', href: '/brokers' },
           { title: 'For Property Managers', desc: '' },
-          { title: 'For Lenders', desc: '' },
+          { title: 'For Lenders', desc: '', href: '/lenders' },
           { title: 'For Insurance Agencies', desc: '' },
         ].map((item, index) => {
           const row = (
