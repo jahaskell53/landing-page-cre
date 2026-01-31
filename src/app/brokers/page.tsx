@@ -213,7 +213,7 @@ export default function BrokersPage() {
                 fontFamily: 'var(--font-sans)',
                 marginBottom: '2rem'
               }}>
-                Never lose track of a connection. See every interaction, meeting,
+                Never lose track of a connection. With one easy sync from your email account, see every interaction, meeting,
                 and touchpoint with your network in one place. Know exactly when
                 to reach out and what to talk about.
               </p>
