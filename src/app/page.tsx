@@ -331,7 +331,7 @@ export default function Home() {
             style={{
               position: 'relative',
               width: '100%',
-              height: '480px'
+              height: '520px'
             }}
           >
             {/* Background Card - Contacts List */}
@@ -342,9 +342,9 @@ export default function Home() {
               viewport={{ once: true }}
               style={{
                 position: 'absolute',
-                left: '0',
-                top: '10%',
-                width: '70%',
+                left: '-5%',
+                top: '5%',
+                width: '85%',
                 height: 'auto',
                 borderRadius: '12px',
                 overflow: 'hidden',
@@ -354,10 +354,10 @@ export default function Home() {
               }}
             >
               <Image
-                src="/mockups/cropped/contacts.png"
+                src="/mockups/cropped/contacts-larger.png"
                 alt="Contacts List"
-                width={600}
-                height={700}
+                width={800}
+                height={600}
                 style={{ width: '100%', height: 'auto', display: 'block' }}
               />
             </motion.div>
@@ -370,9 +370,9 @@ export default function Home() {
               viewport={{ once: true }}
               style={{
                 position: 'absolute',
-                left: '40%',
-                top: '25%',
-                width: '55%',
+                right: '-8%',
+                top: '18%',
+                width: '45%',
                 height: 'auto',
                 borderRadius: '12px',
                 overflow: 'hidden',
