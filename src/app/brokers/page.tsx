@@ -4,6 +4,69 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
+// Message Bubble Component for Generate Leads section
+function MessageBubble() {
+  return (
+    <div
+      style={{
+        position: 'relative',
+        background: '#1c1c21',
+        borderRadius: '16px 16px 0 16px',
+        padding: '1.75rem 2rem',
+        color: 'white',
+        fontFamily: 'var(--font-sans)',
+        maxWidth: '100%',
+      }}
+    >
+      {/* Chat bubble tail */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          width: '20px',
+          height: '20px',
+          background: '#1c1c21',
+          clipPath: 'polygon(0 0, 100% 0, 100% 100%)',
+          transform: 'translateY(100%)',
+        }}
+      />
+      <p style={{
+        fontSize: '1.1rem',
+        lineHeight: 1.7,
+        margin: 0,
+        marginBottom: '1.25rem',
+      }}>
+        Hi Sandy,
+      </p>
+      <p style={{
+        fontSize: '1.1rem',
+        lineHeight: 1.7,
+        margin: 0,
+        marginBottom: '1.25rem',
+      }}>
+        I'm reaching out because I'm currently working with a few active buyers specifically looking for multifamily units in the Mission District.
+      </p>
+      <p style={{
+        fontSize: '1.1rem',
+        lineHeight: 1.7,
+        margin: 0,
+        marginBottom: '1.5rem',
+      }}>
+        Your property at 455 Guerrero St caught my eye—have you given any thought to selling, or would you be open to a valuation to see where the market sits today? Even if the timing isn't right, I'd love to share some recent data on what's moving in the area.
+      </p>
+      <p style={{
+        fontSize: '0.85rem',
+        lineHeight: 1.5,
+        margin: 0,
+        color: 'rgba(255, 255, 255, 0.5)',
+      }}>
+        less than a minute ago
+      </p>
+    </div>
+  );
+}
+
 export default function BrokersPage() {
   const fadeInUp = {
     initial: { opacity: 0, y: 40 },
@@ -237,7 +300,7 @@ export default function BrokersPage() {
             gap: '4rem',
             alignItems: 'center'
           }}>
-            {/* Mockup - New Lead */}
+            {/* Mockup - New Lead Message Bubble */}
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -246,19 +309,11 @@ export default function BrokersPage() {
               className="mockup-container-mobile"
               style={{
                 position: 'relative',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.15)',
-                background: 'white'
+                borderRadius: '16px',
+                boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.25)',
               }}
             >
-              <Image
-                src="/mockups/cropped/new-lead.png"
-                alt="New lead outreach"
-                width={900}
-                height={700}
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-              />
+              <MessageBubble />
             </motion.div>
 
             <motion.div
