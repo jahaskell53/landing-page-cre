@@ -67,8 +67,7 @@ export default function BrokersPage() {
                 maxWidth: '600px'
               }}
             >
-              OpenMidmarket gives CRE brokers the tools to nurture relationships,
-              stay informed, and grow their business in the midmarket space.
+              Generate more leads, faster deal cycles, and higher commissions.
             </motion.p>
           </motion.div>
         </div>
