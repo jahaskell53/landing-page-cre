@@ -297,117 +297,51 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Layered UI Cards */}
-          <div
-            className="mockup-container-mobile"
-            style={{
-              position: 'relative',
-              width: '100%',
-              height: '520px'
-            }}
-          >
-            {/* Background Card - Contacts List */}
+          {/* Full History Card - aligned with text */}
+          <div className="mockup-container-mobile" style={{ position: 'relative', width: '50%' }}>
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
               style={{
-                position: 'absolute',
-                left: '-5%',
-                top: '5%',
-                width: '85%',
-                height: 'auto',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.12), 0 10px 30px -10px rgba(0, 0, 0, 0.08)',
-                zIndex: 1,
-                background: 'white'
-              }}
-            >
-              <Image
-                src="/mockups/cropped/contacts-larger.png"
-                alt="Contacts List"
-                width={800}
-                height={600}
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-              />
-            </motion.div>
-
-            {/* Foreground Card - Person Detail / Timeline */}
-            <motion.div
-              initial={{ opacity: 0, y: 40, x: 20 }}
-              whileInView={{ opacity: 1, y: 0, x: 0 }}
-              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              viewport={{ once: true }}
-              style={{
-                position: 'absolute',
-                right: '-8%',
-                top: '18%',
-                width: '45%',
-                height: 'auto',
+                position: 'relative',
+                width: '100%',
+                maxWidth: '700px',
                 borderRadius: '12px',
                 overflow: 'hidden',
                 boxShadow: '0 35px 100px -15px rgba(0, 0, 0, 0.18), 0 15px 40px -10px rgba(0, 0, 0, 0.12)',
-                zIndex: 2,
                 background: 'white'
               }}
             >
               <Image
                 src="/mockups/cropped/person-detail.png"
-                alt="Contact Timeline"
+                alt="Full History"
                 width={700}
                 height={500}
                 style={{ width: '100%', height: 'auto', display: 'block' }}
               />
-            </motion.div>
-
-            {/* Callout badge - Your Network */}
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              viewport={{ once: true }}
-              style={{
-                position: 'absolute',
-                left: '-3%',
-                top: '8%',
-                background: 'var(--foreground)',
-                color: 'var(--background)',
-                padding: '0.5rem 0.9rem',
-                borderRadius: '6px',
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                fontFamily: 'var(--font-sans)',
-                zIndex: 3,
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
-              }}
-            >
-              Your Network
-            </motion.div>
-
-            {/* Callout badge - Full History */}
-            <motion.div
-              initial={{ opacity: 0, x: 10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              viewport={{ once: true }}
-              style={{
-                position: 'absolute',
-                right: '-5%',
-                top: '55%',
-                background: 'var(--foreground)',
-                color: 'var(--background)',
-                padding: '0.5rem 0.9rem',
-                borderRadius: '6px',
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                fontFamily: 'var(--font-sans)',
-                zIndex: 3,
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
-              }}
-            >
-              Full History
+              <motion.div
+                initial={{ opacity: 0, x: 10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                viewport={{ once: true }}
+                style={{
+                  position: 'absolute',
+                  right: '1rem',
+                  bottom: '1rem',
+                  background: 'var(--foreground)',
+                  color: 'var(--background)',
+                  padding: '0.5rem 0.9rem',
+                  borderRadius: '6px',
+                  fontSize: '0.75rem',
+                  fontWeight: 500,
+                  fontFamily: 'var(--font-sans)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+                }}
+              >
+                Full History
+              </motion.div>
             </motion.div>
           </div>
         </div>
