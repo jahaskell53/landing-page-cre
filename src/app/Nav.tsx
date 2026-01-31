@@ -10,7 +10,7 @@ export default function Nav() {
 
   return (
     <nav className="nav">
-      <div className="nav-brand">OpenMidmarket</div>
+      <a href="/" className="nav-brand">OpenMidmarket</a>
       <div className="nav-links" style={{ display: "flex", justifyContent: "center" }}>
         {isBrokers ? (
           <>
