@@ -276,7 +276,7 @@ export default function Home() {
 
       {/* Text and Mockup Section - Feature Peek */}
       <section style={{ margin: '8rem 0' }}>
-        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '4rem', alignItems: 'center' }}>
+        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '7.5rem', alignItems: 'center', marginLeft: '18%' }}>
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
