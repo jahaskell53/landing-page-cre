@@ -51,9 +51,9 @@ export default function BrokersPage() {
               }}
             >
               <span style={{ fontFamily: 'var(--font-kyoto)', fontStyle: 'italic' }}>
-                Deals
+                More deals.
               </span>{' '}
-              you can't find anywhere else
+              Higher commissions.
             </motion.h1>
             <motion.p
               variants={fadeInUp}
