@@ -113,15 +113,6 @@ export default function Home() {
           <div style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: 'url(/images/handshake.jpeg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            zIndex: 0
-          }} />
-          <div style={{
-            position: 'absolute',
-            inset: 0,
             width: '100%',
             height: '100%',
             zIndex: 2
@@ -493,7 +484,7 @@ export default function Home() {
           { title: 'For Insurance Agencies', desc: '' },
         ].map((item, index) => {
           const row = (
-            <motion.div
+            <motion.div 
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
