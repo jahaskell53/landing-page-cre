@@ -34,7 +34,7 @@ export default function Nav() {
           <>
             <a href="/brokers">Brokers</a>
             <a href="/lenders">Lenders</a>
-            <a href="/owners">Owners</a>
+            <a href="/owners">Property Owners</a>
           </>
         )}
       </div>
