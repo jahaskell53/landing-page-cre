@@ -76,7 +76,7 @@ export default function Home() {
                 marginBottom: '2rem'
               }}
             >
-              <span style={{ fontStyle: 'italic', fontWeight: 700 }}>Institutional-grade</span> intelligence for the midmarket
+              <span style={{ fontStyle: 'italic', fontWeight: 700 }}>Institutional-grade</span> AI hub for the midmarket
             </motion.h1>
             <motion.p
               variants={fadeInUp}
@@ -90,7 +90,7 @@ export default function Home() {
                 maxWidth: '600px'
               }}
             >
-              The first AI platform built for multi-family brokers, owners, and operators.
+              Built for multi-family brokers, owners, and operators.
             </motion.p>
           </motion.div>
         </div>
