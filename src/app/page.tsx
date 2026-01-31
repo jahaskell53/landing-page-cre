@@ -474,7 +474,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Built for Everyone Section */}
+      {/* Built for the Midmarket Section */}
       <section id="features" style={{ margin: '12rem 0' }}>
         <h2 style={{ 
           fontSize: 'clamp(3rem, 10vw, 6rem)', 
@@ -482,7 +482,7 @@ export default function Home() {
           fontFamily: 'var(--font-sans)',
           fontWeight: 400,
           color: 'var(--foreground)'
-        }}>Built for Everyone</h2>
+        }}>Built for the Midmarket</h2>
         <div className="divider" />
 
         {[
