@@ -90,7 +90,7 @@ export default function Home() {
                 maxWidth: '600px'
               }}
             >
-              Built for multifamily owners, brokers, and property managers.
+              Built for multifamily owners, brokers, lenders, and property managers.
             </motion.p>
           </motion.div>
         </div>
