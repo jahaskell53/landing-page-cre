@@ -76,7 +76,7 @@ export default function Home() {
                 marginBottom: '2rem'
               }}
             >
-              <span style={{ fontFamily: 'var(--font-kyoto)', fontStyle: 'italic' }}>Institutional-grade</span> intelligence for the midmarket
+              <span style={{ fontStyle: 'italic', fontWeight: 700 }}>Institutional-grade</span> intelligence for the midmarket
             </motion.h1>
             <motion.p
               variants={fadeInUp}
