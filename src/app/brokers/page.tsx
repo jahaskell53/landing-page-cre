@@ -216,32 +216,6 @@ export default function BrokersPage() {
               }}
             >
               {/* Contacts List Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-                style={{
-                  position: 'absolute',
-                  left: '0',
-                  top: '5%',
-                  width: '70%',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.15)',
-                  background: 'white',
-                  zIndex: 1
-                }}
-              >
-                <Image
-                  src="/mockups/cropped/contacts-larger.png"
-                  alt="Contacts List"
-                  width={600}
-                  height={500}
-                  style={{ width: '100%', height: 'auto', display: 'block' }}
-                />
-              </motion.div>
-
               {/* Person Detail Card */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
