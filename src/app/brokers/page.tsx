@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import Footer from "../Footer";
+// import Footer from "../Footer";
 
 const HERO_IMAGES = ["/images/handshake-high-res.png", "/images/women-handshake.png"];
 const HERO_CYCLE_MS = 5000;
@@ -573,7 +573,7 @@ export default function BrokersPage() {
           </motion.div>
         </section>
 
-        <Footer />
+        {/* <Footer /> */}
       </main>
     </>
   );

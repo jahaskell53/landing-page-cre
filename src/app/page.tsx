@@ -4,7 +4,7 @@ import { motion, useInView, animate } from "framer-motion";
 import Image from "next/image";
 import { ArrowUpRight, CheckCircle2, Globe, Shield, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import Footer from "./Footer";
+// import Footer from "./Footer";
 
 function AnimatedNumber({ value, suffix = "", duration = 2 }: { value: number; suffix?: string; duration?: number }) {
   const ref = useRef(null);
@@ -528,7 +528,7 @@ export default function Home() {
         <a className="btn-primary" href="https://app.openmidmarket.com/signup" style={{ padding: '1.5rem 4rem', fontSize: '1rem', display: 'inline-block', textDecoration: 'none' }}>Join Now For Free</a>
       </section>
 
-      <Footer />
+      {/* <Footer /> */}
 
       <style jsx>{`
         .feature-row {

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight, TrendingUp, Shield, Bell } from "lucide-react";
-import Footer from "../Footer";
+// import Footer from "../Footer";
 
 const HERO_IMAGES = ["/images/detail.png", "/images/office.png"];
 const HERO_CYCLE_MS = 5000;
@@ -625,7 +625,7 @@ export default function OwnersPage() {
           </motion.div>
         </section>
 
-        <Footer />
+        {/* <Footer /> */}
       </main>
     </>
   );
