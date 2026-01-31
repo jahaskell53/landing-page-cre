@@ -354,7 +354,7 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          style={{ maxWidth: '1100px' }}
+          style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}
         >
           <h2 style={{
             fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
@@ -373,7 +373,8 @@ export default function Home() {
             color: 'var(--text-dim)',
             fontFamily: 'var(--font-sans)',
             fontWeight: 400,
-            maxWidth: '900px'
+            maxWidth: '900px',
+            margin: '0 auto'
           }}>
             across property owners, brokers, property managers, lenders, insurers, and trades—creating operational efficiency, building trust, and increasing market liquidity and transaction volumes.
           </p>
