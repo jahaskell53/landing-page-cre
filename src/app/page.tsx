@@ -392,8 +392,8 @@ export default function Home() {
         <div className="divider" />
 
         {[
-          { title: 'For Property Owners', desc: '', href: '/brokers' },
-          { title: 'For Brokers', desc: '' },
+          { title: 'For Property Owners', desc: '' },
+          { title: 'For Brokers', desc: '', href: '/brokers' },
           { title: 'For Property Managers', desc: '' },
           { title: 'For Lenders', desc: '' },
           { title: 'For Insurance Agencies', desc: '' },
