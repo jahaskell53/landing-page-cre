@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 export default function Nav() {
   const pathname = usePathname();
   const isBrokers = pathname?.startsWith("/brokers");
+  const isOwners = pathname?.startsWith("/owners");
 
   return (
     <nav className="nav">
@@ -16,11 +17,17 @@ export default function Nav() {
             <a href="#relationships">CRM</a>
             <a href="#seminars">Seminars</a>
           </>
+        ) : isOwners ? (
+          <>
+            <a href="/">Home</a>
+            <a href="#valuations">Valuations</a>
+            <a href="#insights">Insights</a>
+          </>
         ) : (
           <>
             <a href="/brokers">Brokers</a>
             <a href="#lenders">Lenders</a>
-            <a href="#owners">Owners</a>
+            <a href="/owners">Owners</a>
           </>
         )}
       </div>

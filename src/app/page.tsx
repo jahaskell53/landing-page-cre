@@ -276,7 +276,7 @@ export default function Home() {
 
       {/* Text and Mockup Section - Feature Peek */}
       <section style={{ margin: '8rem 0' }}>
-        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '7.5rem', alignItems: 'center', marginLeft: '18%' }}>
+        <div className="section-grid-mobile feature-peek-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '7.5rem', alignItems: 'center', marginLeft: '18%' }}>
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -393,7 +393,7 @@ export default function Home() {
         <div className="divider" />
 
         {[
-          { title: 'For Property Owners', desc: '' },
+          { title: 'For Property Owners', desc: '', href: '/owners' },
           { title: 'For Brokers', desc: '', href: '/brokers' },
           { title: 'For Property Managers', desc: '' },
           { title: 'For Lenders', desc: '' },

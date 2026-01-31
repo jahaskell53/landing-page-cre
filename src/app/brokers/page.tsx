@@ -12,6 +12,7 @@ const HERO_CYCLE_MS = 5000;
 function MessageBubble() {
   return (
     <div
+      className="message-bubble-mobile"
       style={{
         position: 'relative',
         background: '#1c1c21',
@@ -248,7 +249,7 @@ export default function BrokersPage() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
-              className="mockup-container-mobile"
+              className="mockup-container-mobile relationships-mockup"
               style={{
                 position: 'relative',
                 height: '500px'
@@ -285,7 +286,7 @@ export default function BrokersPage() {
         </section>
 
         {/* Divider */}
-        <div className="divider" style={{ margin: '9rem 0' }} />
+        <div className="divider divider-mobile" style={{ margin: '9rem 0' }} />
 
         {/* Value Prop 2: Local News & Regulation */}
         <section style={{ margin: '8rem 0' }}>
@@ -344,7 +345,7 @@ export default function BrokersPage() {
         </section>
 
         {/* Divider */}
-        <div className="divider" style={{ margin: '6rem 0' }} />
+        <div className="divider divider-mobile" style={{ margin: '6rem 0' }} />
 
         {/* Value Prop 3: Host Seminars */}
         <section id="seminars" style={{ margin: '8rem 0' }}>
@@ -391,7 +392,7 @@ export default function BrokersPage() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
-              className="mockup-container-mobile"
+              className="mockup-container-mobile seminars-mockup"
               style={{
                 position: 'relative',
                 height: '500px',
@@ -402,6 +403,7 @@ export default function BrokersPage() {
             >
               {/* Seminar Card UI */}
               <motion.div
+                className="seminar-card-mobile"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
@@ -511,14 +513,17 @@ export default function BrokersPage() {
         </section>
 
         {/* CTA Section */}
-        <section style={{
-          margin: '8rem 0',
-          padding: '5rem 4rem',
-          backgroundColor: 'var(--foreground)',
-          color: 'var(--background)',
-          borderRadius: '16px',
-          textAlign: 'center'
-        }}>
+        <section
+          className="cta-section-mobile"
+          style={{
+            margin: '8rem 0',
+            padding: '5rem 4rem',
+            backgroundColor: 'var(--foreground)',
+            color: 'var(--background)',
+            borderRadius: '16px',
+            textAlign: 'center'
+          }}
+        >
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
