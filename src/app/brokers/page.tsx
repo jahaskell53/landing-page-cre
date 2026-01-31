@@ -121,10 +121,10 @@ export default function BrokersPage() {
             <motion.p
               variants={fadeInUp}
               style={{
-                fontSize: '1.75rem',
+                fontSize: '1.95rem',
                 lineHeight: '1.6',
                 fontFamily: 'var(--font-sans)',
-                fontWeight: 400,
+                fontWeight: 500,
                 color: 'var(--foreground)',
                 opacity: 0.8,
                 maxWidth: '600px'
@@ -204,13 +204,14 @@ export default function BrokersPage() {
                 color: 'var(--foreground)'
               }}>
                 Maintain your{' '}
-                <span style={{ fontWeight: 700 }}>relationships</span>
+                <span style={{ fontWeight: 600 }}>relationships</span>
               </h2>
               <p style={{
-                fontSize: '1.2rem',
+                fontSize: '1.35rem',
                 lineHeight: '1.7',
                 color: 'var(--text-dim)',
                 fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
                 marginBottom: '2rem'
               }}>
                 Never lose track of a connection. With one easy sync from your email account, see every interaction, meeting,
@@ -303,13 +304,14 @@ export default function BrokersPage() {
                 color: 'var(--foreground)'
               }}>
                 Generate more{' '}
-                <span style={{ fontWeight: 700 }}>leads</span>
+                <span style={{ fontWeight: 600 }}>leads</span>
               </h2>
               <p style={{
-                fontSize: '1.2rem',
+                fontSize: '1.35rem',
                 lineHeight: '1.7',
                 color: 'var(--text-dim)',
                 fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
                 marginBottom: '2rem'
               }}>
                 Find qualified buyers and sellers in your markets. Reach decision-makers
@@ -345,13 +347,14 @@ export default function BrokersPage() {
                 color: 'var(--foreground)'
               }}>
                 Host{' '}
-                <span style={{ fontWeight: 700 }}>seminars</span>
+                <span style={{ fontWeight: 600 }}>seminars</span>
               </h2>
               <p style={{
-                fontSize: '1.2rem',
+                fontSize: '1.35rem',
                 lineHeight: '1.7',
                 color: 'var(--text-dim)',
                 fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
                 marginBottom: '2rem'
               }}>
                 Position yourself as a market expert. Create and promote educational
@@ -507,13 +510,11 @@ export default function BrokersPage() {
               lineHeight: '1.2',
               marginBottom: '1.5rem'
             }}>
-              Ready to grow your{' '}
-              <span style={{ fontFamily: 'var(--font-kyoto)', fontStyle: 'italic' }}>
-                business
-              </span>?
+              Ready to grow your business?
             </h2>
             <p style={{
-              fontSize: '1.25rem',
+              fontSize: '1.35rem',
+              fontWeight: 500,
               opacity: 0.8,
               maxWidth: '600px',
               margin: '0 auto 2.5rem',
