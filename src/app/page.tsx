@@ -77,7 +77,7 @@ export default function Home() {
                 marginBottom: '2rem'
               }}
             >
-              <span style={{ fontStyle: 'italic', fontWeight: 700 }}>Institutional-grade</span> AI hub for the midmarket
+              <span style={{ fontStyle: 'italic', fontWeight: 700 }}>Institutional-grade</span> AI hub for the midmarket CRE
             </motion.h1>
             <motion.p
               variants={fadeInUp}
