@@ -486,45 +486,48 @@ export default function Home() {
         <div className="divider" />
 
         {[
-          { title: 'For Property Owners', desc: '' },
+          { title: 'For Property Owners', desc: '', href: '/brokers' },
           { title: 'For Brokers', desc: '' },
           { title: 'For Property Managers', desc: '' },
           { title: 'For Lenders', desc: '' },
           { title: 'For Insurance Agencies', desc: '' },
-        ].map((item, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            viewport={{ once: true }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '3rem 0',
-              borderBottom: '1px solid var(--border)',
-              transition: 'background-color 0.3s ease'
-            }}
-            className="feature-row"
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '3rem' }}>
-              <span style={{ opacity: 0.4, fontFamily: 'var(--font-sans)' }}>0{index + 1}</span>
-              <div>
-                <h3 style={{ 
-                  fontSize: '2rem',
-                  fontFamily: 'var(--font-sans)',
-                  fontWeight: 400,
-                  color: 'var(--foreground)'
-                }}>{item.title}</h3>
-                {item.desc && <p style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-sans)' }}>{item.desc}</p>}
+        ].map((item, index) => {
+          const row = (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              viewport={{ once: true }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '3rem 0',
+                borderBottom: '1px solid var(--border)',
+                transition: 'background-color 0.3s ease'
+              }}
+              className="feature-row"
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '3rem' }}>
+                <span style={{ opacity: 0.4, fontFamily: 'var(--font-sans)' }}>0{index + 1}</span>
+                <div>
+                  <h3 style={{ 
+                    fontSize: '2rem',
+                    fontFamily: 'var(--font-sans)',
+                    fontWeight: 400,
+                    color: 'var(--foreground)'
+                  }}>{item.title}</h3>
+                  {item.desc && <p style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-sans)' }}>{item.desc}</p>}
+                </div>
               </div>
-            </div>
-            <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '4rem' }}>
-              <ArrowUpRight strokeWidth={1} size={32} />
-            </div>
-          </motion.div>
-        ))}
+              <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '4rem' }}>
+                <ArrowUpRight strokeWidth={1} size={32} />
+              </div>
+            </motion.div>
+          );
+          return item.href ? <a key={index} href={item.href} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>{row}</a> : row;
+        })}
       </section>
 
       {/* Advocacy Section */}
