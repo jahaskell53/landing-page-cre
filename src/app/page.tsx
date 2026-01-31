@@ -67,8 +67,8 @@ export default function Home() {
           >
             <motion.h1
               variants={fadeInUp}
-              style={{ 
-                fontSize: 'clamp(3rem, 10vw, 6rem)', 
+              style={{
+                fontSize: 'clamp(3rem, 10vw, 6rem)',
                 lineHeight: '1.1',
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 400,
@@ -76,11 +76,11 @@ export default function Home() {
                 marginBottom: '2rem'
               }}
             >
-              <span style={{ fontFamily: 'var(--font-kyoto)', fontStyle: 'italic' }}>Deals</span> you can't find anywhere else
+              <span style={{ fontFamily: 'var(--font-kyoto)', fontStyle: 'italic' }}>Institutional-grade</span> intelligence for the midmarket
             </motion.h1>
             <motion.p
               variants={fadeInUp}
-              style={{ 
+              style={{
                 fontSize: '1.75rem',
                 lineHeight: '1.6',
                 fontFamily: 'var(--font-sans)',
@@ -90,7 +90,7 @@ export default function Home() {
                 maxWidth: '600px'
               }}
             >
-              Institutional-grade intelligence brought to the midmarket. Find local news, vacancies, and listings, personalized to you.
+              The first AI platform built for multi-family brokers, owners, and operators.
             </motion.p>
           </motion.div>
         </div>
