@@ -182,7 +182,7 @@ export default function BrokersPage() {
 
       <main className="container">
         {/* Value Prop 1: Maintaining Relationships */}
-        <section style={{ margin: '8rem 0' }}>
+        <section id="relationships" style={{ margin: '8rem 0' }}>
           <div className="section-grid-mobile" style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
@@ -323,7 +323,7 @@ export default function BrokersPage() {
         <div className="divider" style={{ margin: '6rem 0' }} />
 
         {/* Value Prop 3: Host Seminars */}
-        <section style={{ margin: '8rem 0' }}>
+        <section id="seminars" style={{ margin: '8rem 0' }}>
           <div className="section-grid-mobile" style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',

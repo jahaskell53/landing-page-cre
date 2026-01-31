@@ -13,7 +13,7 @@ export default function Nav() {
         {isBrokers ? (
           <>
             <a href="/">Home</a>
-            <a href="#underwriting">CRM</a>
+            <a href="#relationships">CRM</a>
             <a href="#seminars">Seminars</a>
           </>
         ) : (
