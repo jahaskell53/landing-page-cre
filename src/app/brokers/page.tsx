@@ -113,25 +113,6 @@ export default function BrokersPage() {
               zIndex: 1,
               opacity: 0.6
             }} />
-            {/* Floating emails/history component - upper left */}
-            <div style={{
-              position: 'absolute',
-              left: '-15%',
-              top: '3%',
-              width: '50%',
-              height: 'auto',
-              zIndex: 3,
-              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
-            }}>
-              <Image
-                src="/emails-cropped.png"
-                alt="Emails"
-                width={900}
-                height={700}
-                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
-                priority
-              />
-            </div>
           </div>
         </motion.div>
       </section>
