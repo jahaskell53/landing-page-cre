@@ -12,10 +12,9 @@ export default function Nav() {
       <div className="nav-links" style={{ display: "flex", justifyContent: "center" }}>
         {isBrokers ? (
           <>
-            <a href="#news">News</a>
-            <a href="#sales-listing">Sales Listing</a>
-            <a href="#seminars">Seminars</a>
+            <a href="/">Home</a>
             <a href="#underwriting">CRM</a>
+            <a href="#seminars">Seminars</a>
           </>
         ) : (
           <>
