@@ -204,8 +204,8 @@ export default function BrokersPage() {
                 viewport={{ once: true }}
                 style={{
                   position: 'absolute',
-                  right: '-5%',
-                  top: '20%',
+                  right: '8%',
+                  top: '-5%',
                   width: '55%',
                   borderRadius: '12px',
                   overflow: 'hidden',
@@ -227,7 +227,7 @@ export default function BrokersPage() {
         </section>
 
         {/* Divider */}
-        <div className="divider" style={{ margin: '6rem 0' }} />
+        <div className="divider" style={{ margin: '9rem 0' }} />
 
         {/* Value Prop 2: Local News & Regulation */}
         <section style={{ margin: '8rem 0' }}>
