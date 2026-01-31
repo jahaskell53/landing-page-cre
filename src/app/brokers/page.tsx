@@ -132,25 +132,6 @@ export default function BrokersPage() {
                 priority
               />
             </div>
-            {/* Floating article component - bottom left extending past edge */}
-            <div style={{
-              position: 'absolute',
-              left: '-20%',
-              bottom: '5%',
-              width: '110%',
-              height: 'auto',
-              zIndex: 2,
-              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
-            }}>
-              <Image
-                src="/article-cropped.png"
-                alt="Article"
-                width={1200}
-                height={900}
-                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
-                priority
-              />
-            </div>
           </div>
         </motion.div>
       </section>
