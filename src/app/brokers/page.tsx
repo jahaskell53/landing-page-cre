@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import Footer from "../Footer";
 
 const HERO_IMAGES = ["/images/handshake-high-res.png", "/images/women-handshake.png"];
 const HERO_CYCLE_MS = 5000;
@@ -572,23 +573,7 @@ export default function BrokersPage() {
           </motion.div>
         </section>
 
-        {/* Footer */}
-        <footer className="footer-mobile" style={{
-          padding: '4rem 0',
-          borderTop: '1px solid var(--border)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontSize: '0.8rem'
-        }}>
-          <div style={{ letterSpacing: '0.1em' }}>
-            © 2026 OM CRM. All Rights Reserved.
-          </div>
-          <div className="footer-links-mobile" style={{ display: 'flex', gap: '2rem', letterSpacing: '0.1em' }}>
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Instagram</a>
-          </div>
-        </footer>
+        <Footer />
       </main>
     </>
   );

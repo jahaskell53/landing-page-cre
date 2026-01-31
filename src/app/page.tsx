@@ -4,6 +4,7 @@ import { motion, useInView, animate } from "framer-motion";
 import Image from "next/image";
 import { ArrowUpRight, CheckCircle2, Globe, Shield, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import Footer from "./Footer";
 
 function AnimatedNumber({ value, suffix = "", duration = 2 }: { value: number; suffix?: string; duration?: number }) {
   const ref = useRef(null);
@@ -527,17 +528,7 @@ export default function Home() {
         <a className="btn-primary" href="https://app.openmidmarket.com/signup" style={{ padding: '1.5rem 4rem', fontSize: '1rem', display: 'inline-block', textDecoration: 'none' }}>Join Now For Free</a>
       </section>
 
-      {/* Footer */}
-      <footer className="footer-mobile" style={{ padding: '4rem 0', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-        <div style={{ letterSpacing: '0.1em' }}>
-          © 2026 OM CRM. All Rights Reserved.
-        </div>
-        <div className="footer-links-mobile" style={{ display: 'flex', gap: '2rem', letterSpacing: '0.1em' }}>
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
-          <a href="#">Instagram</a>
-        </div>
-      </footer>
+      <Footer />
 
       <style jsx>{`
         .feature-row {
