@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
-const HERO_IMAGES = ["/images/handshake.jpeg", "/images/women-handshake.png"];
+const HERO_IMAGES = ["/images/handshake-high-res.png", "/images/women-handshake.png"];
 const HERO_CYCLE_MS = 5000;
 
 // Message Bubble Component for Generate Leads section
