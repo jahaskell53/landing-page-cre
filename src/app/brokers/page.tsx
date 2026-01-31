@@ -237,7 +237,7 @@ export default function BrokersPage() {
             gap: '4rem',
             alignItems: 'center'
           }}>
-            {/* Mockup - News Cards */}
+            {/* Mockup - New Lead */}
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -246,62 +246,19 @@ export default function BrokersPage() {
               className="mockup-container-mobile"
               style={{
                 position: 'relative',
-                height: '500px'
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.15)',
+                background: 'white'
               }}
             >
-              {/* Article Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-                style={{
-                  position: 'absolute',
-                  left: '-5%',
-                  top: '0',
-                  width: '110%',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.15)',
-                  background: 'white',
-                  zIndex: 1
-                }}
-              >
-                <Image
-                  src="/mockups/cropped/post.png"
-                  alt="News Article"
-                  width={900}
-                  height={643}
-                  style={{ width: '100%', height: 'auto', display: 'block' }}
-                />
-              </motion.div>
-
-              {/* Second Article Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                viewport={{ once: true }}
-                style={{
-                  position: 'absolute',
-                  right: '-10%',
-                  bottom: '5%',
-                  width: '70%',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  boxShadow: '0 35px 100px -15px rgba(0, 0, 0, 0.2)',
-                  background: 'white',
-                  zIndex: 2
-                }}
-              >
-                <Image
-                  src="/mockups/cropped/new-post.png.png"
-                  alt="Create Post"
-                  width={500}
-                  height={400}
-                  style={{ width: '100%', height: 'auto', display: 'block' }}
-                />
-              </motion.div>
+              <Image
+                src="/mockups/cropped/new-lead.png"
+                alt="New lead outreach"
+                width={900}
+                height={700}
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
             </motion.div>
 
             <motion.div
