@@ -344,7 +344,7 @@ export default function BrokersPage() {
                   position: 'absolute',
                   left: '-5%',
                   top: '0',
-                  width: '90%',
+                  width: '110%',
                   borderRadius: '12px',
                   overflow: 'hidden',
                   boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.15)',
@@ -355,8 +355,8 @@ export default function BrokersPage() {
                 <Image
                   src="/mockups/cropped/post.png"
                   alt="News Article"
-                  width={700}
-                  height={500}
+                  width={900}
+                  height={643}
                   style={{ width: '100%', height: 'auto', display: 'block' }}
                 />
               </motion.div>
