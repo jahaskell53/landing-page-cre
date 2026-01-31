@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowRight, Users, Newspaper, Calendar } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function BrokersPage() {
   const fadeInUp = {
@@ -116,32 +116,6 @@ export default function BrokersPage() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
             >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                marginBottom: '1.5rem'
-              }}>
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  background: 'var(--foreground)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <Users size={24} color="var(--background)" />
-                </div>
-                <span style={{
-                  fontSize: '0.85rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  color: 'var(--text-dim)'
-                }}>
-                  Relationship Management
-                </span>
-              </div>
               <h2 style={{
                 fontSize: 'clamp(2rem, 5vw, 3.5rem)',
                 fontWeight: 400,
@@ -347,32 +321,6 @@ export default function BrokersPage() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
             >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                marginBottom: '1.5rem'
-              }}>
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  background: 'var(--foreground)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <Newspaper size={24} color="var(--background)" />
-                </div>
-                <span style={{
-                  fontSize: '0.85rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  color: 'var(--text-dim)'
-                }}>
-                  Market Intelligence
-                </span>
-              </div>
               <h2 style={{
                 fontSize: 'clamp(2rem, 5vw, 3.5rem)',
                 fontWeight: 400,
@@ -444,32 +392,6 @@ export default function BrokersPage() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
             >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                marginBottom: '1.5rem'
-              }}>
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  background: 'var(--foreground)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <Calendar size={24} color="var(--background)" />
-                </div>
-                <span style={{
-                  fontSize: '0.85rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  color: 'var(--text-dim)'
-                }}>
-                  Events & Education
-                </span>
-              </div>
               <h2 style={{
                 fontSize: 'clamp(2rem, 5vw, 3.5rem)',
                 fontWeight: 400,
