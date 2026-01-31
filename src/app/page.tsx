@@ -130,15 +130,15 @@ export default function Home() {
             {/* Floating map component - center right */}
             <div style={{ 
               position: 'absolute', 
-              left: '15%',
-              top: '30%',
-              width: '35%', 
+              left: '0%',
+              top: '5%',
+              width: '90%', 
               height: 'auto',
               zIndex: 2,
               filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
             }}>
               <Image
-                src="/map-cropped.png"
+                src="/mockups/cropped/property-map.png"
                 alt="Map"
                 width={1000}
                 height={800}
@@ -149,7 +149,7 @@ export default function Home() {
             {/* Floating article component - bottom left extending past edge */}
             <div style={{ 
               position: 'absolute', 
-              left: '-20%',
+              left: '-25%',
               bottom: '5%',
               width: '110%', 
               height: 'auto',
