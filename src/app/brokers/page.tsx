@@ -133,25 +133,6 @@ export default function BrokersPage() {
                 priority
               />
             </div>
-            {/* Floating map component - center right */}
-            <div style={{
-              position: 'absolute',
-              left: '15%',
-              top: '30%',
-              width: '35%',
-              height: 'auto',
-              zIndex: 2,
-              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
-            }}>
-              <Image
-                src="/map-cropped.png"
-                alt="Map"
-                width={1000}
-                height={800}
-                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
-                priority
-              />
-            </div>
             {/* Floating article component - bottom left extending past edge */}
             <div style={{
               position: 'absolute',
