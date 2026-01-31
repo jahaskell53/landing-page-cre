@@ -22,37 +22,27 @@ export default function BrokersPage() {
   return (
     <>
       {/* Hero Section */}
-      <section style={{
-        minHeight: '80vh',
-        display: 'flex',
+      <section className="hero-section hero-section-mobile" style={{
+        position: 'relative',
+        minHeight: '100vh',
+        width: '100vw',
+        display: 'grid',
+        gridTemplateColumns: '50% 50%',
         alignItems: 'center',
-        paddingTop: '120px',
-        paddingBottom: '4rem'
+        paddingTop: '100px'
       }}>
-        <div className="container">
+        {/* Left Side - Text */}
+        <div className="hero-left-mobile" style={{ paddingLeft: '1rem', paddingRight: '2rem' }}>
           <motion.div
             initial="initial"
             animate="animate"
             variants={staggerContainer}
-            style={{ maxWidth: '900px' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', maxWidth: '800px', marginLeft: 'auto' }}
           >
-            <motion.span
-              variants={fadeInUp}
-              style={{
-                display: 'inline-block',
-                fontSize: '0.9rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.15em',
-                color: 'var(--text-dim)',
-                marginBottom: '1.5rem'
-              }}
-            >
-              For Brokers
-            </motion.span>
             <motion.h1
               variants={fadeInUp}
               style={{
-                fontSize: 'clamp(2.5rem, 8vw, 5rem)',
+                fontSize: 'clamp(3rem, 10vw, 6rem)',
                 lineHeight: '1.1',
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 400,
@@ -68,37 +58,121 @@ export default function BrokersPage() {
             <motion.p
               variants={fadeInUp}
               style={{
-                fontSize: '1.5rem',
+                fontSize: '1.75rem',
                 lineHeight: '1.6',
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 400,
-                color: 'var(--text-dim)',
-                maxWidth: '700px',
-                marginBottom: '3rem'
+                color: 'var(--foreground)',
+                opacity: 0.8,
+                maxWidth: '600px'
               }}
             >
               OpenMidmarket gives CRE brokers the tools to nurture relationships,
               stay informed, and grow their business in the midmarket space.
             </motion.p>
-            <motion.div variants={fadeInUp}>
-              <a
-                className="btn-primary"
-                href="https://app.openmidmarket.com/signup"
-                style={{
-                  padding: '1.25rem 2.5rem',
-                  fontSize: '1rem',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  textDecoration: 'none'
-                }}
-              >
-                Get Started Free
-                <ArrowRight size={20} />
-              </a>
-            </motion.div>
           </motion.div>
         </div>
+
+        {/* Right Side - Background Image with Mockup */}
+        <motion.div
+          className="hero-right-mobile"
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: '100px',
+            width: '50vw',
+            height: 'calc(100vh - 100px)',
+            overflow: 'visible'
+          }}
+        >
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'url(/images/handshake.jpeg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            zIndex: 0
+          }} />
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 2
+          }}>
+            {/* Glow effect behind the mockup */}
+            <div style={{
+              position: 'absolute',
+              width: '80%',
+              height: '60%',
+              background: 'radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, transparent 70%)',
+              filter: 'blur(40px)',
+              zIndex: 1,
+              opacity: 0.6
+            }} />
+            {/* Floating emails/history component - upper left */}
+            <div style={{
+              position: 'absolute',
+              left: '-15%',
+              top: '3%',
+              width: '50%',
+              height: 'auto',
+              zIndex: 3,
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
+            }}>
+              <Image
+                src="/emails-cropped.png"
+                alt="Emails"
+                width={900}
+                height={700}
+                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
+                priority
+              />
+            </div>
+            {/* Floating map component - center right */}
+            <div style={{
+              position: 'absolute',
+              left: '15%',
+              top: '30%',
+              width: '35%',
+              height: 'auto',
+              zIndex: 2,
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
+            }}>
+              <Image
+                src="/map-cropped.png"
+                alt="Map"
+                width={1000}
+                height={800}
+                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
+                priority
+              />
+            </div>
+            {/* Floating article component - bottom left extending past edge */}
+            <div style={{
+              position: 'absolute',
+              left: '-20%',
+              bottom: '5%',
+              width: '110%',
+              height: 'auto',
+              zIndex: 2,
+              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
+            }}>
+              <Image
+                src="/article-cropped.png"
+                alt="Article"
+                width={1200}
+                height={900}
+                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
+                priority
+              />
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       <main className="container">
