@@ -217,34 +217,6 @@ export default function BrokersPage() {
                 and touchpoint with your network in one place. Know exactly when
                 to reach out and what to talk about.
               </p>
-              <ul style={{
-                listStyle: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem'
-              }}>
-                {[
-                  'Full interaction history at a glance',
-                  'Smart reminders to stay in touch',
-                  'Network strength scoring'
-                ].map((item, index) => (
-                  <li key={index} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                    fontSize: '1rem',
-                    color: 'var(--foreground)'
-                  }}>
-                    <div style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      background: 'var(--foreground)'
-                    }} />
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </motion.div>
 
             {/* Mockup - Layered Cards */}
@@ -343,34 +315,6 @@ export default function BrokersPage() {
                 Find qualified buyers and sellers in your markets. Reach decision-makers
                 directly and fill your pipeline with warm introductions from your network.
               </p>
-              <ul style={{
-                listStyle: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem'
-              }}>
-                {[
-                  'Discover active buyers and sellers in your territory',
-                  'Direct access to property owners and investors',
-                  'Warm introductions through your network'
-                ].map((item, index) => (
-                  <li key={index} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                    fontSize: '1rem',
-                    color: 'var(--foreground)'
-                  }}>
-                    <div style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      background: 'var(--foreground)'
-                    }} />
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </motion.div>
           </div>
         </section>
@@ -414,34 +358,6 @@ export default function BrokersPage() {
                 seminars for property owners, investors, and other industry professionals.
                 Build your reputation while generating leads.
               </p>
-              <ul style={{
-                listStyle: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem'
-              }}>
-                {[
-                  'Easy event creation and management',
-                  'Built-in RSVP and attendee tracking',
-                  'Automatic follow-up tools'
-                ].map((item, index) => (
-                  <li key={index} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                    fontSize: '1rem',
-                    color: 'var(--foreground)'
-                  }}>
-                    <div style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      background: 'var(--foreground)'
-                    }} />
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </motion.div>
 
             {/* Mockup - Seminar/Calendar */}
