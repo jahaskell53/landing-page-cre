@@ -60,10 +60,10 @@ export default function BrokersPage() {
                 marginBottom: '2rem'
               }}
             >
-              Your network is your{' '}
               <span style={{ fontFamily: 'var(--font-kyoto)', fontStyle: 'italic' }}>
-                net worth
-              </span>
+                Deals
+              </span>{' '}
+              you can't find anywhere else
             </motion.h1>
             <motion.p
               variants={fadeInUp}

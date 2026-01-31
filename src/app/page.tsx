@@ -90,7 +90,7 @@ export default function Home() {
                 maxWidth: '600px'
               }}
             >
-              CoStar-level intelligence brought to the midmarket. Find local news, vacancies, and listings, personalized to you.
+              Institutional-grade intelligence brought to the midmarket. Find local news, vacancies, and listings, personalized to you.
             </motion.p>
           </motion.div>
         </div>
