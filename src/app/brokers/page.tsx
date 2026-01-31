@@ -1,8 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+
+const HERO_IMAGES = ["/images/handshake.jpeg", "/images/women-handshake.png"];
+const HERO_CYCLE_MS = 5000;
 
 // Message Bubble Component for Generate Leads section
 function MessageBubble() {
@@ -68,6 +72,16 @@ function MessageBubble() {
 }
 
 export default function BrokersPage() {
+  const [heroImageIndex, setHeroImageIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(
+      () => setHeroImageIndex((i) => (i + 1) % HERO_IMAGES.length),
+      HERO_CYCLE_MS
+    );
+    return () => clearInterval(id);
+  }, []);
+
   const fadeInUp = {
     initial: { opacity: 0, y: 40 },
     animate: { opacity: 1, y: 0 },
@@ -150,15 +164,23 @@ export default function BrokersPage() {
             overflow: 'visible'
           }}
         >
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'url(/images/handshake.jpeg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            zIndex: 0
-          }} />
+          {HERO_IMAGES.map((src, i) => (
+            <motion.div
+              key={src}
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `url(${src})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                zIndex: 0,
+              }}
+              initial={false}
+              animate={{ opacity: heroImageIndex === i ? 1 : 0 }}
+              transition={{ duration: 1 }}
+            />
+          ))}
           <div style={{
             position: 'absolute',
             inset: 0,
