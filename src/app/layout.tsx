@@ -3,8 +3,8 @@ import "./globals.css";
 import Nav from "./Nav";
 
 export const metadata: Metadata = {
-  title: "OM | Together, stronger",
-  description: "OM - Together, stronger",
+  title: "OpenMidmarket: AI Hub for the midmarket",
+  description: "Institutional-grade AI hub for the midmarket",
   keywords: ["OpenMidmarket", "News", "Vacancy", "Sales Listing", "Seminars", "Underwriting"],
   authors: [{ name: "OpenMidmarket" }],
   openGraph: {
