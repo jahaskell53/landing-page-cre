@@ -364,8 +364,8 @@ export default function BrokersPage() {
                 marginBottom: '1.5rem',
                 color: 'var(--foreground)'
               }}>
-                Stay on top of{' '}
-                <span style={{ fontWeight: 700 }}>local news</span>
+                Generate more{' '}
+                <span style={{ fontWeight: 700 }}>leads</span>
               </h2>
               <p style={{
                 fontSize: '1.2rem',
@@ -374,9 +374,8 @@ export default function BrokersPage() {
                 fontFamily: 'var(--font-sans)',
                 marginBottom: '2rem'
               }}>
-                Get curated news and regulatory updates specific to your markets.
-                Be the first to know about zoning changes, rent control initiatives,
-                and development opportunities.
+                Find qualified buyers and sellers in your markets. Reach decision-makers
+                directly and fill your pipeline with warm introductions from your network.
               </p>
               <ul style={{
                 listStyle: 'none',
@@ -385,9 +384,9 @@ export default function BrokersPage() {
                 gap: '0.75rem'
               }}>
                 {[
-                  'Personalized market news feed',
-                  'Regulatory change alerts',
-                  'Share insights with your network'
+                  'Discover active buyers and sellers in your territory',
+                  'Direct access to property owners and investors',
+                  'Warm introductions through your network'
                 ].map((item, index) => (
                   <li key={index} style={{
                     display: 'flex',
