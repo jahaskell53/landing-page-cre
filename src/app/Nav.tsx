@@ -16,7 +16,7 @@ export default function Nav() {
           <>
             <a href="/">Home</a>
             <a href="#relationships">CRM</a>
-            <a href="#seminars">Seminars</a>
+            <a href="#pipeline">Pipeline</a>
           </>
         ) : isOwners ? (
           <>

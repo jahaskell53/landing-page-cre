@@ -513,6 +513,74 @@ export default function BrokersPage() {
           </div>
         </section>
 
+        {/* Divider */}
+        <div className="divider divider-mobile" style={{ margin: '6rem 0' }} />
+
+        {/* Value Prop 4: Pipeline Management */}
+        <section id="pipeline" style={{ margin: '8rem 0' }}>
+          <div className="section-grid-mobile" style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '4rem',
+            alignItems: 'center'
+          }}>
+            {/* Mockup - Kanban GIF */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true }}
+              className="mockup-container-mobile"
+              style={{
+                position: 'relative',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.15)',
+              }}
+            >
+              <Image
+                src="/Kanban-trimmed.gif"
+                alt="Pipeline Management"
+                width={1096}
+                height={912}
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+                unoptimized
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true }}
+            >
+              <h2 style={{
+                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                fontWeight: 400,
+                fontFamily: 'var(--font-sans)',
+                lineHeight: '1.15',
+                marginBottom: '1.5rem',
+                color: 'var(--foreground)'
+              }}>
+                Manage your{' '}
+                <span style={{ fontWeight: 600 }}>pipeline</span>
+              </h2>
+              <p style={{
+                fontSize: '1.35rem',
+                lineHeight: '1.7',
+                color: 'var(--text-dim)',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
+                marginBottom: '2rem'
+              }}>
+                Track every deal from prospecting to close with a visual pipeline.
+                Move deals through stages, never miss a follow-up, and keep your
+                entire workflow organized in one place.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
         {/* CTA Section */}
         <section
           className="cta-section-mobile"
