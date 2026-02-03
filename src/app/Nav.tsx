@@ -14,8 +14,8 @@ export default function Nav() {
       <div className="nav-links" style={{ display: "flex", justifyContent: "center" }}>
         {isBrokers ? (
           <>
-            <a href="/">Home</a>
             <a href="#relationships">CRM</a>
+            <a href="#seminars">Seminars</a>
             <a href="#pipeline">Pipeline</a>
           </>
         ) : isOwners ? (
