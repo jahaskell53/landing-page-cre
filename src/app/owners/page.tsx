@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { ArrowRight, TrendingUp, Shield, Bell } from "lucide-react";
 // import Footer from "../Footer";
 
@@ -337,7 +336,7 @@ export default function OwnersPage() {
                 marginBottom: '1.5rem',
                 color: 'var(--foreground)'
               }}>
-                Know your property's{' '}
+                Know your property&apos;s{' '}
                 <span style={{ fontWeight: 600 }}>true value</span>
               </h2>
               <p style={{
@@ -424,7 +423,7 @@ export default function OwnersPage() {
                 fontWeight: 500,
                 marginBottom: '2rem'
               }}>
-                When you're ready to sell, connect directly with pre-qualified buyers
+                When you&apos;re ready to sell, connect directly with pre-qualified buyers
                 actively searching in your market. No cold calls, no tire-kickers—just
                 serious investors who match your property profile.
               </p>
