@@ -1,0 +1,2 @@
+-- Optional seed data for `supabase db reset`.
+-- Add INSERT statements or \i includes here.
