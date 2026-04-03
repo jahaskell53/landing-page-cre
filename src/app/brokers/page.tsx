@@ -51,7 +51,7 @@ function MessageBubble() {
         margin: 0,
         marginBottom: '1.25rem',
       }}>
-        I'm reaching out because I'm currently working with a few active buyers specifically looking for multifamily units in the Mission District.
+        I&apos;m reaching out because I&apos;m currently working with a few active buyers specifically looking for multifamily units in the Mission District.
       </p>
       <p style={{
         fontSize: '1.1rem',
@@ -59,7 +59,7 @@ function MessageBubble() {
         margin: 0,
         marginBottom: '1.5rem',
       }}>
-        Your property at 455 Guerrero St caught my eye—have you given any thought to selling, or would you be open to a valuation to see where the market sits today? Even if the timing isn't right, I'd love to share some recent data on what's moving in the area.
+        Your property at 455 Guerrero St caught my eye—have you given any thought to selling, or would you be open to a valuation to see where the market sits today? Even if the timing isn&apos;t right, I&apos;d love to share some recent data on what&apos;s moving in the area.
       </p>
       <p style={{
         fontSize: '0.85rem',

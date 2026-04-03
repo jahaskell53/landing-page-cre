@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function Nav() {
@@ -10,7 +11,7 @@ export default function Nav() {
 
   return (
     <nav className="nav">
-      <a href="/" className="nav-brand">OpenMidmarket</a>
+      <Link href="/" className="nav-brand">OpenMidmarket</Link>
       <div className="nav-links" style={{ display: "flex", justifyContent: "center" }}>
         {isBrokers ? (
           <>
@@ -20,13 +21,13 @@ export default function Nav() {
           </>
         ) : isOwners ? (
           <>
-            <a href="/">Home</a>
+            <Link href="/">Home</Link>
             <a href="#valuations">Valuations</a>
             <a href="#insights">Insights</a>
           </>
         ) : isLenders ? (
           <>
-            <a href="/">Home</a>
+            <Link href="/">Home</Link>
             <a href="#dealflow">Deal Flow</a>
             <a href="#underwriting">Underwriting</a>
           </>
