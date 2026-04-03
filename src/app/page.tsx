@@ -2,7 +2,7 @@
 
 import { motion, useInView, animate } from "framer-motion";
 import Image from "next/image";
-import { ArrowUpRight, CheckCircle2, Globe, Shield, Zap } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 // import Footer from "./Footer";
 
