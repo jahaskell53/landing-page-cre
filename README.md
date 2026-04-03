@@ -34,12 +34,12 @@ npm run supabase:status
 ```
 
 - API: `http://127.0.0.1:54321`
-- Postgres: `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
+- Postgres: `127.0.0.1:54322` (user, password, and full URL come from `npm run supabase:status` or the [local development](https://supabase.com/docs/guides/local-development) docs)
 - Studio: URL is printed by `supabase status`.
 
 Stop the stack with `npm run supabase:stop`. Rebuild the DB from migrations and `supabase/seed.sql` with `npm run supabase:reset`.
 
-For Next.js env vars, copy `.env.local.example` to `.env.local`. After upgrades or non-default config, run `npm run supabase:status` and align URLs and keys if they differ.
+For Next.js env vars, copy `.env.local.example` to `.env.local` and replace every `PASTE_*` placeholder using the output of `npm run supabase:status`.
 
 ## Notes
 
