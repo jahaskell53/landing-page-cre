@@ -5,11 +5,11 @@ import { useSyncExternalStore } from "react";
 import { APP_ORIGIN } from "@/lib/app-origin";
 
 /**
- * Public early-access waitlist questionnaire (Tally).
+ * Public early-access waitlist questionnaire (Typeform).
  *
  * Set `NEXT_PUBLIC_WAITLIST_URL` in the environment to override without a code change.
  */
-const WAITLIST_URL = process.env.NEXT_PUBLIC_WAITLIST_URL ?? "https://tally.so/r/q4edR2";
+const WAITLIST_URL = process.env.NEXT_PUBLIC_WAITLIST_URL ?? "https://form.typeform.com/to/bkrYqz2b";
 
 function resolveHref(invite: string | null): string {
     // Invited visitors (VIPs / approved applicants) go straight to app signup with
