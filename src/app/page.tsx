@@ -17,10 +17,9 @@ import { VideoPanel } from "./welcome/video-panel";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title:
-    "OpenMidmarket — The AI platform that democratizes the multifamily mid-market",
+  title: "Institutional-grade CRE platform. Built for the mid-market.",
   description:
-    "OpenMidmarket is the AI platform that democratizes the multifamily mid-market — AI-powered CRM, real-time market data, and a dedicated professional network in one clean workspace.",
+    "A unified ecosystem leveraging predictive AI, real-time data, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
   openGraph: {
     title: "Institutional-grade CRE platform. Built for the mid-market.",
     description:
