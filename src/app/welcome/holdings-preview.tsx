@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 
 const CARD = "rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800";
 
-// Monthly portfolio value ($M), ending at the current $38.2M estimate.
-const PORTFOLIO_SERIES = [34.4, 34.7, 35.1, 35.0, 35.6, 36.2, 36.1, 36.8, 37.3, 37.6, 37.9, 38.2];
+// Monthly portfolio value ($M), ending at the current $18.2M estimate.
+const PORTFOLIO_SERIES = [17.1, 17.3, 17.2, 17.5, 17.6, 17.5, 17.8, 17.9, 18.0, 18.0, 18.1, 18.2];
 
 type Holding = {
     name: string;
@@ -18,34 +18,26 @@ type Holding = {
     spark: number[];
 };
 
-// Values sum to the $38.2M portfolio total; units sum to 248; occupancy avgs 94%.
+// Values sum to the $18.2M portfolio total; units sum to 56 (~$325k/door);
+// occupancy avgs 94%.
 const HOLDINGS: Holding[] = [
     {
         name: "Lakeshore Apartments",
-        location: "Oakland · 96 units",
+        location: "Oakland · 32 units",
         occ: 96,
-        value: "$14.8M",
+        value: "$10.4M",
         delta: "+0.4%",
         up: true,
-        spark: [12.0, 12.5, 12.3, 13.0, 13.4, 13.2, 14.0, 14.2, 14.5, 14.8],
+        spark: [8.9, 9.3, 9.2, 9.6, 9.9, 9.7, 10.0, 10.1, 10.3, 10.4],
     },
     {
         name: "Mission Court",
-        location: "San Jose · 84 units",
+        location: "San Jose · 24 units",
         occ: 91,
-        value: "$12.9M",
+        value: "$7.8M",
         delta: "-0.2%",
         up: false,
-        spark: [13.4, 13.2, 13.3, 13.1, 13.0, 13.2, 12.9, 13.0, 12.8, 12.9],
-    },
-    {
-        name: "Elm Street Flats",
-        location: "Fremont · 68 units",
-        occ: 95,
-        value: "$10.5M",
-        delta: "+0.6%",
-        up: true,
-        spark: [9.4, 9.6, 9.5, 9.9, 10.0, 10.1, 10.2, 10.3, 10.4, 10.5],
+        spark: [8.1, 8.0, 8.05, 7.95, 7.9, 7.95, 7.85, 7.9, 7.8, 7.82],
     },
 ];
 
@@ -90,30 +82,38 @@ const MAP_SCENES: MapScene[] = [
         ),
         pin: { left: "33%", top: "33%" },
     },
-    // Elm Street Flats — suburban: a big park, a pond, and a curving lane.
-    {
-        svg: (
-            <>
-                <rect x="27" y="6" width="19" height="17" rx="2" fill="currentColor" className="text-emerald-300/60 dark:text-emerald-800/50" />
-                <circle cx="11" cy="39" r="7" fill="currentColor" className="text-sky-300/50 dark:text-sky-900/50" />
-                <g stroke="currentColor" fill="none" strokeLinecap="round" className="text-white/80 dark:text-gray-600/70">
-                    <path d="M-2 29 H50" strokeWidth={3} />
-                    <path d="M22 -2 C 26 14, 16 22, 22 50" strokeWidth={2} />
-                    <path d="M35 23 V50" strokeWidth={1.5} />
-                </g>
-            </>
-        ),
-        pin: { left: "46%", top: "62%" },
-    },
 ];
+
+// Blended market-vs-in-place rent by unit type across the portfolio. Counts sum
+// to the 56-unit total; the monthly total is the sum of count × gap.
+type RentGapRow = {
+    type: string;
+    count: number;
+    market: string;
+    inPlace: string;
+    gap: string;
+    upside: string;
+    comps: number;
+};
+
+const RENT_GAP: RentGapRow[] = [
+    { type: "Studio", count: 8, market: "$1,950", inPlace: "$1,720", gap: "+$230", upside: "+13.4%", comps: 12 },
+    { type: "1BR / 1 ba", count: 22, market: "$2,650", inPlace: "$2,280", gap: "+$370", upside: "+16.2%", comps: 18 },
+    { type: "2BR / 2 ba", count: 20, market: "$3,400", inPlace: "$2,850", gap: "+$550", upside: "+19.3%", comps: 15 },
+    { type: "3BR / 2 ba", count: 6, market: "$4,200", inPlace: "$3,450", gap: "+$750", upside: "+21.7%", comps: 9 },
+];
+
+// 8·230 + 22·370 + 20·550 + 6·750 = 25,480/mo ≈ $306K/yr.
+const RENT_GAP_TOTAL = "25,480";
+const RENT_GAP_ANNUAL = "$306K";
 
 // Hero: filled area chart of portfolio value over the last year, mirroring the
 // ValuationProjectionChart SVG approach so the two tabs share a visual language.
 function PortfolioAreaChart({ className }: { className?: string }) {
     const data = PORTFOLIO_SERIES;
     const width = 320;
-    const height = 84;
-    const pad = { top: 8, right: 2, bottom: 2, left: 2 };
+    const height = 52;
+    const pad = { top: 6, right: 2, bottom: 2, left: 2 };
     const iw = width - pad.left - pad.right;
     const ih = height - pad.top - pad.bottom;
 
@@ -214,13 +214,76 @@ function StatTile({ label, value }: { label: string; value: string }) {
     );
 }
 
+// Rent gap analysis — market vs. in-place rent by unit type, with the captured
+// monthly upside called out at the bottom. This is the "here's the money" hook.
+function RentGapCard() {
+    return (
+        <div className={cn(CARD, "overflow-hidden")}>
+            <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-gray-700">
+                <div>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Rent gap analysis</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Market vs. in-place by unit type</p>
+                </div>
+                <span className="shrink-0 rounded-md bg-emerald-50 px-2 py-1 text-[10px] font-semibold text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400">
+                    +18% blended
+                </span>
+            </div>
+            <table className="w-full table-fixed text-[10px]">
+                <colgroup>
+                    <col />
+                    <col className="w-7" />
+                    <col className="w-[3.25rem]" />
+                    <col className="w-[3.25rem]" />
+                    <col className="w-[3.25rem]" />
+                    <col className="w-[3rem]" />
+                    <col className="w-9" />
+                </colgroup>
+                <thead>
+                    <tr className="border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-700/30">
+                        <th className="px-3 py-1.5 text-left font-semibold tracking-tight text-gray-500 uppercase">Unit type</th>
+                        <th className="px-1 py-1.5 text-right font-semibold text-gray-500 uppercase">Ct</th>
+                        <th className="px-1 py-1.5 text-right font-semibold tracking-tight text-gray-500 uppercase">Market</th>
+                        <th className="px-1 py-1.5 text-right font-semibold tracking-tight text-gray-500 uppercase">In-pl.</th>
+                        <th className="px-1 py-1.5 text-right font-semibold text-gray-500 uppercase">Gap</th>
+                        <th className="px-1 py-1.5 text-right font-semibold tracking-tight text-gray-500 uppercase">Upside</th>
+                        <th className="px-2 py-1.5 text-right font-semibold text-gray-500 uppercase">Cmp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {RENT_GAP.map((r) => (
+                        <tr key={r.type} className="border-b border-gray-50 dark:border-gray-700/50">
+                            <td className="truncate px-3 py-1.5 font-medium text-gray-900 dark:text-gray-100">{r.type}</td>
+                            <td className="px-1 py-1.5 text-right text-gray-600 tabular-nums dark:text-gray-400">{r.count}</td>
+                            <td className="px-1 py-1.5 text-right text-gray-900 tabular-nums dark:text-gray-100">{r.market}</td>
+                            <td className="px-1 py-1.5 text-right text-gray-600 tabular-nums dark:text-gray-400">{r.inPlace}</td>
+                            <td className="px-1 py-1.5 text-right font-semibold text-emerald-600 tabular-nums dark:text-emerald-400">{r.gap}</td>
+                            <td className="px-1 py-1.5 text-right font-medium text-emerald-600 tabular-nums dark:text-emerald-400">{r.upside}</td>
+                            <td className="px-2 py-1.5 text-right text-gray-500 tabular-nums dark:text-gray-400">{r.comps}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <div className="flex items-center justify-between border-t border-gray-100 px-4 py-3 dark:border-gray-700">
+                <div>
+                    <div className="text-xs font-medium text-gray-700 dark:text-gray-300">Total monthly rent gap</div>
+                    <div className="text-[10px] text-gray-400 dark:text-gray-500">Captured unit types · ≈ {RENT_GAP_ANNUAL}/yr</div>
+                </div>
+                <div className="text-lg font-semibold text-emerald-600 tabular-nums dark:text-emerald-400">
+                    +${RENT_GAP_TOTAL}
+                    <span className="text-xs font-medium text-gray-400 dark:text-gray-500">/mo</span>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export function HoldingsPreview() {
     return (
         <>
             <div className="flex items-baseline justify-between border-b border-gray-200 pb-4 dark:border-gray-800">
                 <h2 className="text-base leading-none font-semibold text-gray-900 dark:text-gray-100">Portfolio</h2>
                 <span className="rounded-md border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 dark:border-gray-700 dark:text-gray-400">
-                    3 assets
+                    2 assets
                 </span>
             </div>
 
@@ -229,7 +292,7 @@ export function HoldingsPreview() {
                 <div className="flex items-start justify-between gap-2">
                     <div>
                         <div className="text-xs text-gray-500 dark:text-gray-400">Portfolio value</div>
-                        <div className="mt-1 text-2xl font-semibold text-gray-900 tabular-nums dark:text-gray-100">$38.2M</div>
+                        <div className="mt-1 text-2xl font-semibold text-gray-900 tabular-nums dark:text-gray-100">$18.2M</div>
                     </div>
                     <div className="text-right">
                         <span className="inline-flex items-center rounded-md bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-600 tabular-nums dark:bg-emerald-900/20 dark:text-emerald-400">
@@ -238,13 +301,13 @@ export function HoldingsPreview() {
                         <div className="mt-1 text-[10px] text-gray-400 dark:text-gray-500">vs. last year</div>
                     </div>
                 </div>
-                <PortfolioAreaChart className="mt-3" />
+                <PortfolioAreaChart className="mt-2" />
             </div>
 
             <div className="grid grid-cols-3 gap-2.5">
-                <StatTile value="248" label="Total units" />
+                <StatTile value="56" label="Total units" />
                 <StatTile value="94%" label="Avg occupancy" />
-                <StatTile value="$2.1M" label="Annual NOI" />
+                <StatTile value="$965K" label="Annual NOI" />
             </div>
 
             <div className="space-y-2.5">
@@ -276,6 +339,8 @@ export function HoldingsPreview() {
                     </div>
                 ))}
             </div>
+
+            <RentGapCard />
         </>
     );
 }
