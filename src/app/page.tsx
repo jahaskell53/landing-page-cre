@@ -9,6 +9,7 @@ import { BrowserWindow } from "./welcome/browser-window";
 import { HeroHighlight } from "./welcome/hero-highlight";
 import { RentTrendsPreview } from "./welcome/rent-trends-preview";
 import { getWelcomeRentTrends } from "./welcome/rent-trends-server";
+import { SignupCta } from "./welcome/signup-cta";
 import { getWelcomeSalesTrends } from "./welcome/sales-trends-server";
 import { VideoPanel } from "./welcome/video-panel";
 
@@ -178,7 +179,7 @@ export default async function HomePage() {
                             <a href={`${APP_ORIGIN}/login`}>Log in</a>
                         </Button>
                         <Button size="sm" className={PRIMARY} asChild>
-                            <a href={`${APP_ORIGIN}/signup`}>Sign up</a>
+                            <SignupCta>Sign up</SignupCta>
                         </Button>
                     </div>
                 </nav>
@@ -231,10 +232,10 @@ export default async function HomePage() {
 
                     <div className="mt-12 flex justify-center">
                         <Button className={PRIMARY} asChild>
-                            <a href={`${APP_ORIGIN}/signup`}>
+                            <SignupCta>
                                 Get started
                                 <ArrowRight className="size-4" />
-                            </a>
+                            </SignupCta>
                         </Button>
                     </div>
                 </div>
@@ -317,10 +318,10 @@ export default async function HomePage() {
                 <h2 className="text-7xl font-semibold tracking-tight text-white sm:text-8xl">Uncover opportunities with OpenMidmarket AI</h2>
                 <div className="mt-10 flex justify-center">
                     <Button size="lg" className={`h-24 px-16 text-3xl ${PRIMARY}`} asChild>
-                        <a href={`${APP_ORIGIN}/signup`}>
+                        <SignupCta>
                             Get started
                             <ArrowRight className="size-7" />
-                        </a>
+                        </SignupCta>
                     </Button>
                 </div>
             </VideoPanel>
