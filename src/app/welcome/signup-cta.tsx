@@ -7,10 +7,9 @@ import { APP_ORIGIN } from "@/lib/app-origin";
 /**
  * Public early-access waitlist questionnaire (Tally).
  *
- * TODO(early-access): swap this placeholder for the real public Tally waitlist URL.
  * Set `NEXT_PUBLIC_WAITLIST_URL` in the environment to override without a code change.
  */
-const WAITLIST_URL = process.env.NEXT_PUBLIC_WAITLIST_URL ?? "https://tally.so/r/REPLACE_ME_EARLY_ACCESS_WAITLIST";
+const WAITLIST_URL = process.env.NEXT_PUBLIC_WAITLIST_URL ?? "https://tally.so/r/q4edR2";
 
 function resolveHref(invite: string | null): string {
     // Invited visitors (VIPs / approved applicants) go straight to app signup with
