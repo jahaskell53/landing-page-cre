@@ -389,7 +389,10 @@ export default async function HomePage() {
         <div className="flex w-full flex-col items-start text-left">
           <h2 className="max-w-4xl text-left text-[clamp(1.125rem,4.8vw,6rem)] leading-[1.1] font-semibold tracking-tight text-white">
             <span className="block">Uncover opportunities</span>
-            <span className="block">with OpenMidmarket AI</span>
+            <span className="block">
+              with{" "}
+              <span className="text-blue-400">OpenMidmarket</span> AI
+            </span>
           </h2>
           <div className="mt-10">
             <Button
