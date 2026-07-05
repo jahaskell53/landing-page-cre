@@ -348,19 +348,20 @@ export default async function HomePage() {
         <div className={SECTION_CONTAINER}>
           <div className="max-w-3xl">
             <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-              A Unified, Stronger Voice for Protecting Midmarket Assets.
+              Fighting Unfair Regulation Through a Collective Midmarket Voice
             </h2>
             <p className="mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
               OpenMidmarket <span className={EMPHASIS}>pledges</span> ongoing
-              capital and structural resources to backing fair and balanced
-              regulatory policies—
+              capital and structural resources to{" "}
+              <span className={EMPHASIS}>actively fight unfair regulation</span>{" "}
+              and back balanced policy. Together, we give midmarket property
+              owners the{" "}
               <span className={EMPHASIS}>
-                ensuring midmarket property owners have the collective
-                institutional leverage
+                collective institutional leverage
               </span>{" "}
-              they need to thrive and{" "}
-              <span className={EMPHASIS}>protect their investments</span> long
-              term.
+              they need to thrive, <span className={EMPHASIS}>defend</span>{" "}
+              their rights, and <span className={EMPHASIS}>protect</span> our
+              investments long term.
             </p>
           </div>
         </div>
