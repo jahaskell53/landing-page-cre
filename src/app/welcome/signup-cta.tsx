@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useSyncExternalStore } from "react";
 import { APP_ORIGIN } from "@/lib/app-origin";
-import { captureLandingCtaClick, type LandingCtaLocation } from "@/lib/tracking";
+import { captureLandingCtaClick, withReferralParams, type LandingCtaLocation } from "@/lib/tracking";
 
 /**
  * Public early-access waitlist questionnaire (Typeform).
@@ -55,8 +55,10 @@ export function SignupCta({ children, trackingLocation, audience, onClick, ...pr
         <a
             href={href}
             onClick={(event) => {
+                const referralHref = withReferralParams(href);
+                event.currentTarget.href = referralHref;
                 if (trackingLocation) {
-                    captureLandingCtaClick(trackingLocation, href, audience);
+                    captureLandingCtaClick(trackingLocation, referralHref, audience);
                 }
                 onClick?.(event);
             }}

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentProps } from "react";
-import { captureLandingCtaClick, type LandingCtaLocation } from "@/lib/tracking";
+import { captureLandingCtaClick, withReferralParams, type LandingCtaLocation } from "@/lib/tracking";
 
 type TrackedLinkProps = ComponentProps<"a"> & {
     trackingLocation: LandingCtaLocation;
@@ -14,7 +14,9 @@ export function TrackedLink({ trackingLocation, audience, href, onClick, ...prop
             href={href}
             onClick={(event) => {
                 if (href) {
-                    captureLandingCtaClick(trackingLocation, href, audience);
+                    const referralHref = withReferralParams(href);
+                    event.currentTarget.href = referralHref;
+                    captureLandingCtaClick(trackingLocation, referralHref, audience);
                 }
                 onClick?.(event);
             }}
