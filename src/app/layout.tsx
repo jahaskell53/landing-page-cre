@@ -1,33 +1,55 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Nav from "./Nav";
+import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
+import { cn as cx } from "@/lib/utils";
+import { RouteProvider } from "@/providers/router-provider";
+import { Theme } from "@/providers/theme";
+import "@/styles/globals.css";
+
+const inter = localFont({
+    src: [
+        {
+            path: "./fonts/InterVariable.woff2",
+            style: "normal",
+        },
+        {
+            path: "./fonts/InterVariable-Italic.woff2",
+            style: "italic",
+        },
+    ],
+    display: "swap",
+    variable: "--font-inter",
+    weight: "100 900",
+    fallback: ["-apple-system", "Segoe UI", "Roboto", "Arial", "sans-serif"],
+});
 
 export const metadata: Metadata = {
-  title: "OpenMidmarket: AI Hub for the midmarket",
-  description: "Institutional-grade AI hub for the midmarket CRE",
-  keywords: ["OpenMidmarket", "News", "Vacancy", "Sales Listing", "Seminars", "Underwriting"],
-  authors: [{ name: "OpenMidmarket" }],
-  openGraph: {
-    images: ["/preview.jpeg"],
-  },
+    title: "OpenMidmarket — The AI platform that democratizes the multifamily mid-market",
+    description:
+        "OpenMidmarket is the AI platform that democratizes the multifamily mid-market — AI-powered CRM, real-time market data, and a dedicated professional network in one clean workspace.",
+    openGraph: {
+        title: "OpenMidmarket — The AI platform that democratizes the multifamily mid-market",
+        description: "AI-powered CRM, real-time market data, and a dedicated CRE professional network — in one workspace.",
+        images: "/og-preview.jpeg",
+    },
 };
 
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
+export const viewport: Viewport = {
+    themeColor: "#1e3a8a",
+    colorScheme: "light dark",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body>
-        <Nav />
-        {children}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <body className={cx(inter.variable, "bg-primary antialiased")}>
+                <RouteProvider>
+                    <Theme>{children}</Theme>
+                </RouteProvider>
+            </body>
+        </html>
+    );
 }

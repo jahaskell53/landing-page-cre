@@ -1,545 +1,329 @@
-"use client";
+import { ArrowRight, Brain, ChevronDown, TrendingUp, Zap } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { APP_ORIGIN } from "@/lib/app-origin";
+import { AppPreview } from "./welcome/app-preview";
+import { AudienceCards } from "./welcome/audience-cards";
+import { BrowserWindow } from "./welcome/browser-window";
+import { HeroHighlight } from "./welcome/hero-highlight";
+import { RentTrendsPreview } from "./welcome/rent-trends-preview";
+import { getWelcomeRentTrends } from "./welcome/rent-trends-server";
+import { getWelcomeSalesTrends } from "./welcome/sales-trends-server";
+import { VideoPanel } from "./welcome/video-panel";
 
-import { motion, useInView, animate } from "framer-motion";
-import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-// import Footer from "./Footer";
+export const revalidate = 3600;
 
-function AnimatedNumber({ value, suffix = "", duration = 2 }: { value: number; suffix?: string; duration?: number }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [displayValue, setDisplayValue] = useState(0);
+export const metadata: Metadata = {
+    title: "OpenMidmarket — The AI platform that democratizes the multifamily mid-market",
+    description:
+        "OpenMidmarket is the AI platform that democratizes the multifamily mid-market — AI-powered CRM, real-time market data, and a dedicated professional network in one clean workspace.",
+    openGraph: {
+        title: "OpenMidmarket — The AI platform that democratizes the multifamily mid-market",
+        description: "AI-powered CRM, real-time market data, and a dedicated CRE professional network — in one workspace.",
+        images: "/og-preview.jpeg",
+    },
+};
 
-  useEffect(() => {
-    if (isInView) {
-      const controls = animate(0, value, {
-        duration,
-        ease: "easeOut",
-        onUpdate: (latest) => setDisplayValue(Math.round(latest))
-      });
-      return () => controls.stop();
-    }
-  }, [isInView, value, duration]);
+const PRIMARY = "bg-blue-900 text-white hover:bg-blue-950 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500";
+const EMPHASIS = "font-semibold text-blue-900 dark:text-blue-400";
 
-  const formattedValue = value >= 1000 ? displayValue.toLocaleString() : displayValue;
+const SECTION_WHITE = "bg-white dark:bg-gray-950";
+const SECTION_GRAY = "bg-gray-50 dark:bg-gray-900/40";
+const SECTION_CONTAINER = "mx-auto max-w-6xl px-4 py-32 sm:px-6 lg:px-8";
 
-  return (
-    <span ref={ref}>
-      {formattedValue}{suffix}
-    </span>
-  );
-}
+type NavLink = { label: string; href: string; children?: { label: string; href: string }[] };
 
-export default function Home() {
-  const fadeInUp = {
-    initial: { opacity: 0, y: 40 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 1, ease: [0.16, 1, 0.3, 1] }
-  };
+const NAV_LINKS: NavLink[] = [
+    {
+        label: "Features",
+        href: "#features",
+        children: [
+            { label: "Holdings", href: "#preview-holdings" },
+            { label: "Valuation", href: "#preview-valuation" },
+            { label: "Rent Comps", href: "#preview-rent-comps" },
+            { label: "Sales Comps", href: "#preview-sales-comps" },
+            { label: "Rent Trends", href: "#preview-rent-trends" },
+            { label: "Sales Trends", href: "#preview-sales-trends" },
+            { label: "Listings", href: "#preview-listings" },
+            { label: "Research", href: "#preview-research" },
+            { label: "Network", href: "#preview-network" },
+            { label: "News", href: "#preview-news" },
+        ],
+    },
+    { label: "Property owners", href: "#owners" },
+    { label: "CRE brokers", href: "#brokers" },
+    { label: "CRE lenders", href: "#lenders" },
+];
 
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
+const FOOTER_LINKS = [
+    { label: "Home", href: "/" },
+    { label: "Features", href: "#features" },
+    { label: "Property owners", href: "#owners" },
+    { label: "CRE brokers", href: "#brokers" },
+    { label: "CRE lenders", href: "#lenders" },
+    { label: "Property managers", href: "#property-managers" },
+    { label: "Appraisers", href: "#appraisers" },
+    { label: "Insurance agents", href: "#insurance-agents" },
+    { label: "1031 advisors", href: "#1031-advisors" },
+];
 
-  return (
-    <>
-      {/* Hero Section */}
-      <section className="hero-section hero-section-mobile" style={{
-        position: 'relative',
-        minHeight: '100vh',
-        width: '100vw',
-        display: 'grid',
-        gridTemplateColumns: '50% 50%',
-        alignItems: 'center',
-        paddingTop: '100px'
-      }}>
-        {/* Left Side - Text */}
-        <div className="hero-left-mobile" style={{ paddingLeft: '1rem', paddingRight: '2rem' }}>
-          <motion.div
-            initial="initial"
-            animate="animate"
-            variants={staggerContainer}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', maxWidth: '800px', marginLeft: 'auto' }}
-          >
-            <motion.h1
-              variants={fadeInUp}
-              style={{
-                fontSize: 'clamp(3rem, 10vw, 6rem)',
-                lineHeight: '1.1',
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 400,
-                color: 'var(--foreground)',
-                marginBottom: '2rem'
-              }}
-            >
-              <span style={{ fontStyle: 'italic', fontWeight: 700 }}>Institutional-grade</span> AI hub for the midmarket CRE
-            </motion.h1>
-            <motion.p
-              variants={fadeInUp}
-              style={{
-                fontSize: '1.75rem',
-                lineHeight: '1.6',
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 400,
-                color: 'var(--foreground)',
-                opacity: 0.8,
-                maxWidth: '600px'
-              }}
-            >
-              Built for multifamily property owners, brokers, lenders, and property managers.
-            </motion.p>
-          </motion.div>
-        </div>
+const VALUE_PILLARS = [
+    {
+        icon: Brain,
+        title: "Smarter Decisions",
+        body: "Driven by AI predictive market intelligence and risk analytics.",
+    },
+    {
+        icon: TrendingUp,
+        title: "Superior Returns",
+        body: "Unlock hidden opportunities with AI driven sourcing and qualification.",
+    },
+    {
+        icon: Zap,
+        title: "Improved Productivity",
+        body: "Streamline workflows with AI unified data, analytics, and collaboration.",
+    },
+];
 
-        {/* Right Side - Background Image with Mockup */}
-        <motion.div
-          className="hero-right-mobile"
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            position: 'absolute',
-            right: 0,
-            top: '100px',
-            width: '50vw',
-            height: 'calc(100vh - 100px)',
-            overflow: 'visible'
-          }}
-        >
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 2
-          }}>
-            {/* Glow effect behind the mockup */}
-            <div style={{
-              position: 'absolute',
-              width: '80%',
-              height: '60%',
-              background: 'radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, transparent 70%)',
-              filter: 'blur(40px)',
-              zIndex: 1,
-              opacity: 0.6
-            }} />
-            {/* Floating map component - center right */}
-            <div style={{ 
-              position: 'absolute', 
-              left: '0%',
-              top: '5%',
-              width: '90%', 
-              height: 'auto',
-              zIndex: 2,
-              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
-            }}>
-              <Image
-                src="/mockups/cropped/property-map.png"
-                alt="Map"
-                width={1000}
-                height={800}
-                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
-                priority
-              />
-            </div>
-            {/* Floating article component - bottom left extending past edge */}
-            <div style={{ 
-              position: 'absolute', 
-              left: '-25%',
-              bottom: '5%',
-              width: '110%', 
-              height: 'auto',
-              zIndex: 2,
-              filter: 'drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3))'
-            }}>
-              <Image
-                src="/article-cropped.png"
-                alt="Article"
-                width={1200}
-                height={900}
-                style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto' }}
-                priority
-              />
-            </div>
-          </div>
-        </motion.div>
-      </section>
+const STATS = [
+    {
+        value: "4.5M+",
+        label: "Mid-Market Properties",
+        description: "Total number of physical commercial assets tracked by AI within the U.S. inventory core.",
+    },
+    {
+        value: "140K+",
+        label: "Annual Transactions",
+        description: "Continuous transactional liquidity happening strictly inside the mid-market commercial tier.",
+    },
+    {
+        value: "1.5M+",
+        label: "Unique Owners",
+        description: "A highly fragmented network of operators, private LLCs, and family offices.",
+    },
+    {
+        value: "120,000+",
+        label: "Active Brokers",
+        description: "Active mid-market specialized brokers seeking collaborative off-market deals.",
+    },
+    {
+        value: "5,000",
+        label: "Lenders",
+        description: "Regional and institutional lenders supplying capital to mid-market debt.",
+    },
+    {
+        value: "68%",
+        label: "Fee Revenue Capture",
+        description:
+            "Total proportion of commercial brokerage fee revenue captured by regional boutique firms, independent brokerages, and localized operators.",
+    },
+    {
+        value: "85%",
+        label: "Transactional Velocity",
+        description:
+            "The proportion of all annual U.S. commercial property trades by asset count driven consistently by mid-market transactions.",
+    },
+    {
+        value: "$197B",
+        label: "Traded Capital",
+        description:
+            "Total capital volume represented by mid-market transactions, accounting for roughly 35% of domestic deal volume.",
+    },
+];
 
-    <main className="container">
-      {/* Trust and Transparency Section */}
-      <section style={{ margin: '4rem 0' }}>
-        <div className="section-grid-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-          >
-            <h2 style={{
-              fontSize: 'clamp(2rem, 8vw, 6rem)',
-              fontWeight: 400,
-              fontFamily: 'var(--font-sans)',
-              marginBottom: '0',
-              lineHeight: '1.1',
-              color: 'var(--foreground)'
-            }}>
-              OpenMidmarket
-            </h2>
-            <span style={{
-              fontSize: 'clamp(2rem, 8vw, 6rem)',
-              fontWeight: 700,
-              fontFamily: 'var(--font-sans)',
-              display: 'block',
-              lineHeight: '1.1',
-              color: 'var(--foreground)'
-            }}>
-              fosters trust
-            </span>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-          >
-            <p className="text-xl-mobile" style={{
-              fontSize: '2.0rem',
-              lineHeight: '1.6',
-              color: 'var(--foreground)',
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 400
-            }}>
-              Ensures transparency, and levels the playing field in multifamily real estate
-            </p>
-          </motion.div>
-        </div>
-      </section>
+export default async function HomePage() {
+    const [initialRentResults, initialSalesResults] = await Promise.all([getWelcomeRentTrends(), getWelcomeSalesTrends()]);
+    return (
+        <div className="min-h-dvh bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+            <header className="sticky top-0 z-20 border-b border-gray-200 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-gray-950/80">
+                <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
+                    <Link href="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+                        <span className="flex size-6 items-center justify-center rounded bg-blue-900 text-[11px] font-bold text-white dark:bg-blue-600 dark:text-white">
+                            OM
+                        </span>
+                        OpenMidmarket
+                    </Link>
+                    <div className="hidden items-center gap-7 text-sm text-gray-600 lg:flex dark:text-gray-400">
+                        {NAV_LINKS.map((link) =>
+                            link.children ? (
+                                <div key={link.label} className="group relative">
+                                    <a href={link.href} className="flex items-center gap-1 transition-colors hover:text-gray-900 dark:hover:text-gray-100">
+                                        {link.label}
+                                        <ChevronDown className="size-3.5 transition-transform group-hover:rotate-180" />
+                                    </a>
+                                    <div className="invisible absolute top-full left-0 z-30 pt-2 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100">
+                                        <div className="grid w-[26rem] grid-cols-2 gap-0.5 rounded-lg border border-gray-200 bg-white p-1.5 shadow-lg dark:border-gray-800 dark:bg-gray-900">
+                                            {link.children.map((child) => (
+                                                <a
+                                                    key={child.label}
+                                                    href={child.href}
+                                                    className="block rounded-md px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                                                >
+                                                    {child.label}
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <a key={link.label} href={link.href} className="transition-colors hover:text-gray-900 dark:hover:text-gray-100">
+                                    {link.label}
+                                </a>
+                            ),
+                        )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" asChild>
+                            <a href={`${APP_ORIGIN}/login`}>Log in</a>
+                        </Button>
+                        <Button size="sm" className={PRIMARY} asChild>
+                            <a href={`${APP_ORIGIN}/signup`}>Sign up</a>
+                        </Button>
+                    </div>
+                </nav>
+            </header>
 
-      {/* Stats Section */}
-      <section style={{ margin: '8rem 0', padding: '4rem 0' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="stats-grid-mobile"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '2rem',
-            textAlign: 'center'
-          }}
-        >
-          {[
-            { value: 50000, suffix: '+', label: 'Properties Tracked' },
-            { value: 120, suffix: '+', label: 'Markets Covered' },
-            { value: 2500, suffix: '+', label: 'Active Brokers' },
-            { value: 10, suffix: 'B+', label: 'Deal Volume' },
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.8 }}
-              viewport={{ once: true }}
-              style={{
-                padding: '2rem 1rem',
-                borderLeft: index > 0 ? '1px solid var(--border)' : 'none'
-              }}
-              className={index > 0 ? 'stat-border-mobile' : ''}
-            >
-              <div style={{
-                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-                fontWeight: 600,
-                fontFamily: 'var(--font-sans)',
-                color: 'var(--foreground)',
-                marginBottom: '0.5rem'
-              }}>
-                <AnimatedNumber value={stat.value} suffix={stat.suffix} />
-              </div>
-              <div style={{
-                fontSize: '1rem',
-                color: 'var(--text-dim)',
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 400
-              }}>
-                {stat.label}
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
+            <section className={SECTION_WHITE}>
+                <div className="mx-auto w-full max-w-6xl px-4 pt-10 pb-4 sm:px-6 lg:px-8 lg:pt-16 lg:pb-5">
+                    <h1 className="text-4xl leading-[1.1] font-semibold tracking-tight text-gray-900 sm:text-5xl sm:leading-[1.1] lg:text-6xl lg:leading-[1.1] dark:text-gray-100">
+                        <span className="mb-3 block">Institutional-grade CRE platform.</span>
+                        <span className="block">
+                            Built for the <HeroHighlight className="bg-blue-900 text-white dark:bg-blue-600 dark:text-white">mid-market.</HeroHighlight>
+                        </span>
+                    </h1>
 
-      {/* Text and Mockup Section - Feature Peek */}
-      <section style={{ margin: '8rem 0' }}>
-        <div className="section-grid-mobile feature-peek-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '7.5rem', alignItems: 'center', marginLeft: '18%' }}>
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-          >
-            <p className="text-2xl-mobile" style={{ fontSize: '2.5rem', lineHeight: '1.3', fontFamily: 'var(--font-sans)', marginBottom: '1.5rem' }}>
-              OpenMidmarket <span style={{ fontWeight: 700 }}>empowers</span> CRE brokers
-            </p>
-            <p style={{
-              fontSize: '1.1rem',
-              lineHeight: '1.7',
-              color: 'var(--text-dim)',
-              fontFamily: 'var(--font-sans)',
-              maxWidth: '400px'
-            }}>
-              Track every touchpoint with your network. See relationship history, recent interactions, and next best actions at a glance.
-            </p>
-          </motion.div>
-
-          {/* Full History Card - aligned with text */}
-          <div className="mockup-container-mobile" style={{ position: 'relative', width: '50%' }}>
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              viewport={{ once: true }}
-              style={{
-                position: 'relative',
-                width: '100%',
-                maxWidth: '700px',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                boxShadow: '0 35px 100px -15px rgba(0, 0, 0, 0.18), 0 15px 40px -10px rgba(0, 0, 0, 0.12)',
-                background: 'white'
-              }}
-            >
-              <Image
-                src="/mockups/cropped/person-detail.png"
-                alt="Full History"
-                width={700}
-                height={500}
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-              />
-              <motion.div
-                initial={{ opacity: 0, x: 10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                viewport={{ once: true }}
-                style={{
-                  position: 'absolute',
-                  right: '1rem',
-                  bottom: '1rem',
-                  background: 'var(--foreground)',
-                  color: 'var(--background)',
-                  padding: '0.5rem 0.9rem',
-                  borderRadius: '6px',
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                  fontFamily: 'var(--font-sans)',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
-                }}
-              >
-                Full History
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Digitizes Collaboration Section */}
-      <section style={{ margin: '10rem 0' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}
-        >
-          <h2 style={{
-            fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-            fontWeight: 400,
-            fontFamily: 'var(--font-sans)',
-            lineHeight: '1.15',
-            color: 'var(--foreground)',
-            marginBottom: '2rem'
-          }}>
-            OpenMidmarket{' '}
-            <span style={{ fontWeight: 700 }}>digitizes collaboration</span>
-          </h2>
-          <p className="text-xl-mobile" style={{
-            fontSize: '1.5rem',
-            lineHeight: '1.7',
-            color: 'var(--text-dim)',
-            fontFamily: 'var(--font-sans)',
-            fontWeight: 400,
-            maxWidth: '900px',
-            margin: '0 auto'
-          }}>
-            across property owners, brokers, property managers, lenders, insurers, and trades—creating operational efficiency, building trust, and increasing market liquidity and transaction volumes.
-          </p>
-        </motion.div>
-      </section>
-
-      {/* Built for the Midmarket Section */}
-      <section id="features" style={{ margin: '12rem 0' }}>
-        <h2 style={{ 
-          fontSize: 'clamp(3rem, 10vw, 6rem)', 
-          marginBottom: '4rem',
-          fontFamily: 'var(--font-sans)',
-          fontWeight: 400,
-          color: 'var(--foreground)'
-        }}>Built for the Midmarket</h2>
-        <div className="divider" />
-
-        {[
-          { title: 'For Property Owners', desc: '', href: '/owners' },
-          { title: 'For Brokers', desc: '', href: '/brokers' },
-          // { title: 'For Property Managers', desc: '' },
-          { title: 'For Lenders', desc: '', href: '/lenders' },
-          // { title: 'For Insurance Agencies', desc: '' },
-        ].map((item, index) => {
-          const row = (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              viewport={{ once: true }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '3rem 0',
-                borderBottom: '1px solid var(--border)',
-                transition: 'background-color 0.3s ease'
-              }}
-              className="feature-row"
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '3rem' }}>
-                <span style={{ opacity: 0.4, fontFamily: 'var(--font-sans)' }}>0{index + 1}</span>
-                <div>
-                  <h3 style={{ 
-                    fontSize: '2rem',
-                    fontFamily: 'var(--font-sans)',
-                    fontWeight: 400,
-                    color: 'var(--foreground)'
-                  }}>{item.title}</h3>
-                  {item.desc && <p style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-sans)' }}>{item.desc}</p>}
+                    <p className="mt-6 max-w-2xl text-xl leading-relaxed text-gray-600 dark:text-gray-400">
+                        A unified ecosystem leveraging <span className={EMPHASIS}>predictive AI</span>, <span className={EMPHASIS}>real-time data</span>, and a
+                        dedicated <span className={EMPHASIS}>CRE professional network</span>.{" "}
+                        <span className={EMPHASIS}>Gain an edge with institutional power tailored for your speed.</span>
+                    </p>
                 </div>
-              </div>
-              <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '4rem' }}>
-                <ArrowUpRight strokeWidth={1} size={32} />
-              </div>
-            </motion.div>
-          );
-          return item.href ? <a key={index} href={item.href} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>{row}</a> : row;
-        })}
-      </section>
+            </section>
 
-      {/* Advocacy Section */}
-      <section style={{
-        margin: '10rem 0',
-        padding: '5rem 4rem',
-        backgroundColor: 'var(--foreground)',
-        color: 'var(--background)',
-        borderRadius: '16px'
-      }}
-      className="advocacy-section-mobile"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="section-grid-mobile"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '4rem',
-            alignItems: 'center'
-          }}
-        >
-          <div>
-            <span style={{
-              fontSize: '0.9rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.15em',
-              opacity: 0.6,
-              marginBottom: '1.5rem',
-              display: 'block'
-            }}>
-              Our Commitment
-            </span>
-            <h2 style={{
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-              fontWeight: 400,
-              fontFamily: 'var(--font-sans)',
-              lineHeight: '1.2',
-              marginBottom: '0'
-            }}>
-              <span style={{ fontWeight: 700 }}>5%</span> of profits dedicated to advocacy
-            </h2>
-          </div>
-          <div>
-            <p className="text-xl-mobile" style={{
-              fontSize: '1.35rem',
-              lineHeight: '1.7',
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 400,
-              opacity: 0.9
-            }}>
-              Mid-market property owners lack a unified voice, resulting in unfair rent control and burdensome regulations. OpenMidmarket advocates for its members, dedicating 5% of profits to regulatory initiatives that ensure fair, balanced policy.
-            </p>
-          </div>
-        </motion.div>
-      </section>
+            <section className={SECTION_GRAY}>
+                <div className="mx-auto w-full max-w-6xl px-4 pt-4 pb-14 sm:px-6 lg:px-8 lg:pt-5 lg:pb-20">
+                    <div className="relative">
+                        <div
+                            aria-hidden
+                            className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-br from-blue-200 via-blue-100 to-transparent opacity-70 blur-2xl dark:from-blue-900/40 dark:via-blue-950/20 dark:opacity-40"
+                        />
+                        <BrowserWindow url="app.openmidmarket.com/analytics/rent-trends">
+                            <div className="bg-gray-50 p-6 dark:bg-gray-900/40">
+                                <RentTrendsPreview initialRentResults={initialRentResults ?? undefined} />
+                            </div>
+                        </BrowserWindow>
+                    </div>
+                </div>
+            </section>
 
-      {/* Visual Break */}
-      <section className="visual-break-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', height: '60vh' }}>
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px' }}
-        >
-          <Image src="/images/detail.png" alt="Detail" fill style={{ objectFit: 'cover' }} />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px' }}
-        >
-          <Image src="/images/office.png" alt="Office" fill style={{ objectFit: 'cover' }} />
-        </motion.div>
-      </section>
+            <section className={SECTION_WHITE}>
+                <div className={SECTION_CONTAINER}>
+                    <div className="grid gap-12 sm:grid-cols-3">
+                        {VALUE_PILLARS.map((pillar) => (
+                            <div key={pillar.title}>
+                                <pillar.icon className="size-8 text-blue-900 dark:text-blue-400" />
+                                <h3 className="mt-4 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">{pillar.title}</h3>
+                                <p className="mt-2 text-base leading-relaxed text-gray-600 dark:text-gray-400">{pillar.body}</p>
+                            </div>
+                        ))}
+                    </div>
 
-      {/* CTA Section */}
-      <section id="contact" style={{ margin: '12rem 0', textAlign: 'center' }}>
-        <h2 className="high-contrast font-kyoto" style={{ marginBottom: '4rem' }}>
-          <span className="font-light">Join the</span> <br />
-          <span className="cursive">Community</span>
-        </h2>
-        <p style={{ maxWidth: '500px', margin: '0 auto 3rem', fontSize: '1.2rem', color: 'var(--text-dim)' }}>
-          Join the exclusive circle of brokers who will define the future of the industry.
-        </p>
-        <a className="btn-primary" href="https://app.openmidmarket.com/signup" style={{ padding: '1.5rem 4rem', fontSize: '1rem', display: 'inline-block', textDecoration: 'none' }}>Join Now For Free</a>
-      </section>
+                    <div className="mt-12 flex justify-center">
+                        <Button className={PRIMARY} asChild>
+                            <a href={`${APP_ORIGIN}/signup`}>
+                                Get started
+                                <ArrowRight className="size-4" />
+                            </a>
+                        </Button>
+                    </div>
+                </div>
+            </section>
 
-      {/* <Footer /> */}
+            <section className={SECTION_GRAY}>
+                <div className={SECTION_CONTAINER}>
+                    <p className="text-2xl font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">Quick Stats</p>
+                    <dl className="mt-16 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+                        {STATS.map((stat) => (
+                            <div key={stat.label}>
+                                <dt className="text-6xl font-semibold tracking-tight text-blue-900 dark:text-blue-400">{stat.value}</dt>
+                                <dd className="mt-2 text-base font-medium text-gray-900 dark:text-gray-100">{stat.label}</dd>
+                                <dd className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{stat.description}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                </div>
+            </section>
 
-      <style jsx>{`
-        .feature-row {
-          border-radius: 8px;
-        }
-        .feature-row:hover {
-          background-color: #fafafa;
-          cursor: pointer;
-        }
-      `}</style>
-    </main>
-    </>
-  );
+            <section id="features" className={SECTION_WHITE}>
+                <div className={SECTION_CONTAINER}>
+                    <div className="max-w-2xl">
+                        <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">The AI-Native Workspace</h2>
+                        <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">
+                            Bring your tools, data, and workflows into a unified interface to accelerate your productivity.
+                        </p>
+                    </div>
+                    <div className="mx-auto mt-12 max-w-3xl">
+                        <AppPreview initialRentResults={initialRentResults ?? undefined} initialSalesResults={initialSalesResults ?? undefined} />
+                    </div>
+                </div>
+            </section>
+
+            <section id="audiences" className={SECTION_GRAY}>
+                <div className={SECTION_CONTAINER}>
+                    <div className="max-w-5xl 2xl:max-w-6xl">
+                        <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                            Purpose-Built for Every Stakeholder
+                            <br className="2xl:hidden" /> in the CRE Mid-Market
+                        </h2>
+                        <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">AI-tailored workflows for smarter execution</p>
+                    </div>
+                    <AudienceCards />
+                </div>
+            </section>
+
+            <section className={SECTION_WHITE}>
+                <div className={SECTION_CONTAINER}>
+                    <div className="max-w-3xl">
+                        <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                            A Unified, Stronger Voice for Protecting Midmarket Assets.
+                        </h2>
+                        <p className="mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
+                            OpenMidmarket <span className={EMPHASIS}>pledges</span> ongoing capital and structural resources to backing fair and balanced
+                            regulatory policies—
+                            <span className={EMPHASIS}>ensuring midmarket property owners have the collective institutional leverage</span> they need to thrive and{" "}
+                            <span className={EMPHASIS}>protect their investments</span> long term.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <VideoPanel
+                videoSrc="/videos/sf-residential-aerial.mp4"
+                posterSrc="/videos/sf-residential-aerial-poster.jpg"
+                footer={
+                    <div className="space-y-6">
+                        <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+                            {FOOTER_LINKS.map((link) => (
+                                <a key={link.label} href={link.href} className="transition-colors hover:text-white">
+                                    {link.label}
+                                </a>
+                            ))}
+                        </nav>
+                        <p>© {new Date().getFullYear()} OpenMidmarket</p>
+                    </div>
+                }
+            >
+                <h2 className="text-7xl font-semibold tracking-tight text-white sm:text-8xl">Uncover opportunities with OpenMidmarket AI</h2>
+                <div className="mt-10 flex justify-center">
+                    <Button size="lg" className={`h-24 px-16 text-3xl ${PRIMARY}`} asChild>
+                        <a href={`${APP_ORIGIN}/signup`}>
+                            Get started
+                            <ArrowRight className="size-7" />
+                        </a>
+                    </Button>
+                </div>
+            </VideoPanel>
+        </div>
+    );
 }
