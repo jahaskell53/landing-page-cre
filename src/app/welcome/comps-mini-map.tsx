@@ -37,21 +37,18 @@ function circlePolygon(center: [number, number], radiusMiles: number, steps = 64
     };
 }
 
+function compPoint(coordinates: [number, number], kind: "subject" | "comp"): GeoJSON.Feature<GeoJSON.Point> {
+    return {
+        type: "Feature",
+        geometry: { type: "Point", coordinates },
+        properties: { kind },
+    };
+}
+
 function pointsGeoJSON(subject: [number, number], comps: [number, number][]): GeoJSON.FeatureCollection {
     return {
         type: "FeatureCollection",
-        features: [
-            {
-                type: "Feature",
-                geometry: { type: "Point", coordinates: subject },
-                properties: { kind: "subject" },
-            },
-            ...comps.map((coordinates) => ({
-                type: "Feature",
-                geometry: { type: "Point", coordinates },
-                properties: { kind: "comp" },
-            })),
-        ],
+        features: [compPoint(subject, "subject"), ...comps.map((coordinates) => compPoint(coordinates, "comp"))],
     };
 }
 
@@ -110,7 +107,9 @@ function fitToData(map: mapboxgl.Map, subject: [number, number], comps: [number,
     const bounds = new mapboxgl.LngLatBounds();
     bounds.extend(subject);
     comps.forEach((coord) => bounds.extend(coord));
-    circlePolygon(subject, radiusMiles, 16).geometry.coordinates[0].forEach((coord) => bounds.extend(coord));
+    circlePolygon(subject, radiusMiles, 16).geometry.coordinates[0].forEach((coord) =>
+        bounds.extend(coord as [number, number]),
+    );
     map.fitBounds(bounds, { padding: 16, duration: 0, maxZoom: 14 });
 }
 
