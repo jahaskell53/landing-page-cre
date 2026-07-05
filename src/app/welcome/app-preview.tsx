@@ -5,7 +5,7 @@ import { ArrowUpRight, Building2, DoorOpen, Gauge, Heart, LineChart, MessageCirc
 import { motion } from "motion/react";
 import type { TrendRow } from "@/app/(app)/analytics/rent-trends/trends-utils";
 import { HomeIcon, PeopleIcon, SearchIcon } from "@/app/(app)/network/icons";
-import { ValuationProjectionChart } from "@/components/application/irr-projection-chart";
+import { ValueAddProjectionChart, VALUE_ADD_PLAN } from "@/components/application/irr-projection-chart";
 import type { SalesTrendRowV2 } from "@/db/rpc";
 import { cn } from "@/lib/utils";
 import { BrowserWindow } from "./browser-window";
@@ -38,12 +38,17 @@ const PREVIEW_CARD = "rounded-xl border border-gray-200 bg-white dark:border-gra
 
 type TabLabel = (typeof PREVIEW_NAV)[number]["label"];
 
-function StatRow({ stats }: { stats: { k: string; v: string }[] }) {
+function StatRow({ stats }: { stats: { k: string; v: string; delta?: string }[] }) {
     return (
         <div className="grid grid-cols-3 gap-2.5">
             {stats.map((s) => (
                 <div key={s.v} className={`${PREVIEW_CARD} p-4`}>
-                    <div className="text-base font-semibold text-gray-900 tabular-nums dark:text-gray-100">{s.k}</div>
+                    <div className="flex items-baseline gap-1.5">
+                        <span className="text-base font-semibold text-gray-900 tabular-nums dark:text-gray-100">{s.k}</span>
+                        {s.delta && (
+                            <span className="text-xs font-semibold text-[#2f855a] tabular-nums dark:text-[#38a06e]">{s.delta}</span>
+                        )}
+                    </div>
                     <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">{s.v}</div>
                 </div>
             ))}
@@ -160,30 +165,45 @@ function PanelHeader({ title, badge, live = false }: { title: string; badge: str
 function ValuationPanel() {
     return (
         <>
-            <PanelHeader title="Valuation" badge="Estimate" />
+            <PanelHeader title="Valuation" badge="Estimate + plan" live />
             <StatRow
                 stats={[
-                    { k: "$4.2M", v: "Est. value" },
+                    { k: "$4.2M", v: "Est. value today" },
+                    { k: "$5.5M", v: "Stabilized (Y5)", delta: "+31%" },
                     { k: "5.3%", v: "Implied cap" },
-                    { k: "$142k", v: "$/door" },
                 ]}
             />
             <div className={`${PREVIEW_CARD} p-4`}>
                 <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                    <span>Estimated range</span>
-                    <span>Confidence: High</span>
+                    <span>Value &amp; NOI with value-add plan</span>
+                    <span>5-yr projection</span>
                 </div>
-                <div className="mt-3 flex items-center gap-2.5">
-                    <span className="text-sm font-semibold text-gray-900 tabular-nums dark:text-gray-100">$3.9M</span>
-                    <div className="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">
-                        <div className="h-full w-[62%] rounded-full bg-gray-900 dark:bg-gray-100" />
-                    </div>
-                    <span className="text-sm font-semibold text-gray-900 tabular-nums dark:text-gray-100">$4.5M</span>
-                </div>
-                <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">Based on 18 nearby closed comps and your current NOI.</p>
+                <ValueAddProjectionChart className="mt-3" />
+                <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                    Blends 18 nearby closed comps, your rent roll, and the modeled lift from each planned improvement.
+                </p>
             </div>
             <div className={`${PREVIEW_CARD} p-4`}>
-                <ValuationProjectionChart currentValueM={4.2} />
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">Value-add plan</p>
+                <div className="mt-3 space-y-2.5">
+                    {VALUE_ADD_PLAN.map((e) => (
+                        <div key={e.n} className="flex items-center gap-3">
+                            <span className="flex size-5 flex-none items-center justify-center rounded-full bg-gray-900 text-[10px] font-bold text-white dark:bg-gray-100 dark:text-gray-900">
+                                {e.n}
+                            </span>
+                            <div className="min-w-0 flex-1">
+                                <div className="truncate text-[13px] font-medium text-gray-900 dark:text-gray-100">{e.name}</div>
+                                <div className="truncate text-[11px] text-gray-500 dark:text-gray-400">
+                                    {e.detail} · {e.when}
+                                </div>
+                            </div>
+                            <div className="flex-none text-right">
+                                <div className="text-[13px] font-semibold text-[#2f855a] tabular-nums dark:text-[#38a06e]">+${e.noi}k</div>
+                                <div className="text-[9px] text-gray-400 dark:text-gray-500">NOI / yr</div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </>
     );
