@@ -9,6 +9,7 @@ import { ValuationProjectionChart } from "@/components/application/irr-projectio
 import type { SalesTrendRowV2 } from "@/db/rpc";
 import { cn } from "@/lib/utils";
 import { BrowserWindow } from "./browser-window";
+import { HoldingsPreview } from "./holdings-preview";
 import { ListingsMapPreview } from "./listings-map-preview";
 import { NetworkPreview } from "./network-preview";
 import { NewsPreview } from "./news-preview";
@@ -144,48 +145,6 @@ function HomePanel() {
     );
 }
 
-function HoldingsPanel() {
-    return (
-        <>
-            <div className="flex items-baseline justify-between border-b border-gray-200 pb-4 dark:border-gray-800">
-                <h2 className="text-base leading-none font-semibold text-gray-900 dark:text-gray-100">Portfolio</h2>
-                <span className="rounded-md border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 dark:border-gray-700 dark:text-gray-400">
-                    3 assets
-                </span>
-            </div>
-            <StatRow
-                stats={[
-                    { k: "248", v: "Total units" },
-                    { k: "94%", v: "Avg occupancy" },
-                    { k: "$38.2M", v: "Portfolio val." },
-                ]}
-            />
-            {[
-                { n: "Lakeshore Apartments", l: "Oakland · 96 units", d: "+0.4%", up: true },
-                { n: "Mission Court", l: "San Jose · 84 units", d: "-0.2%", up: false },
-                { n: "Elm Street Flats", l: "Fremont · 68 units", d: "+0.6%", up: true },
-            ].map((h) => (
-                <div key={h.n} className={`flex items-center gap-3 ${PREVIEW_CARD} p-3`}>
-                    <div className="flex size-8 shrink-0 items-center justify-center rounded-md border border-gray-200 dark:border-gray-700">
-                        <Building2 className="size-4 text-gray-400" />
-                    </div>
-                    <div className="min-w-0">
-                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{h.n}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{h.l}</div>
-                    </div>
-                    <span
-                        className={
-                            "ml-auto text-xs font-semibold tabular-nums " + (h.up ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400")
-                        }
-                    >
-                        {h.d}
-                    </span>
-                </div>
-            ))}
-        </>
-    );
-}
-
 function PanelHeader({ title, badge, live = false }: { title: string; badge: string; live?: boolean }) {
     return (
         <div className="flex items-baseline justify-between border-b border-gray-200 pb-4 dark:border-gray-800">
@@ -264,7 +223,7 @@ function ResearchPanel() {
 
 const PANELS: Record<TabLabel, (props: AppPreviewData) => React.JSX.Element> = {
     Home: () => <HomePanel />,
-    Holdings: () => <HoldingsPanel />,
+    Holdings: () => <HoldingsPreview />,
     Valuation: () => <ValuationPanel />,
     "Rent Comps": () => <RentCompsPanel />,
     "Sales Comps": () => <SalesCompsPanel />,
