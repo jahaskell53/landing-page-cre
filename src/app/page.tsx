@@ -334,7 +334,6 @@ export default async function HomePage() {
           <div className="max-w-5xl 2xl:max-w-6xl">
             <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
               Purpose-Built for Every Stakeholder
-              <br className="2xl:hidden" /> in the CRE Mid-Market
             </h2>
             <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">
               AI-tailored workflows for smarter execution
