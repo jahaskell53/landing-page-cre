@@ -10,15 +10,19 @@ const MOCK_PREFERENCES = {
     interests: "Multifamily acquisitions · Bay Area mid-market",
 };
 
+const REDWOOD_CITY_COUNCIL_IMAGE = "/welcome/redwood-city-council.jpg";
+
 const MOCK_ARTICLES = [
     {
-        title: "Oakland council delays rent-cap vote",
-        description: "City leaders postponed a decision on new rent stabilization rules affecting mid-market multifamily owners across the East Bay.",
+        title: "Redwood City council delays rent-cap vote",
+        description: "City leaders postponed a decision on new rent stabilization rules affecting mid-market multifamily owners across the Peninsula.",
         source: "San Francisco Chronicle",
         date: "2 hours ago",
-        counties: ["Alameda"],
+        counties: ["San Mateo"],
         tags: ["Regulatory", "Multifamily"],
-        matchReason: "Matches Alameda County in your regions",
+        matchReason: "Relevant to Peninsula multifamily owners",
+        imageSrc: REDWOOD_CITY_COUNCIL_IMAGE,
+        imageAlt: "Redwood City welcome sign downtown",
     },
     {
         title: "Santa Clara permits up 12% QoQ",
@@ -40,12 +44,27 @@ const MOCK_ARTICLES = [
     },
 ];
 
-function MockArticleCard({ title, description, source, date, counties, tags, matchReason }: (typeof MOCK_ARTICLES)[number]) {
+function MockArticleCard({
+    title,
+    description,
+    source,
+    date,
+    counties,
+    tags,
+    matchReason,
+    imageSrc,
+    imageAlt,
+}: (typeof MOCK_ARTICLES)[number]) {
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
             <div className="flex min-w-0 gap-3">
                 <div className="flex h-20 w-24 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-                    <Newspaper className="size-6 text-gray-300 dark:text-gray-600" />
+                    {imageSrc ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={imageSrc} alt={imageAlt ?? title} className="h-full w-full object-cover" />
+                    ) : (
+                        <Newspaper className="size-6 text-gray-300 dark:text-gray-600" />
+                    )}
                 </div>
                 <div className="min-w-0 flex-1 overflow-hidden">
                     <p className="mb-1 flex items-center gap-1 text-[10px] font-medium text-blue-700 dark:text-blue-400">

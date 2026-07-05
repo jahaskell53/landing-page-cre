@@ -5,6 +5,7 @@ import { ArrowUpRight, Building2, DoorOpen, Gauge, Heart, LineChart, MessageCirc
 import { motion } from "motion/react";
 import type { TrendRow } from "@/app/(app)/analytics/rent-trends/trends-utils";
 import { HomeIcon, PeopleIcon, SearchIcon } from "@/app/(app)/network/icons";
+import { generateAuroraGradient, getInitials } from "@/app/(app)/network/utils";
 import { ValueAddProjectionChart, VALUE_ADD_PLAN } from "@/components/application/irr-projection-chart";
 import type { SalesTrendRowV2 } from "@/db/rpc";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,17 @@ const PREVIEW_NAV = [
 
 const PREVIEW_CARD = "rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800";
 
+function MockProfileAvatar({ name, className }: { name: string; className?: string }) {
+    return (
+        <div
+            className={cn("flex shrink-0 items-center justify-center rounded-full text-xs font-medium text-white", className ?? "size-7")}
+            style={{ background: generateAuroraGradient(name) }}
+        >
+            {getInitials(name)}
+        </div>
+    );
+}
+
 type TabLabel = (typeof PREVIEW_NAV)[number]["label"];
 
 function StatRow({ stats }: { stats: { k: string; v: string; delta?: string }[] }) {
@@ -59,19 +71,21 @@ function StatRow({ stats }: { stats: { k: string; v: string; delta?: string }[] 
 function MockFeedLinkPost({
     ago,
     author,
-    authorInitials,
     siteName,
     title,
     description,
     hostname,
+    imageSrc,
+    imageAlt,
 }: {
     ago: string;
     author: string;
-    authorInitials: string;
     siteName: string;
     title: string;
     description: string;
     hostname: string;
+    imageSrc?: string;
+    imageAlt?: string;
 }) {
     return (
         <article className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
@@ -81,10 +95,17 @@ function MockFeedLinkPost({
                         <span className="text-xs text-gray-500 dark:text-gray-400">{ago}</span>
                     </div>
                     <div className="mb-4 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800">
-                        <div className="relative w-full overflow-hidden bg-gray-100 p-4 dark:bg-gray-800">
-                            <div className="mx-auto flex h-24 w-full items-center justify-center rounded bg-gray-200 dark:bg-gray-700">
-                                <Newspaper className="size-8 text-gray-400" />
-                            </div>
+                        <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            {imageSrc ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={imageSrc} alt={imageAlt ?? title} className="h-full w-full object-cover" />
+                            ) : (
+                                <div className="flex h-24 w-full items-center justify-center p-4">
+                                    <div className="mx-auto flex h-24 w-full items-center justify-center rounded bg-gray-200 dark:bg-gray-700">
+                                        <Newspaper className="size-8 text-gray-400" />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className="p-4">
                             <div className="mb-1 text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">{siteName}</div>
@@ -99,9 +120,7 @@ function MockFeedLinkPost({
                 </div>
                 <div className="mt-auto flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className="flex size-7 items-center justify-center rounded-full bg-gray-200 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                            {authorInitials}
-                        </div>
+                        <MockProfileAvatar name={author} />
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{author}</p>
                     </div>
                     <div className="flex gap-1">
@@ -127,10 +146,10 @@ function HomePanel() {
                     Liked
                 </span>
             </div>
-            {[{ n: "Dana R.", t: "Just closed a 24-unit in Oakland at a 5.6 cap." }].map((p) => (
+            {[{ n: "Dana R.", t: "Just closed a 24-unit in Burlingame at a 5.6 cap." }].map((p) => (
                 <div key={p.n} className={`${PREVIEW_CARD} p-4`}>
                     <div className="flex items-center gap-2">
-                        <div className="size-7 rounded-full bg-gray-200 dark:bg-gray-700" />
+                        <MockProfileAvatar name={p.n} />
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{p.n}</div>
                         <div className="ml-auto text-xs text-gray-400">2h</div>
                     </div>
@@ -139,12 +158,13 @@ function HomePanel() {
             ))}
             <MockFeedLinkPost
                 ago="5 hours ago"
-                author="OpenMidmarket"
-                authorInitials="OM"
+                author="Marcus L."
                 siteName="San Francisco Chronicle"
-                title="Oakland council delays rent-cap vote"
-                description="City leaders postponed a decision on new rent stabilization rules affecting mid-market multifamily owners across the East Bay."
+                title="Redwood City council delays rent-cap vote"
+                description="City leaders postponed a decision on new rent stabilization rules affecting mid-market multifamily owners across the Peninsula."
                 hostname="sfchronicle.com"
+                imageSrc="/welcome/redwood-city-council.jpg"
+                imageAlt="Redwood City welcome sign downtown"
             />
         </>
     );
