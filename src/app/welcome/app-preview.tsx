@@ -137,6 +137,49 @@ function MockFeedLinkPost({
     );
 }
 
+function MockFeedTextPost({
+    ago,
+    author,
+    body,
+    hashtags,
+    likes,
+    comments,
+}: {
+    ago: string;
+    author: string;
+    body: string;
+    hashtags?: string;
+    likes?: number;
+    comments?: number;
+}) {
+    return (
+        <article className={`${PREVIEW_CARD} p-4`}>
+            <div className="flex items-center gap-2">
+                <MockProfileAvatar name={author} />
+                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{author}</div>
+                <div className="ml-auto text-xs text-gray-400">{ago}</div>
+            </div>
+            <div className="mt-2.5 space-y-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="line-clamp-6 whitespace-pre-line">{body}</p>
+                {hashtags ? <p className="text-xs text-blue-700 dark:text-blue-400">{hashtags}</p> : null}
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400">…more</p>
+            </div>
+            {(likes != null || comments != null) && (
+                <div className="mt-3 flex gap-1 border-t border-gray-100 pt-2.5 dark:border-gray-700">
+                    <span className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        <Heart className="size-4" />
+                        {likes}
+                    </span>
+                    <span className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        <MessageCircle className="size-4" />
+                        {comments}
+                    </span>
+                </div>
+            )}
+        </article>
+    );
+}
+
 function HomePanel() {
     return (
         <>
@@ -146,16 +189,26 @@ function HomePanel() {
                     Liked
                 </span>
             </div>
-            {[{ n: "Dana R.", t: "Just closed a 24-unit in Burlingame at a 5.6 cap." }].map((p) => (
-                <div key={p.n} className={`${PREVIEW_CARD} p-4`}>
-                    <div className="flex items-center gap-2">
-                        <MockProfileAvatar name={p.n} />
-                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{p.n}</div>
-                        <div className="ml-auto text-xs text-gray-400">2h</div>
-                    </div>
-                    <p className="mt-2.5 text-sm text-gray-600 dark:text-gray-400">{p.t}</p>
-                </div>
-            ))}
+            <MockFeedTextPost
+                ago="2h"
+                author="Dana R."
+                body={`Redwood City just delayed a rent-cap vote. And it's being hailed as a win for renters. But read the draft: the cap would apply to renewals and new leases at CPI or 5% — vacancy control by another name.
+
+In practice, that keeps Peninsula development capital on ice. Who writes an 8-figure check when your pro forma could get rewritten in one election cycle?
+
+Three observations:
+
+1) Mid-market operators already report rent to credit bureaus and offer first right of refusal — the tools policymakers say they want.
+
+2) Supply is what actually bends the curve. Caps don't add units; permitting and construction do.
+
+3) Wage growth has outpaced rent growth in professionally managed stock for 41 consecutive months. That's the trend worth watching — not the saber rattling.
+
+Today's delay is a speed bump, not the end of the fight.`}
+                hashtags="#housing #rentcontrol #multifamily"
+                likes={524}
+                comments={53}
+            />
             <MockFeedLinkPost
                 ago="5 hours ago"
                 author="Marcus L."
