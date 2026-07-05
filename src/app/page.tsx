@@ -22,10 +22,9 @@ export const metadata: Metadata = {
   description:
     "OpenMidmarket is the AI platform that democratizes the multifamily mid-market — AI-powered CRM, real-time market data, and a dedicated professional network in one clean workspace.",
   openGraph: {
-    title:
-      "OpenMidmarket — The AI platform that democratizes the multifamily mid-market",
+    title: "Institutional-grade CRE platform. Built for the mid-market.",
     description:
-      "AI-powered CRM, real-time market data, and a dedicated CRE professional network — in one workspace.",
+      "A unified ecosystem leveraging predictive AI, real-time data, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
     images: "/og-preview.jpeg",
   },
 };
