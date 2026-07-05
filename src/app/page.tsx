@@ -103,10 +103,22 @@ const STATS = [
       "Total number of physical commercial assets tracked by AI within the U.S. inventory core.",
   },
   {
+    value: "$197B",
+    label: "Traded Capital",
+    description:
+      "Total capital volume represented by mid-market transactions, accounting for roughly 35% of domestic deal volume.",
+  },
+  {
     value: "140K+",
     label: "Annual Transactions",
     description:
       "Continuous transactional liquidity happening strictly inside the mid-market commercial tier.",
+  },
+  {
+    value: "85%",
+    label: "Transactional Velocity",
+    description:
+      "The proportion of all annual U.S. commercial property trades by asset count driven consistently by mid-market transactions.",
   },
   {
     value: "1.5M+",
@@ -131,18 +143,6 @@ const STATS = [
     label: "Fee Revenue Capture",
     description:
       "Total proportion of commercial brokerage fee revenue captured by regional boutique firms, independent brokerages, and localized operators.",
-  },
-  {
-    value: "85%",
-    label: "Transactional Velocity",
-    description:
-      "The proportion of all annual U.S. commercial property trades by asset count driven consistently by mid-market transactions.",
-  },
-  {
-    value: "$197B",
-    label: "Traded Capital",
-    description:
-      "Total capital volume represented by mid-market transactions, accounting for roughly 35% of domestic deal volume.",
   },
 ];
 
