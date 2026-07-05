@@ -33,12 +33,24 @@ async function readErrorMessage(response: Response): Promise<string> {
 
 import { APP_ORIGIN } from "@/lib/app-origin";
 
+function resolveApiUrl(path: string): string {
+    if (!path.startsWith("/")) {
+        return path;
+    }
+    // Browser calls use the local `/api/*` proxy to avoid cross-origin CORS on app.openmidmarket.com.
+    if (typeof window !== "undefined") {
+        return path;
+    }
+    return `${APP_ORIGIN}${path}`;
+}
+
 /**
- * Typed fetch wrapper for app `/api/*` routes (cross-origin on the marketing site).
+ * Typed fetch wrapper for app `/api/*` routes.
+ * Client-side calls hit same-origin proxies on the marketing site; server-side calls go direct.
  * Throws `ApiFetchError` on non-2xx responses using the `{ error }` envelope from `withApiRoute`.
  */
 export async function apiFetch<T>(path: string, opts?: RequestInit): Promise<T> {
-    const url = path.startsWith("/") ? `${APP_ORIGIN}${path}` : path;
+    const url = resolveApiUrl(path);
     const response = await fetch(url, {
         credentials: "omit",
         ...opts,
