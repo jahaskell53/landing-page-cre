@@ -17,7 +17,7 @@ import { VideoPanel } from "./welcome/video-panel";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Institutional-grade CRE platform. Built for the mid-market.",
+  title: "OpenMidmarket — Institutional-grade CRE platform. Built for the mid-market.",
   description:
     "A unified ecosystem leveraging predictive AI, real-time data, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
   openGraph: {
