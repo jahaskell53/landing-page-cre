@@ -33,7 +33,7 @@ export function VideoPanel({
     return (
         <section
             ref={sectionRef}
-            className="relative flex min-h-screen items-center overflow-hidden border-b border-gray-200 dark:border-gray-800"
+            className="relative grid min-h-screen place-items-center overflow-hidden border-b border-gray-200 dark:border-gray-800"
         >
             <motion.video
                 ref={videoRef}
@@ -56,7 +56,7 @@ export function VideoPanel({
             <div aria-hidden className="absolute inset-0 bg-black/25" />
 
             <motion.div
-                className="relative mx-auto w-full max-w-6xl px-4 py-32 text-left sm:px-6 lg:px-8"
+                className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-start px-4 py-32 text-left sm:px-6 lg:px-8"
                 initial={{ opacity: 0, y: 32 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-15% 0px" }}
