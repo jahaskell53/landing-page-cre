@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useSyncExternalStore } from "react";
 import { APP_ORIGIN } from "@/lib/app-origin";
+import { captureLandingCtaClick, type LandingCtaLocation } from "@/lib/tracking";
 
 /**
  * Public early-access waitlist questionnaire (Typeform).
@@ -41,12 +42,26 @@ const getServerInviteSnapshot = (): string | null => null;
  * Designed to be used as the child of `<Button asChild>` — `className` and other
  * props are forwarded to the underlying `<a>` by Radix's `Slot`.
  */
-export function SignupCta({ children, ...props }: Omit<React.ComponentProps<"a">, "href">) {
+type SignupCtaProps = Omit<React.ComponentProps<"a">, "href"> & {
+    trackingLocation?: LandingCtaLocation;
+    audience?: string;
+};
+
+export function SignupCta({ children, trackingLocation, audience, onClick, ...props }: SignupCtaProps) {
     const invite = useSyncExternalStore(subscribe, getInviteSnapshot, getServerInviteSnapshot);
     const href = resolveHref(invite);
 
     return (
-        <a href={href} {...props}>
+        <a
+            href={href}
+            onClick={(event) => {
+                if (trackingLocation) {
+                    captureLandingCtaClick(trackingLocation, href, audience);
+                }
+                onClick?.(event);
+            }}
+            {...props}
+        >
             {children}
         </a>
     );

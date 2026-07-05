@@ -7,10 +7,7 @@ Marketing site for OpenMidmarket. Separate Next.js project, independent of `app/
 ```
 landing/
 ├── src/app/
-│   ├── page.tsx          # Homepage
-│   ├── brokers/          # Broker-focused landing page
-│   ├── lenders/          # Lender-focused landing page
-│   └── owners/           # Owner-focused landing page
+│   └── page.tsx          # Homepage (audience sections via hash anchors)
 ├── public/               # Static assets
 └── package.json          # Independent dependencies
 ```

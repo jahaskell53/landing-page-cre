@@ -4,7 +4,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { APP_ORIGIN } from "@/lib/app-origin";
+import { SignupCta } from "./signup-cta";
 
 const EMPHASIS = "font-semibold text-blue-900 dark:text-blue-400";
 const PRIMARY = "bg-blue-900 text-white hover:bg-blue-950 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500";
@@ -184,10 +184,14 @@ export function AudienceCards() {
                             <h3 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">{headline}</h3>
                             <p className="mt-4 text-lg leading-relaxed text-gray-600 dark:text-gray-400">{body}</p>
                             <Button className={`mt-8 ${PRIMARY}`} asChild>
-                                <a href={`${APP_ORIGIN}/signup`} tabIndex={isActive ? 0 : -1}>
+                                <SignupCta
+                                    trackingLocation="audience_get_started"
+                                    audience={AUDIENCES[index].id}
+                                    tabIndex={isActive ? 0 : -1}
+                                >
                                     Get started
                                     <ArrowRight className="size-4" />
-                                </a>
+                                </SignupCta>
                             </Button>
                         </motion.div>
                     );

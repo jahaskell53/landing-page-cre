@@ -1,6 +1,7 @@
 import { ArrowRight, Brain, ChevronDown, TrendingUp, Zap } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { TrackedLink } from "@/components/tracking/tracked-link";
 import { Button } from "@/components/ui/button";
 import { APP_ORIGIN } from "@/lib/app-origin";
 import { AppPreview } from "./welcome/app-preview";
@@ -176,10 +177,12 @@ export default async function HomePage() {
                     </div>
                     <div className="flex items-center gap-2">
                         <Button variant="ghost" size="sm" asChild>
-                            <a href={`${APP_ORIGIN}/login`}>Log in</a>
+                            <TrackedLink href={`${APP_ORIGIN}/login`} trackingLocation="header_login">
+                                Log in
+                            </TrackedLink>
                         </Button>
                         <Button size="sm" className={PRIMARY} asChild>
-                            <SignupCta>Sign up</SignupCta>
+                            <SignupCta trackingLocation="header_signup">Sign up</SignupCta>
                         </Button>
                     </div>
                 </nav>
@@ -232,7 +235,7 @@ export default async function HomePage() {
 
                     <div className="mt-12 flex justify-center">
                         <Button className={PRIMARY} asChild>
-                            <SignupCta>
+                            <SignupCta trackingLocation="value_pillars_get_started">
                                 Get started
                                 <ArrowRight className="size-4" />
                             </SignupCta>
@@ -318,7 +321,7 @@ export default async function HomePage() {
                 <h2 className="text-7xl font-semibold tracking-tight text-white sm:text-8xl">Uncover opportunities with OpenMidmarket AI</h2>
                 <div className="mt-10 flex justify-center">
                     <Button size="lg" className={`h-24 px-16 text-3xl ${PRIMARY}`} asChild>
-                        <SignupCta>
+                        <SignupCta trackingLocation="footer_get_started">
                             Get started
                             <ArrowRight className="size-7" />
                         </SignupCta>
