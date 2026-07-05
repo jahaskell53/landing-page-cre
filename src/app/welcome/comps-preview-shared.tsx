@@ -4,37 +4,6 @@ import { SegmentedControl } from "@/components/analytics/filters/segmented-contr
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-const COMP_PIN_POSITIONS = [
-    { left: "28%", top: "35%" },
-    { left: "62%", top: "28%" },
-    { left: "72%", top: "58%" },
-    { left: "38%", top: "68%" },
-    { left: "55%", top: "45%" },
-];
-
-export function MockCompsMiniMap() {
-    return (
-        <div className="relative h-[120px] overflow-hidden rounded-lg border border-gray-200 bg-[#e8eef4] dark:border-gray-700 dark:bg-gray-800">
-            <div
-                className="absolute inset-0 opacity-40 dark:opacity-20"
-                style={{
-                    backgroundImage: "linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px)",
-                    backgroundSize: "24px 24px",
-                }}
-            />
-            <div className="absolute top-1/2 left-1/2 h-[72px] w-[72px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-blue-400/70 bg-blue-400/10" />
-            {COMP_PIN_POSITIONS.map((pos, i) => (
-                <div
-                    key={i}
-                    className="absolute h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white bg-blue-600 shadow-sm dark:border-gray-800"
-                    style={{ left: pos.left, top: pos.top }}
-                />
-            ))}
-            <div className="absolute top-1/2 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-orange-500 shadow dark:border-gray-800" />
-        </div>
-    );
-}
-
 export function MockAddressField({ value }: { value: string }) {
     return (
         <div className="flex h-8 min-w-0 items-center truncate rounded-md border border-gray-200 bg-white px-2.5 text-xs text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100">

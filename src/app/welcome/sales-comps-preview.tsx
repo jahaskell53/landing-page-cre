@@ -10,22 +10,31 @@ import {
     COMPS_PREVIEW_SHELL,
     DistributionBar,
     MockAddressField,
-    MockCompsMiniMap,
     MockInputField,
     MockRadiusSlider,
     MockSearchByToggle,
     StatCell,
 } from "./comps-preview-shared";
+import { CompsMiniMap } from "./comps-mini-map";
 
 const SUBJECT = {
-    street: "1420 Foothill Blvd",
+    street: "850 Main St",
     meta: "24 units · built 1965",
 };
 
+const SUBJECT_COORDS: [number, number] = [-122.2294, 37.4862];
+const COMP_COORDS: [number, number][] = [
+    [-122.2348, 37.4821],
+    [-122.2246, 37.4894],
+    [-122.2412, 37.4796],
+    [-122.2278, 37.4912],
+    [-122.2364, 37.4848],
+];
+
 const MOCK_COMPS = [
-    { street: "755 14th St", city: "Oakland, CA", price: "$3.6M", ppu: "$150k", cap: "5.6%", score: 94 },
-    { street: "892 34th St", city: "Oakland, CA", price: "$2.9M", ppu: "$161k", cap: "5.2%", score: 89 },
-    { street: "2100 Webster", city: "Oakland, CA", price: "$5.2M", ppu: "$173k", cap: "5.4%", score: 86 },
+    { street: "755 Middlefield Rd", city: "Redwood City, CA", price: "$3.6M", ppu: "$150k", cap: "5.6%", score: 94 },
+    { street: "892 Broadway", city: "Redwood City, CA", price: "$2.9M", ppu: "$161k", cap: "5.2%", score: 89 },
+    { street: "2100 Jefferson Ave", city: "Redwood City, CA", price: "$5.2M", ppu: "$173k", cap: "5.4%", score: 86 },
 ];
 
 export function SalesCompsPreview() {
@@ -36,7 +45,7 @@ export function SalesCompsPreview() {
                 <div className="space-y-2.5">
                     <div className="min-w-0">
                         <Label className="mb-1 block text-[10px]">Subject Property Address</Label>
-                        <MockAddressField value="1420 Foothill Blvd, Oakland, CA" />
+                        <MockAddressField value="850 Main St, Redwood City, CA" />
                     </div>
 
                     <div className="min-w-0">
@@ -44,7 +53,7 @@ export function SalesCompsPreview() {
                         <MockRadiusSlider value={2} />
                     </div>
 
-                    <MockCompsMiniMap />
+                    <CompsMiniMap subject={SUBJECT_COORDS} comps={COMP_COORDS} radiusMiles={2} />
 
                     <div className="min-w-0 space-y-1.5">
                         <Label className="text-[10px]">Sale window</Label>
@@ -96,7 +105,7 @@ export function SalesCompsPreview() {
             <div className="min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
                 <div className="border-b border-gray-100 px-3 py-2 dark:border-gray-700">
                     <h3 className="text-xs font-semibold text-gray-900 dark:text-gray-100">11 comps found</h3>
-                    <p className="truncate text-[10px] text-gray-500">1420 Foothill Blvd, Oakland, CA</p>
+                    <p className="truncate text-[10px] text-gray-500">850 Main St, Redwood City, CA</p>
                 </div>
                 <table className="w-full table-fixed text-[10px]">
                     <colgroup>

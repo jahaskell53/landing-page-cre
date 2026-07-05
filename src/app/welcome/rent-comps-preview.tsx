@@ -9,24 +9,33 @@ import {
     COMPS_PREVIEW_SHELL,
     DistributionBar,
     MockAddressField,
-    MockCompsMiniMap,
     MockInputField,
     MockRadiusSlider,
     MockSearchByToggle,
     StatCell,
 } from "./comps-preview-shared";
+import { CompsMiniMap } from "./comps-mini-map";
 
 const SUBJECT = {
-    street: "512 Elm St",
-    city: "Fremont, CA",
+    street: "425 2nd Ave",
+    city: "San Mateo, CA",
     rent: "$2,850",
     bedBa: "2 / 2.0",
 };
 
+const SUBJECT_COORDS: [number, number] = [-122.3228, 37.5654];
+const COMP_COORDS: [number, number][] = [
+    [-122.3182, 37.5621],
+    [-122.3284, 37.5682],
+    [-122.3156, 37.5598],
+    [-122.3268, 37.5612],
+    [-122.3191, 37.5674],
+];
+
 const MOCK_COMPS = [
-    { street: "88 Oak Ave", city: "Fremont, CA", rent: "$2,650", bedBa: "2 / 2.0", score: 92 },
-    { street: "140 Pine St", city: "Fremont, CA", rent: "$2,780", bedBa: "2 / 1.5", score: 88 },
-    { street: "245 Stevenson", city: "Fremont, CA", rent: "$2,950", bedBa: "2 / 2.0", score: 85 },
+    { street: "88 S Delaware St", city: "San Mateo, CA", rent: "$2,650", bedBa: "2 / 2.0", score: 92 },
+    { street: "140 Claremont Ave", city: "San Mateo, CA", rent: "$2,780", bedBa: "2 / 1.5", score: 88 },
+    { street: "245 Laurel Ave", city: "San Mateo, CA", rent: "$2,950", bedBa: "2 / 2.0", score: 85 },
 ];
 
 export function RentCompsPreview() {
@@ -37,7 +46,7 @@ export function RentCompsPreview() {
                 <div className="space-y-2.5">
                     <div className="min-w-0">
                         <Label className="mb-1 block text-[10px]">Subject Property Address</Label>
-                        <MockAddressField value="512 Elm St, Fremont, CA" />
+                        <MockAddressField value="425 2nd Ave, San Mateo, CA" />
                     </div>
 
                     <div className="min-w-0">
@@ -45,7 +54,7 @@ export function RentCompsPreview() {
                         <MockRadiusSlider value={2} />
                     </div>
 
-                    <MockCompsMiniMap />
+                    <CompsMiniMap subject={SUBJECT_COORDS} comps={COMP_COORDS} radiusMiles={2} />
 
                     <div className="min-w-0">
                         <div className="grid grid-cols-2 gap-2">
@@ -82,7 +91,7 @@ export function RentCompsPreview() {
             <div className="min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
                 <div className="border-b border-gray-100 px-3 py-2 dark:border-gray-700">
                     <h3 className="text-xs font-semibold text-gray-900 dark:text-gray-100">12 comps found</h3>
-                    <p className="truncate text-[10px] text-gray-500">512 Elm St, Fremont, CA</p>
+                    <p className="truncate text-[10px] text-gray-500">425 2nd Ave, San Mateo, CA</p>
                 </div>
                 <table className="w-full table-fixed text-[10px]">
                     <colgroup>
