@@ -11,6 +11,8 @@ const MOCK_PREFERENCES = {
 };
 
 const REDWOOD_CITY_COUNCIL_IMAGE = "/welcome/redwood-city-council.jpg";
+const SANTA_CLARA_MISSION_IMAGE = "/welcome/santa-clara-mission.jpeg";
+const TIC_FINANCING_IMAGE = "/welcome/tic-financing.jpg";
 
 const MOCK_ARTICLES = [
     {
@@ -32,6 +34,8 @@ const MOCK_ARTICLES = [
         counties: ["Santa Clara"],
         tags: ["Market", "Development"],
         matchReason: "Relevant to multifamily acquisitions",
+        imageSrc: SANTA_CLARA_MISSION_IMAGE,
+        imageAlt: "Santa Clara Mission",
     },
     {
         title: "New TIC financing rules take effect",
@@ -41,6 +45,8 @@ const MOCK_ARTICLES = [
         counties: ["San Francisco"],
         tags: ["Regulatory", "Financing"],
         matchReason: "Matches San Francisco in your regions",
+        imageSrc: TIC_FINANCING_IMAGE,
+        imageAlt: "Tenant-in-common financing",
     },
 ];
 
