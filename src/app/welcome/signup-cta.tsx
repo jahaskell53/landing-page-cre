@@ -1,9 +1,12 @@
 "use client";
 
 import * as React from "react";
+import { ArrowRight } from "lucide-react";
 import { useSyncExternalStore } from "react";
+import { Button } from "@/components/ui/button";
 import { APP_ORIGIN } from "@/lib/app-origin";
 import { captureLandingCtaClick, withReferralParams, type LandingCtaLocation } from "@/lib/tracking";
+import { cn } from "@/lib/utils";
 
 /**
  * Public early-access waitlist questionnaire (Typeform).
@@ -11,6 +14,8 @@ import { captureLandingCtaClick, withReferralParams, type LandingCtaLocation } f
  * Set `NEXT_PUBLIC_WAITLIST_URL` in the environment to override without a code change.
  */
 const WAITLIST_URL = process.env.NEXT_PUBLIC_WAITLIST_URL ?? "https://form.typeform.com/to/bkrYqz2b";
+
+const SIGNUP_CTA_ICON = <ArrowRight className="size-5" />;
 
 function resolveHref(invite: string | null): string {
     // Invited visitors (VIPs / approved applicants) go straight to app signup with
@@ -75,5 +80,25 @@ export function SignupCta({ trackingLocation, audience, onClick, icon, ...props 
             {label}
             {icon}
         </a>
+    );
+}
+
+type SignupCtaButtonProps = Omit<SignupCtaProps, "icon"> & {
+    className?: string;
+};
+
+export function SignupCtaButton({ className, ...props }: SignupCtaButtonProps) {
+    return (
+        <Button variant="primary" size="cta" className={cn(className)} asChild>
+            <SignupCta icon={SIGNUP_CTA_ICON} {...props} />
+        </Button>
+    );
+}
+
+export function NavSignupCtaButton({ trackingLocation }: { trackingLocation: LandingCtaLocation }) {
+    return (
+        <Button variant="primary" size="sm" asChild>
+            <SignupCta trackingLocation={trackingLocation} />
+        </Button>
     );
 }

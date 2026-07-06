@@ -1,4 +1,4 @@
-import { ArrowRight, Brain, ChevronDown, TrendingUp, Zap } from "lucide-react";
+import { Brain, ChevronDown, TrendingUp, Zap } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { TrackedLink } from "@/components/tracking/tracked-link";
@@ -10,7 +10,7 @@ import { BrowserWindow } from "./welcome/browser-window";
 import { HeroHighlight } from "./welcome/hero-highlight";
 import { RentTrendsPreview } from "./welcome/rent-trends-preview";
 import { getWelcomeRentTrends } from "./welcome/rent-trends-server";
-import { SignupCta } from "./welcome/signup-cta";
+import { NavSignupCtaButton, SignupCtaButton } from "./welcome/signup-cta";
 import { getWelcomeSalesTrends } from "./welcome/sales-trends-server";
 import { VideoPanel } from "./welcome/video-panel";
 
@@ -28,8 +28,6 @@ export const metadata: Metadata = {
   },
 };
 
-const PRIMARY =
-  "bg-blue-900 text-white hover:bg-blue-950 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500";
 const EMPHASIS = "font-semibold text-blue-900 dark:text-blue-400";
 
 const SECTION_WHITE = "bg-white dark:bg-gray-950";
@@ -208,9 +206,7 @@ export default async function HomePage() {
                 Log in
               </TrackedLink>
             </Button>
-            <Button size="sm" className={PRIMARY} asChild>
-              <SignupCta trackingLocation="header_signup" />
-            </Button>
+            <NavSignupCtaButton trackingLocation="header_signup" />
           </div>
         </nav>
       </header>
@@ -276,9 +272,7 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-12 flex justify-center">
-            <Button className={PRIMARY} asChild>
-              <SignupCta trackingLocation="value_pillars_get_started" icon={<ArrowRight className="size-4" />} />
-            </Button>
+            <SignupCtaButton trackingLocation="value_pillars_get_started" />
           </div>
         </div>
       </section>
@@ -392,13 +386,7 @@ export default async function HomePage() {
             </span>
           </h2>
           <div className="mt-10">
-            <Button
-              size="lg"
-              className={`h-24 px-16 text-3xl ${PRIMARY}`}
-              asChild
-            >
-              <SignupCta trackingLocation="footer_get_started" icon={<ArrowRight className="size-7" />} />
-            </Button>
+            <SignupCtaButton trackingLocation="footer_get_started" />
           </div>
         </div>
       </VideoPanel>
