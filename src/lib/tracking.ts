@@ -42,7 +42,9 @@ export function withReferralParams(href: string): string {
 
     let url: URL;
     try {
-        url = new URL(href);
+        // Resolve relative hrefs (e.g. the internal `/waitlist` form) against the
+        // current origin so campaign UTMs are appended to same-origin links too.
+        url = new URL(href, window.location.origin);
     } catch {
         return href;
     }
@@ -57,4 +59,31 @@ export function withReferralParams(href: string): string {
     }
 
     return url.toString();
+}
+
+/**
+ * Attribution metadata to persist alongside a waitlist submission: the visitor's
+ * UTM params, the referring URL, the landing path they submitted from, and the
+ * PostHog distinct_id so the row can be joined back to the analytics session.
+ */
+export function getWaitlistReferral(): Record<string, string> {
+    if (typeof window === "undefined") return {};
+
+    const payload: Record<string, string> = { ...getUtmParams() };
+
+    if (document.referrer) payload.referrer = document.referrer;
+    payload.path = window.location.pathname + window.location.search;
+
+    const distinctId = posthog.get_distinct_id();
+    if (distinctId) payload.ph_distinct_id = distinctId;
+
+    return payload;
+}
+
+/** Fire the waitlist-submitted event. No-op when PostHog is not initialized. */
+export function captureWaitlistSubmitted(roles: string[]) {
+    posthog.capture("waitlist_submitted", {
+        roles,
+        ...getUtmParams(),
+    });
 }
