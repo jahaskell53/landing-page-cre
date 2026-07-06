@@ -188,10 +188,8 @@ export function AudienceCards() {
                                     trackingLocation="audience_get_started"
                                     audience={AUDIENCES[index].id}
                                     tabIndex={isActive ? 0 : -1}
-                                >
-                                    Get started
-                                    <ArrowRight className="size-4" />
-                                </SignupCta>
+                                    icon={<ArrowRight className="size-4" />}
+                                />
                             </Button>
                         </motion.div>
                     );

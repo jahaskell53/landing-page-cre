@@ -209,7 +209,7 @@ export default async function HomePage() {
               </TrackedLink>
             </Button>
             <Button size="sm" className={PRIMARY} asChild>
-              <SignupCta trackingLocation="header_signup">Sign up</SignupCta>
+              <SignupCta trackingLocation="header_signup" />
             </Button>
           </div>
         </nav>
@@ -277,10 +277,7 @@ export default async function HomePage() {
 
           <div className="mt-12 flex justify-center">
             <Button className={PRIMARY} asChild>
-              <SignupCta trackingLocation="value_pillars_get_started">
-                Get started
-                <ArrowRight className="size-4" />
-              </SignupCta>
+              <SignupCta trackingLocation="value_pillars_get_started" icon={<ArrowRight className="size-4" />} />
             </Button>
           </div>
         </div>
@@ -400,10 +397,7 @@ export default async function HomePage() {
               className={`h-24 px-16 text-3xl ${PRIMARY}`}
               asChild
             >
-              <SignupCta trackingLocation="footer_get_started">
-                Get started
-                <ArrowRight className="size-7" />
-              </SignupCta>
+              <SignupCta trackingLocation="footer_get_started" icon={<ArrowRight className="size-7" />} />
             </Button>
           </div>
         </div>

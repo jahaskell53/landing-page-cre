@@ -21,6 +21,12 @@ function resolveHref(invite: string | null): string {
     return WAITLIST_URL;
 }
 
+// Invited visitors already have access, so the CTA reads as an action they can
+// complete now; everyone else is applying to a waitlist, not signing up outright.
+function resolveLabel(invite: string | null): string {
+    return invite ? "Get Started" : "Join Waitlist";
+}
+
 // The `?invite=` code is external browser state. `useSyncExternalStore` reads it
 // without a hydration mismatch: `getServerSnapshot` (and the first client render)
 // yields `null` so both SSR and hydration render the waitlist URL, then the store
@@ -42,14 +48,16 @@ const getServerInviteSnapshot = (): string | null => null;
  * Designed to be used as the child of `<Button asChild>` — `className` and other
  * props are forwarded to the underlying `<a>` by Radix's `Slot`.
  */
-type SignupCtaProps = Omit<React.ComponentProps<"a">, "href"> & {
+type SignupCtaProps = Omit<React.ComponentProps<"a">, "href" | "children"> & {
     trackingLocation?: LandingCtaLocation;
     audience?: string;
+    icon?: React.ReactNode;
 };
 
-export function SignupCta({ children, trackingLocation, audience, onClick, ...props }: SignupCtaProps) {
+export function SignupCta({ trackingLocation, audience, onClick, icon, ...props }: SignupCtaProps) {
     const invite = useSyncExternalStore(subscribe, getInviteSnapshot, getServerInviteSnapshot);
     const href = resolveHref(invite);
+    const label = resolveLabel(invite);
 
     return (
         <a
@@ -64,7 +72,8 @@ export function SignupCta({ children, trackingLocation, audience, onClick, ...pr
             }}
             {...props}
         >
-            {children}
+            {label}
+            {icon}
         </a>
     );
 }
