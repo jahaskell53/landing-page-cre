@@ -9,11 +9,14 @@ import { captureLandingCtaClick, withReferralParams, type LandingCtaLocation } f
 import { cn } from "@/lib/utils";
 
 /**
- * Public early-access waitlist questionnaire (Typeform).
+ * Public early-access waitlist questionnaire — a first-party stepped form at
+ * `/waitlist` (see `src/app/waitlist`). Submissions are proxied to the app's
+ * database via `/api/waitlist`.
  *
- * Set `NEXT_PUBLIC_WAITLIST_URL` in the environment to override without a code change.
+ * Set `NEXT_PUBLIC_WAITLIST_URL` in the environment to override without a code
+ * change (e.g. to point back at an external form).
  */
-const WAITLIST_URL = process.env.NEXT_PUBLIC_WAITLIST_URL ?? "https://form.typeform.com/to/bkrYqz2b";
+const WAITLIST_URL = process.env.NEXT_PUBLIC_WAITLIST_URL ?? "/waitlist";
 
 const SIGNUP_CTA_ICON = <ArrowRight className="size-5" />;
 
