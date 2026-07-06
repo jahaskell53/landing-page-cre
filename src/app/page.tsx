@@ -349,9 +349,10 @@ export default async function HomePage() {
               <span className={EMPHASIS}>
                 collective institutional leverage
               </span>{" "}
-              they need to thrive, <span className={EMPHASIS}>defend</span>{" "}
-              their rights, and <span className={EMPHASIS}>protect</span> our
-              investments long term.
+              we need to <span className={EMPHASIS}>thrive</span>,{" "}
+              <span className={EMPHASIS}>defend our rights</span>, and{" "}
+              <span className={EMPHASIS}>protect our investments</span> long
+              term.
             </p>
           </div>
         </div>

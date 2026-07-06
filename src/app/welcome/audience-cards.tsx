@@ -21,9 +21,9 @@ const AUDIENCES: Audience[] = [
         headline: "Leverage AI to unlock smarter insights and superior returns.",
         body: (
             <>
-                OpenMidmarket <span className={EMPHASIS}>levels the playing field</span> for midmarket multifamily investors by providing AI-native,
-                institutional-grade tools. Through unified real-time data, smart analytics, trusted networks, and exclusive preferred member pricing, you{" "}
-                <span className={EMPHASIS}>unlock unique investment opportunities, maximize your returns, and build industry leverage</span>.
+                OpenMidmarket <span className={EMPHASIS}>levels the playing field</span> for us as midmarket multifamily investors by providing AI-native,
+                institutional-grade tools. Through unified real-time data, smart analytics, trusted networks, and exclusive preferred member pricing, we{" "}
+                <span className={EMPHASIS}>unlock unique investment opportunities, maximize our returns, and build industry leverage</span>.
             </>
         ),
     },
