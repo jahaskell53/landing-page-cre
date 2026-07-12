@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect, useState } from "react";
 import { motion } from "motion/react";
+import { captureAudienceTabSelected } from "@/lib/tracking";
 import { SignupCtaButton } from "./signup-cta";
 
 const EMPHASIS = "font-semibold text-blue-900 dark:text-blue-400";
@@ -138,6 +139,7 @@ export function AudienceCards() {
     const selectTab = (index: number) => {
         setInteracted(true);
         setActiveIndex(index);
+        captureAudienceTabSelected(AUDIENCES[index].id, AUDIENCES[index].title, index);
     };
 
     return (

@@ -80,10 +80,30 @@ export function getWaitlistReferral(): Record<string, string> {
     return payload;
 }
 
-/** Fire the waitlist-submitted event. No-op when PostHog is not initialized. */
-export function captureWaitlistSubmitted(roles: string[]) {
+/** Fire the waitlist-submitted event and identify the user. No-op when PostHog is not initialized. */
+export function captureWaitlistSubmitted(email: string, roles: string[]) {
+    posthog.identify(email, { email });
     posthog.capture("waitlist_submitted", {
         roles,
         ...getUtmParams(),
+    });
+}
+
+/** Fire when a visitor advances to the next waitlist step. */
+export function captureWaitlistStepAdvanced(stepIndex: number, stepId: string, stepName: string, totalSteps: number) {
+    posthog.capture("waitlist_step_advanced", {
+        step_index: stepIndex,
+        step_id: stepId,
+        step_name: stepName,
+        total_steps: totalSteps,
+    });
+}
+
+/** Fire when a visitor explicitly selects an audience segment tab. */
+export function captureAudienceTabSelected(audienceId: string, audienceTitle: string, tabIndex: number) {
+    posthog.capture("audience_tab_selected", {
+        audience_id: audienceId,
+        audience_title: audienceTitle,
+        tab_index: tabIndex,
     });
 }
