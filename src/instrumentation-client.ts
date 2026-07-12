@@ -1,13 +1,12 @@
 import posthog from "posthog-js";
+import { isPostHogEnabled, POSTHOG_PROJECT_TOKEN } from "@/lib/posthog-config";
 
-const token = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
-
-if (token) {
-    posthog.init(token, {
+if (isPostHogEnabled && POSTHOG_PROJECT_TOKEN) {
+    posthog.init(POSTHOG_PROJECT_TOKEN, {
         api_host: "/ph",
         ui_host: "https://us.posthog.com",
         defaults: "2026-05-30",
         capture_exceptions: true,
-        debug: process.env.NODE_ENV === "development",
+        debug: false,
     });
 }

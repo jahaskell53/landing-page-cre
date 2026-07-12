@@ -6,8 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import posthog from "posthog-js";
-import { captureWaitlistStepAdvanced, captureWaitlistSubmitted, getWaitlistReferral } from "@/lib/tracking";
+import { captureException, captureWaitlistStepAdvanced, captureWaitlistSubmitted, getWaitlistReferral } from "@/lib/tracking";
 import { cn } from "@/lib/utils";
 import { APP_ORIGIN } from "@/lib/app-origin";
 import { EMPTY_ANSWERS, WAITLIST_QUESTIONS, type WaitlistAnswers, type WaitlistQuestion } from "./questions";
@@ -120,7 +119,7 @@ export function WaitlistForm() {
             captureWaitlistSubmitted(answers.email.trim(), answers.roles);
             setStatus("success");
         } catch (err) {
-            posthog.captureException(err);
+            captureException(err);
             setStatus("error");
             setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
         }
