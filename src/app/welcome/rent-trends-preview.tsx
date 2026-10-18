@@ -1,27 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { RentChartGrid } from "@/app/(app)/analytics/rent-trends/rent-chart-grid";
-import { type AreaSelection, type TrendRow } from "@/app/(app)/analytics/rent-trends/trends-utils";
+import { type AreaSelection } from "@/app/(app)/analytics/rent-trends/trends-utils";
 import { AreaTypeSelect } from "@/components/analytics/filters/area-type-select";
 import { BedsSelect } from "@/components/analytics/filters/beds-select";
 import { SegmentToggle } from "@/components/analytics/filters/segment-toggle";
-import { getRentTrendsByCity } from "@/db/rpc/rent-trends";
 import { RENT_TREND_BED_OPTIONS } from "@/lib/analytics/filters";
+import { cn } from "@/lib/utils";
 import { MAP_ZOOM_EVENT } from "./market-map";
-import { PREVIEW_BEDS, PREVIEW_CITIES, previewAreaId } from "./rent-trends-preview-config";
-
-// A live slice of the /analytics/rent-trends tool for the public landing page:
-// real median-rent history for a handful of Bay Area cities. Unlike the old
-// <MarketMap /> (illustrative made-up $/door numbers), every value here is real
-// and updates as new scrapes land — so the numbers on the page match the numbers
-// inside the product. The page server-prefetches the series (see
-// `rent-trends-server.ts`) so the chart ships with data in the initial HTML;
-// the read-only, unauthenticated `/api/rpc` proxy fetch below is the fallback
-// when the prefetch was unavailable. Renders the tool surface minus the
-// inventory/volume chart: per-city stat panels, the trend chart with its
-// granularity + %/$ selectors, and the legend.
+import { PREVIEW_BEDS, PREVIEW_CITIES, PREVIEW_RENT_RESULTS, previewAreaId } from "./rent-trends-preview-config";
 
 // Landing-page series palette. The shared analytics `AREA_COLORS`
 // (blue/orange/violet/green/red) mixes warm hues that clash with this page's
@@ -41,18 +31,18 @@ const PREVIEW_COLORS_REST = ["#0d9488", "#8b5cf6"]; // teal, violet
 
 const noop = () => {};
 
-// A visual-only replica of the tool's <TrendsFilterPanel /> — the same Area type
-// / Area / Bedrooms / Segment controls the real /analytics/rent-trends page shows,
-// frozen to the preview's selection. It's decorative (pointer-events disabled, no
-// state wired up) so the landing page reads like the actual product without making
-// the hero interactive.
-function MockFilterPanel({ areas }: { areas: AreaSelection[] }) {
+function MockFilterPanel({
+    areas,
+    activeAreaId,
+    onAreaSelect,
+}: {
+    areas: AreaSelection[];
+    activeAreaId: string | null;
+    onAreaSelect: (id: string) => void;
+}) {
     return (
-        <div
-            aria-hidden
-            className="pointer-events-none mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 select-none dark:border-gray-700 dark:bg-gray-800"
-        >
-            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+        <div className="mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
+            <div className="pointer-events-none flex min-w-0 flex-col gap-2 select-none sm:flex-row sm:items-center sm:gap-4">
                 <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Area type</span>
                 <AreaTypeSelect value="City" onChange={noop} />
             </div>
@@ -60,28 +50,38 @@ function MockFilterPanel({ areas }: { areas: AreaSelection[] }) {
             <div className="flex items-start gap-4">
                 <span className="w-24 shrink-0 pt-2 text-sm text-gray-500 dark:text-gray-400">Area</span>
                 <div className="flex flex-1 flex-wrap items-center gap-2">
-                    {areas.map((area) => (
-                        <span
-                            key={area.id}
-                            className="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium"
-                            style={{ borderColor: area.color, color: area.color, backgroundColor: `${area.color}14` }}
-                        >
-                            <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: area.color }} />
-                            {area.label}
-                        </span>
-                    ))}
-                    <span className="flex size-6 items-center justify-center rounded-full border-2 border-dashed border-gray-300 text-gray-400 dark:border-gray-600">
+                    {areas.map((area) => {
+                        const isActive = activeAreaId === null || activeAreaId === area.id;
+                        return (
+                            <button
+                                key={area.id}
+                                type="button"
+                                aria-pressed={activeAreaId === area.id}
+                                onClick={() => onAreaSelect(area.id)}
+                                className={cn(
+                                    "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-opacity",
+                                    "cursor-pointer hover:opacity-100",
+                                    isActive ? "opacity-100" : "opacity-40",
+                                )}
+                                style={{ borderColor: area.color, color: area.color, backgroundColor: `${area.color}${activeAreaId === area.id ? "28" : "14"}` }}
+                            >
+                                <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: area.color }} />
+                                {area.label}
+                            </button>
+                        );
+                    })}
+                    <span className="pointer-events-none flex size-6 items-center justify-center rounded-full border-2 border-dashed border-gray-300 text-gray-400 dark:border-gray-600">
                         <span className="mb-px text-base leading-none">+</span>
                     </span>
                 </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="pointer-events-none flex items-center gap-4 select-none">
                 <span className="w-24 shrink-0 text-sm text-gray-500 dark:text-gray-400">Bedrooms</span>
                 <BedsSelect mode="single" options={RENT_TREND_BED_OPTIONS} selected={PREVIEW_BEDS} onChange={noop} />
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="pointer-events-none flex items-center gap-4 select-none">
                 <span className="w-24 shrink-0 text-sm text-gray-500 dark:text-gray-400">Segment</span>
                 <SegmentToggle value="mid" onChange={noop} />
             </div>
@@ -89,7 +89,7 @@ function MockFilterPanel({ areas }: { areas: AreaSelection[] }) {
     );
 }
 
-export function RentTrendsPreview({ initialRentResults, showAreaStats = true }: { initialRentResults?: Record<string, TrendRow[]>; showAreaStats?: boolean }) {
+export function RentTrendsPreview({ showAreaStats = true }: { showAreaStats?: boolean }) {
     // Resolve the lead-series color against the active theme. Guard on `mounted`
     // so SSR and the first client paint both use the light navy (avoids a
     // hydration mismatch); the effect below flips it to blue-400 if dark.
@@ -112,62 +112,50 @@ export function RentTrendsPreview({ initialRentResults, showAreaStats = true }: 
         [colors],
     );
 
-    const [rentResults, setRentResults] = useState<Record<string, TrendRow[]>>(initialRentResults ?? {});
-    const hasInitialData = Object.values(initialRentResults ?? {}).some((rows) => rows.length > 0);
+    const [activeAreaId, setActiveAreaId] = useState<string | null>(null);
 
     useEffect(() => {
-        if (hasInitialData) {
-            // Server prefetch already provided the data; just fire the hero
-            // "mid-market" underline draw that used to wait on the fetch.
-            window.dispatchEvent(new CustomEvent(MAP_ZOOM_EVENT));
-            return;
-        }
-        let cancelled = false;
-        Promise.all(
-            PREVIEW_CITIES.map((c) =>
-                getRentTrendsByCity({ p_city: c.city, p_state: c.state, p_beds: PREVIEW_BEDS[0], p_reits_only: false, p_home_type: null })
-                    .then((rows) => ({ id: previewAreaId(c.city, c.state), rows: rows as TrendRow[] }))
-                    .catch(() => ({ id: previewAreaId(c.city, c.state), rows: [] as TrendRow[] })),
-            ),
-        ).then((results) => {
-            if (cancelled) return;
-            const next: Record<string, TrendRow[]> = {};
-            for (const r of results) next[r.id] = r.rows;
-            setRentResults(next);
-            // Keep the hero "mid-market" underline draw in sync now that the
-            // chart has data (the old map used to fire this on its fly-in).
-            window.dispatchEvent(new CustomEvent(MAP_ZOOM_EVENT));
-        });
-        return () => {
-            cancelled = true;
-        };
-    }, [hasInitialData]);
+        window.dispatchEvent(new CustomEvent(MAP_ZOOM_EVENT));
+    }, []);
 
-    const hasData = areas.some((a) => (rentResults[a.id]?.length ?? 0) > 0);
+    const views = useMemo(
+        () => [{ id: "all" as const, areas }, ...areas.map((area) => ({ id: area.id, areas: [area] }))],
+        [areas],
+    );
+    const activeViewId = activeAreaId ?? "all";
 
-    if (!hasData) {
-        return (
-            <>
-                <MockFilterPanel areas={areas} />
-                <div className="flex min-h-[420px] items-center justify-center rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <p className="text-sm text-gray-400">Loading live rent trends…</p>
-                </div>
-            </>
-        );
-    }
+    const handleAreaSelect = (id: string) => {
+        setActiveAreaId((current) => (current === id ? null : id));
+    };
 
     return (
         <>
-            <MockFilterPanel areas={areas} />
-            <RentChartGrid
-                displayAreas={areas}
-                displayRentResults={rentResults}
-                displayActivityResults={{}}
-                selectedBeds={PREVIEW_BEDS}
-                hasActivity={false}
-                showLegend={false}
-                showAreaStats={showAreaStats}
-            />
+            <MockFilterPanel areas={areas} activeAreaId={activeAreaId} onAreaSelect={handleAreaSelect} />
+            <div className="grid min-w-0 overflow-hidden">
+                {views.map((view) => {
+                    const isActive = view.id === activeViewId;
+                    return (
+                        <motion.div
+                            key={view.id}
+                            className="col-start-1 row-start-1 min-w-0"
+                            animate={{ opacity: isActive ? 1 : 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            aria-hidden={!isActive}
+                            style={{ pointerEvents: isActive ? "auto" : "none", zIndex: isActive ? 1 : 0 }}
+                        >
+                            <RentChartGrid
+                                displayAreas={view.areas}
+                                displayRentResults={PREVIEW_RENT_RESULTS}
+                                displayActivityResults={{}}
+                                selectedBeds={PREVIEW_BEDS}
+                                hasActivity={false}
+                                showLegend={false}
+                                showAreaStats={showAreaStats}
+                            />
+                        </motion.div>
+                    );
+                })}
+            </div>
         </>
     );
 }

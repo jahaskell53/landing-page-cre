@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Gauge, Heart, MessageCircle, Newspaper, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
-import type { TrendRow } from "@/app/(app)/analytics/rent-trends/trends-utils";
 import { generateAuroraGradient, getInitials } from "@/app/(app)/network/utils";
 import { VALUE_ADD_PLAN, ValueAddProjectionChart } from "@/components/application/irr-projection-chart";
 import type { SalesTrendRowV2 } from "@/db/rpc";
@@ -273,8 +272,8 @@ function SalesCompsPanel() {
     return <SalesCompsPreview />;
 }
 
-function RentTrendsPanel({ initialRentResults }: { initialRentResults?: Record<string, TrendRow[]> }) {
-    return <RentTrendsPreview initialRentResults={initialRentResults} showAreaStats={false} />;
+function RentTrendsPanel({ showAreaStats = false }: { showAreaStats?: boolean }) {
+    return <RentTrendsPreview showAreaStats={showAreaStats} />;
 }
 
 function SalesTrendsPanel({ initialSalesResults }: { initialSalesResults?: SalesTrendRowV2[] }) {
@@ -303,7 +302,7 @@ const PANELS: Record<TabLabel, (props: AppPreviewData) => React.JSX.Element> = {
     valuation: () => <ValuationPanel />,
     "rent-comps": () => <RentCompsPanel />,
     "sales-comps": () => <SalesCompsPanel />,
-    "rent-trends": ({ initialRentResults }) => <RentTrendsPanel initialRentResults={initialRentResults} />,
+    "rent-trends": ({ showRentAreaStats }) => <RentTrendsPanel showAreaStats={showRentAreaStats} />,
     "sales-trends": ({ initialSalesResults }) => <SalesTrendsPanel initialSalesResults={initialSalesResults} />,
     listings: () => <ListingsPanel />,
     research: () => <ResearchPanel />,
@@ -312,8 +311,15 @@ const PANELS: Record<TabLabel, (props: AppPreviewData) => React.JSX.Element> = {
 };
 
 type AppPreviewData = {
-    initialRentResults?: Record<string, TrendRow[]>;
     initialSalesResults?: SalesTrendRowV2[];
+    showRentAreaStats?: boolean;
+};
+
+type AppPreviewProps = AppPreviewData & {
+    initialPanel?: TabLabel;
+    enableAutoCycle?: boolean;
+    enableHashLinks?: boolean;
+    browserUrl?: string;
 };
 
 // How long each tab stays visible while auto-cycling.
@@ -334,15 +340,24 @@ const HASH_TO_TAB: Record<string, TabLabel> = {
     "preview-news": "news",
 };
 
-export function AppPreview({ initialRentResults, initialSalesResults }: AppPreviewData) {
-    const [activeTab, setActiveTab] = useState<TabLabel>("home");
+export function AppPreview({
+    initialSalesResults,
+    showRentAreaStats = false,
+    initialPanel = "home",
+    enableAutoCycle = true,
+    enableHashLinks = true,
+    browserUrl = "app.openmidmarket.com",
+}: AppPreviewProps) {
+    const [activeTab, setActiveTab] = useState<TabLabel>(initialPanel);
     // Stop cycling once the visitor takes control by clicking a tab.
-    const [autoCycle, setAutoCycle] = useState(true);
+    const [autoCycle, setAutoCycle] = useState(enableAutoCycle);
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Deep-link: when the URL hash targets a tab, select it, stop the
-    // auto-cycle, and scroll the mockup into view.
+    // auto-cycle, and scroll the mockup into view. The hero instance opts out
+    // so it doesn't steal hash changes from the features mockup below.
     useEffect(() => {
+        if (!enableHashLinks) return;
         const applyHash = () => {
             const tab = HASH_TO_TAB[window.location.hash.replace(/^#/, "")];
             if (!tab) return;
@@ -353,7 +368,7 @@ export function AppPreview({ initialRentResults, initialSalesResults }: AppPrevi
         applyHash();
         window.addEventListener("hashchange", applyHash);
         return () => window.removeEventListener("hashchange", applyHash);
-    }, []);
+    }, [enableHashLinks]);
 
     useEffect(() => {
         if (!autoCycle) return;
@@ -377,7 +392,7 @@ export function AppPreview({ initialRentResults, initialSalesResults }: AppPrevi
 
     return (
         <div ref={containerRef} className="scroll-mt-24">
-            <BrowserWindow url="app.openmidmarket.com">
+            <BrowserWindow url={browserUrl}>
                 <PreviewAppShell activePanel={activeTab} onPanelSelect={handleTabClick}>
                     <div className="grid min-h-[420px] min-w-0 overflow-hidden">
                         {PREVIEW_PANEL_ORDER.map((panel) => {
@@ -390,9 +405,9 @@ export function AppPreview({ initialRentResults, initialSalesResults }: AppPrevi
                                     animate={{ opacity: isActive ? 1 : 0 }}
                                     transition={{ duration: 0.3, ease: "easeInOut" }}
                                     aria-hidden={!isActive}
-                                    style={{ pointerEvents: isActive ? "auto" : "none" }}
+                                    style={{ pointerEvents: isActive ? "auto" : "none", zIndex: isActive ? 1 : 0 }}
                                 >
-                                    <Panel initialRentResults={initialRentResults} initialSalesResults={initialSalesResults} />
+                                    <Panel initialSalesResults={initialSalesResults} showRentAreaStats={showRentAreaStats} />
                                 </motion.div>
                             );
                         })}
