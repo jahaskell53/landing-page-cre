@@ -26,18 +26,18 @@ import { PREVIEW_BEDS, PREVIEW_CITIES, previewAreaId } from "./rent-trends-previ
 // Landing-page series palette. The shared analytics `AREA_COLORS`
 // (blue/orange/violet/green/red) mixes warm hues that clash with this page's
 // navy/blue theme, so the preview uses its own cool-toned categorical set —
-// navy → teal → violet → cool-pink, assigned to the four cities in fixed order.
+// navy → teal → violet, assigned to the three cities in fixed order.
 // Validated (dataviz skill's validator) for CVD separation and ≥3:1 contrast on
 // both the white and dark (gray-800) chart surfaces.
 //
 // The lead series is a deep brand navy for emphasis. Navy is intentionally
-// darker than the other three (it visually leads, matching the page's blue-900
+// darker than the other two (it visually leads, matching the page's blue-900
 // accent) — but pure navy is unreadable on the dark chart surface, so in dark
 // mode it lightens to blue-400, mirroring how the rest of the page's navy
 // (buttons, the "mid-market" highlight) resolves in dark.
 const LEAD_COLOR_LIGHT = "#1e3a8a"; // blue-900 — brand navy
 const LEAD_COLOR_DARK = "#60a5fa"; // blue-400 — legible on gray-800
-const PREVIEW_COLORS_REST = ["#0d9488", "#8b5cf6", "#ec4899"]; // teal, violet, cool-pink
+const PREVIEW_COLORS_REST = ["#0d9488", "#8b5cf6"]; // teal, violet
 
 const noop = () => {};
 

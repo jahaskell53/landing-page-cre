@@ -200,8 +200,8 @@ export default async function HomePage() {
 
                     <p className="mt-6 max-w-2xl text-xl leading-relaxed text-gray-600 dark:text-gray-400">
                         A unified ecosystem leveraging <span className={EMPHASIS}>predictive AI</span>, <span className={EMPHASIS}>real-time data</span>, and a
-                        dedicated <span className={EMPHASIS}>CRE professional network</span>.{" "}
-                        <span className={EMPHASIS}>Gain an edge with institutional power tailored for your speed.</span>
+                        dedicated <span className={EMPHASIS}>CRE professional network</span>. Gain an edge with{" "}
+                        <span className={EMPHASIS}>institutional power</span> tailored for your speed.
                     </p>
                 </div>
             </section>

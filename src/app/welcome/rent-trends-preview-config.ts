@@ -7,7 +7,6 @@ export const PREVIEW_CITIES = [
     { city: "Burlingame", state: "CA" },
     { city: "Santa Clara", state: "CA" },
     { city: "San Mateo", state: "CA" },
-    { city: "Redwood City", state: "CA" },
 ];
 
 // 1BR median rent — one clean, comparable series per city.
