@@ -2,14 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "next-themes";
-import { RentChartGrid } from "@/app/(app)/analytics/rent-trends/rent-chart-grid";
 import { type AreaSelection } from "@/app/(app)/analytics/rent-trends/trends-utils";
 import { AreaTypeSelect } from "@/components/analytics/filters/area-type-select";
 import { BedsSelect } from "@/components/analytics/filters/beds-select";
 import { SegmentToggle, type MarketSegment } from "@/components/analytics/filters/segment-toggle";
-import { RENT_TREND_BED_OPTIONS } from "@/lib/analytics/filters";
+import { ANALYTICS_AREA_TYPES, RENT_TREND_BED_OPTIONS } from "@/lib/analytics/filters";
 import { MAP_ZOOM_EVENT } from "./market-map";
 import { PreviewChip, PreviewFadeStack, usePreviewToggle } from "./preview-interaction";
+import { PreviewRentChart } from "./preview-rent-chart";
 import { PREVIEW_BEDS, PREVIEW_CITIES, PREVIEW_RENT_RESULTS, previewAreaId } from "./rent-trends-preview-config";
 
 // Landing-page series palette. The shared analytics `AREA_COLORS`
@@ -51,7 +51,21 @@ function MockFilterPanel({
         <div className="mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
             <div className="pointer-events-none flex min-w-0 flex-col gap-2 select-none sm:flex-row sm:items-center sm:gap-4">
                 <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Area type</span>
-                <AreaTypeSelect value="City" onChange={noop} />
+                <select
+                    aria-label="Area type"
+                    value="City"
+                    onChange={noop}
+                    className="h-9 w-full rounded-md border border-gray-200 bg-white px-2.5 text-sm text-gray-900 sm:hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                >
+                    {ANALYTICS_AREA_TYPES.map((type) => (
+                        <option key={type} value={type}>
+                            {type}
+                        </option>
+                    ))}
+                </select>
+                <div className="hidden min-w-0 sm:block">
+                    <AreaTypeSelect value="City" onChange={noop} />
+                </div>
             </div>
 
             <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:gap-4">
@@ -85,7 +99,7 @@ function MockFilterPanel({
     );
 }
 
-export function RentTrendsPreview({ showAreaStats = true }: { showAreaStats?: boolean }) {
+export function RentTrendsPreview({ showAreaStats: _showAreaStats = true }: { showAreaStats?: boolean }) {
     // Resolve the lead-series color against the active theme. Guard on `mounted`
     // so SSR and the first client paint both use the light navy (avoids a
     // hydration mismatch); the effect below flips it to blue-400 if dark.
@@ -135,15 +149,7 @@ export function RentTrendsPreview({ showAreaStats = true }: { showAreaStats?: bo
             />
             <PreviewFadeStack items={views} activeId={activeViewId}>
                 {(view) => (
-                    <RentChartGrid
-                        displayAreas={view.areas}
-                        displayRentResults={PREVIEW_RENT_RESULTS}
-                        displayActivityResults={{}}
-                        selectedBeds={selectedBeds}
-                        hasActivity={false}
-                        showLegend={false}
-                        showAreaStats={showAreaStats}
-                    />
+                    <PreviewRentChart areas={view.areas} areaResults={PREVIEW_RENT_RESULTS} selectedBeds={selectedBeds} isDark={isDark} />
                 )}
             </PreviewFadeStack>
         </>
