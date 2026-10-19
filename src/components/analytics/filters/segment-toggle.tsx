@@ -11,6 +11,7 @@ const SEGMENT_OPTIONS = MARKET_SEGMENT_OPTIONS;
 interface SegmentToggleProps {
     value: MarketSegment;
     onChange: (value: MarketSegment) => void;
+    wrap?: boolean;
     className?: string;
 }
 
@@ -20,6 +21,6 @@ interface SegmentToggleProps {
  * with a single shared widget so the control looks and behaves the same
  * everywhere.
  */
-export function SegmentToggle({ value, onChange, className }: SegmentToggleProps) {
-    return <SegmentedControl ariaLabel="Segment" options={SEGMENT_OPTIONS} value={value} onChange={onChange} className={className} />;
+export function SegmentToggle({ value, onChange, wrap = false, className }: SegmentToggleProps) {
+    return <SegmentedControl ariaLabel="Segment" options={SEGMENT_OPTIONS} value={value} onChange={onChange} wrap={wrap} className={className} />;
 }

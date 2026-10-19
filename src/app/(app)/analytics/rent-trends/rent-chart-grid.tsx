@@ -58,16 +58,16 @@ export function RentChartGrid({
     }, [availableGranularities]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <div className={showAreaStats ? "grid grid-cols-4 gap-4" : "grid grid-cols-1 gap-4"}>
+        <div className={showAreaStats ? "grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-4" : "grid min-w-0 grid-cols-1 gap-4"}>
             {showAreaStats && (
-                <div className="col-span-1 flex flex-col gap-5 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
+                <div className="col-span-1 flex min-w-0 flex-col gap-5 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
                     {displayAreas.map((area) => {
                         const parentCtx = parentByDisplayId.get(area.id);
                         return (
                             <div key={area.id}>
                                 <div className="mb-2 flex items-center gap-1.5">
                                     <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: area.color }} />
-                                    <span className="truncate text-xs font-medium text-gray-500 dark:text-gray-400">{area.label}</span>
+                                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{area.label}</span>
                                 </div>
                                 <div className="space-y-2">
                                     {selectedBeds.map((beds) => {
@@ -140,7 +140,7 @@ export function RentChartGrid({
                 </div>
             )}
 
-            <div className={showAreaStats ? "col-span-3 row-span-2" : "col-span-1"}>
+            <div className={showAreaStats ? "col-span-1 min-w-0 sm:col-span-3 sm:row-span-2" : "col-span-1 min-w-0"}>
                 <RentTrendsSection
                     areas={displayAreas}
                     areaResults={displayRentResults}

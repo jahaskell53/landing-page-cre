@@ -54,9 +54,9 @@ function MockFilterPanel({
                 <AreaTypeSelect value="City" onChange={noop} />
             </div>
 
-            <div className="flex items-start gap-4">
-                <span className="w-24 shrink-0 pt-2 text-sm text-gray-500 dark:text-gray-400">Area</span>
-                <div className="flex flex-1 flex-wrap items-center gap-2">
+            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:gap-4">
+                <span className="shrink-0 text-sm text-gray-500 sm:w-24 sm:pt-2 dark:text-gray-400">Area</span>
+                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
                     {areas.map((area) => {
                         const isActive = activeAreaId === null || activeAreaId === area.id;
                         return (
@@ -72,14 +72,14 @@ function MockFilterPanel({
                 </div>
             </div>
 
-            <div className="flex items-center gap-4">
-                <span className="w-24 shrink-0 text-sm text-gray-500 dark:text-gray-400">Bedrooms</span>
+            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Bedrooms</span>
                 <BedsSelect mode="single" options={RENT_TREND_BED_OPTIONS} selected={selectedBeds} onChange={onBedsChange} />
             </div>
 
-            <div className="flex items-center gap-4">
-                <span className="w-24 shrink-0 text-sm text-gray-500 dark:text-gray-400">Segment</span>
-                <SegmentToggle value={segment} onChange={onSegmentChange} />
+            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Segment</span>
+                <SegmentToggle wrap value={segment} onChange={onSegmentChange} />
             </div>
         </div>
     );
