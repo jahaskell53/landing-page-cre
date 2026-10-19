@@ -1,16 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { RentChartGrid } from "@/app/(app)/analytics/rent-trends/rent-chart-grid";
 import { type AreaSelection } from "@/app/(app)/analytics/rent-trends/trends-utils";
 import { AreaTypeSelect } from "@/components/analytics/filters/area-type-select";
 import { BedsSelect } from "@/components/analytics/filters/beds-select";
-import { SegmentToggle } from "@/components/analytics/filters/segment-toggle";
+import { SegmentToggle, type MarketSegment } from "@/components/analytics/filters/segment-toggle";
 import { RENT_TREND_BED_OPTIONS } from "@/lib/analytics/filters";
-import { cn } from "@/lib/utils";
 import { MAP_ZOOM_EVENT } from "./market-map";
+import { PreviewChip, PreviewFadeStack, usePreviewToggle } from "./preview-interaction";
 import { PREVIEW_BEDS, PREVIEW_CITIES, PREVIEW_RENT_RESULTS, previewAreaId } from "./rent-trends-preview-config";
 
 // Landing-page series palette. The shared analytics `AREA_COLORS`
@@ -35,10 +34,18 @@ function MockFilterPanel({
     areas,
     activeAreaId,
     onAreaSelect,
+    selectedBeds,
+    onBedsChange,
+    segment,
+    onSegmentChange,
 }: {
     areas: AreaSelection[];
     activeAreaId: string | null;
     onAreaSelect: (id: string) => void;
+    selectedBeds: number[];
+    onBedsChange: (beds: number[]) => void;
+    segment: MarketSegment;
+    onSegmentChange: (segment: MarketSegment) => void;
 }) {
     return (
         <div className="mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
@@ -53,21 +60,10 @@ function MockFilterPanel({
                     {areas.map((area) => {
                         const isActive = activeAreaId === null || activeAreaId === area.id;
                         return (
-                            <button
-                                key={area.id}
-                                type="button"
-                                aria-pressed={activeAreaId === area.id}
-                                onClick={() => onAreaSelect(area.id)}
-                                className={cn(
-                                    "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-opacity",
-                                    "cursor-pointer hover:opacity-100",
-                                    isActive ? "opacity-100" : "opacity-40",
-                                )}
-                                style={{ borderColor: area.color, color: area.color, backgroundColor: `${area.color}${activeAreaId === area.id ? "28" : "14"}` }}
-                            >
+                            <PreviewChip key={area.id} selected={isActive} onSelect={() => onAreaSelect(area.id)} color={area.color}>
                                 <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: area.color }} />
                                 {area.label}
-                            </button>
+                            </PreviewChip>
                         );
                     })}
                     <span className="pointer-events-none flex size-6 items-center justify-center rounded-full border-2 border-dashed border-gray-300 text-gray-400 dark:border-gray-600">
@@ -76,14 +72,14 @@ function MockFilterPanel({
                 </div>
             </div>
 
-            <div className="pointer-events-none flex items-center gap-4 select-none">
+            <div className="flex items-center gap-4">
                 <span className="w-24 shrink-0 text-sm text-gray-500 dark:text-gray-400">Bedrooms</span>
-                <BedsSelect mode="single" options={RENT_TREND_BED_OPTIONS} selected={PREVIEW_BEDS} onChange={noop} />
+                <BedsSelect mode="single" options={RENT_TREND_BED_OPTIONS} selected={selectedBeds} onChange={onBedsChange} />
             </div>
 
-            <div className="pointer-events-none flex items-center gap-4 select-none">
+            <div className="flex items-center gap-4">
                 <span className="w-24 shrink-0 text-sm text-gray-500 dark:text-gray-400">Segment</span>
-                <SegmentToggle value="mid" onChange={noop} />
+                <SegmentToggle value={segment} onChange={onSegmentChange} />
             </div>
         </div>
     );
@@ -112,7 +108,9 @@ export function RentTrendsPreview({ showAreaStats = true }: { showAreaStats?: bo
         [colors],
     );
 
-    const [activeAreaId, setActiveAreaId] = useState<string | null>(null);
+    const [activeAreaId, toggleArea] = usePreviewToggle<string>(null);
+    const [selectedBeds, setSelectedBeds] = useState<number[]>(PREVIEW_BEDS);
+    const [segment, setSegment] = useState<MarketSegment>("mid");
 
     useEffect(() => {
         window.dispatchEvent(new CustomEvent(MAP_ZOOM_EVENT));
@@ -124,38 +122,30 @@ export function RentTrendsPreview({ showAreaStats = true }: { showAreaStats?: bo
     );
     const activeViewId = activeAreaId ?? "all";
 
-    const handleAreaSelect = (id: string) => {
-        setActiveAreaId((current) => (current === id ? null : id));
-    };
-
     return (
         <>
-            <MockFilterPanel areas={areas} activeAreaId={activeAreaId} onAreaSelect={handleAreaSelect} />
-            <div className="grid min-w-0 overflow-hidden">
-                {views.map((view) => {
-                    const isActive = view.id === activeViewId;
-                    return (
-                        <motion.div
-                            key={view.id}
-                            className="col-start-1 row-start-1 min-w-0"
-                            animate={{ opacity: isActive ? 1 : 0 }}
-                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                            aria-hidden={!isActive}
-                            style={{ pointerEvents: isActive ? "auto" : "none", zIndex: isActive ? 1 : 0 }}
-                        >
-                            <RentChartGrid
-                                displayAreas={view.areas}
-                                displayRentResults={PREVIEW_RENT_RESULTS}
-                                displayActivityResults={{}}
-                                selectedBeds={PREVIEW_BEDS}
-                                hasActivity={false}
-                                showLegend={false}
-                                showAreaStats={showAreaStats}
-                            />
-                        </motion.div>
-                    );
-                })}
-            </div>
+            <MockFilterPanel
+                areas={areas}
+                activeAreaId={activeAreaId}
+                onAreaSelect={toggleArea}
+                selectedBeds={selectedBeds}
+                onBedsChange={setSelectedBeds}
+                segment={segment}
+                onSegmentChange={setSegment}
+            />
+            <PreviewFadeStack items={views} activeId={activeViewId}>
+                {(view) => (
+                    <RentChartGrid
+                        displayAreas={view.areas}
+                        displayRentResults={PREVIEW_RENT_RESULTS}
+                        displayActivityResults={{}}
+                        selectedBeds={selectedBeds}
+                        hasActivity={false}
+                        showLegend={false}
+                        showAreaStats={showAreaStats}
+                    />
+                )}
+            </PreviewFadeStack>
         </>
     );
 }

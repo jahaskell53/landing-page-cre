@@ -7,7 +7,6 @@ import { APP_ORIGIN } from "@/lib/app-origin";
 import { AppPreview } from "./welcome/app-preview";
 import { AudienceCards } from "./welcome/audience-cards";
 import { HeroHighlight } from "./welcome/hero-highlight";
-import { getWelcomeSalesTrends } from "./welcome/sales-trends-server";
 import { NavSignupCtaButton, SignupCtaButton } from "./welcome/signup-cta";
 import { VideoPanel } from "./welcome/video-panel";
 
@@ -133,8 +132,7 @@ const STATS = [
     },
 ];
 
-export default async function HomePage() {
-    const initialSalesResults = await getWelcomeSalesTrends();
+export default function HomePage() {
     return (
         <div className="min-h-dvh bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
             <header className="sticky top-0 z-20 border-b border-gray-200/80 bg-gray-50/90 backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
@@ -215,7 +213,6 @@ export default async function HomePage() {
                             enableHashLinks={false}
                             browserUrl="app.openmidmarket.com/analytics/rent-trends"
                             showRentAreaStats
-                            initialSalesResults={initialSalesResults ?? undefined}
                         />
                     </div>
                 </div>
@@ -263,7 +260,7 @@ export default async function HomePage() {
                         </p>
                     </div>
                     <div className="mx-auto mt-12 max-w-3xl">
-                        <AppPreview initialSalesResults={initialSalesResults ?? undefined} />
+                        <AppPreview />
                     </div>
                 </div>
             </section>

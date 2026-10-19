@@ -10,8 +10,10 @@ export const PREVIEW_CITIES = [
     { city: "San Mateo", state: "CA" },
 ];
 
-// 1BR median rent — one clean, comparable series per city.
+// Default the mockup on 1BR; the series includes Studio–3BR so the bed chips can switch.
 export const PREVIEW_BEDS = [1];
+const PREVIEW_ALL_BEDS = [0, 1, 2, 3] as const;
+const PREVIEW_BED_SCALE: Record<number, number> = { 0: 0.78, 1: 1, 2: 1.32, 3: 1.65 };
 
 export function previewAreaId(city: string, state: string): string {
     return `city:${city}:${state}`;
@@ -33,16 +35,19 @@ function previewWeeks(): string[] {
 }
 
 function mockSeries(weeks: string[], start: number, end: number, phase: number): TrendRow[] {
-    return weeks.map((week_start, i) => {
-        const t = i / (weeks.length - 1);
-        const wobble = Math.round(Math.sin(i * 0.55 + phase) * 28);
-        return {
-            week_start,
-            beds: PREVIEW_BEDS[0],
-            median_rent: Math.round(start + (end - start) * t + wobble),
-            listing_count: 12,
-        };
-    });
+    return PREVIEW_ALL_BEDS.flatMap((beds) =>
+        weeks.map((week_start, i) => {
+            const t = i / (weeks.length - 1);
+            const wobble = Math.round(Math.sin(i * 0.55 + phase + beds) * 28);
+            const oneBed = start + (end - start) * t + wobble;
+            return {
+                week_start,
+                beds,
+                median_rent: Math.round(oneBed * PREVIEW_BED_SCALE[beds]),
+                listing_count: 12,
+            };
+        }),
+    );
 }
 
 const WEEKS = previewWeeks();

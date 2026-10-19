@@ -50,6 +50,8 @@ interface MapProps {
     addressPin?: [number, number] | null;
     onBoundsChange?: (bounds: MapBounds) => void;
     onViewChange?: (lat: number, lng: number, zoom: number) => void;
+    /** When true, popups are not links — used by the landing-page listings mockup. */
+    disableLinks?: boolean;
 }
 
 const BOUNDARY_SOURCE = "area-boundary";
@@ -95,6 +97,7 @@ export const PropertyMap = ({
     addressPin,
     onBoundsChange,
     onViewChange,
+    disableLinks = false,
 }: MapProps) => {
     const mapStyle = useMapboxStyle("standard");
     const mapContainer = useRef<HTMLDivElement>(null);
@@ -106,6 +109,7 @@ export const PropertyMap = ({
     const onBoundsChangeRef = useRef(onBoundsChange);
     const onViewChangeRef = useRef(onViewChange);
     const propertiesRef = useRef(properties);
+    const disableLinksRef = useRef(disableLinks);
 
     useEffect(() => {
         onBoundsChangeRef.current = onBoundsChange;
@@ -115,6 +119,9 @@ export const PropertyMap = ({
     });
     useEffect(() => {
         propertiesRef.current = properties;
+    });
+    useEffect(() => {
+        disableLinksRef.current = disableLinks;
     });
 
     // fitBounds
@@ -313,8 +320,11 @@ export const PropertyMap = ({
                     unitMix = JSON.parse(props.unitMix ?? "[]");
                 } catch {}
 
-                const popupHref =
-                    props.isReit && props.buildingZpid ? `/analytics/building/${encodeURIComponent(props.buildingZpid)}` : `/analytics/listings/${props.id}`;
+                const popupHref = disableLinksRef.current
+                    ? undefined
+                    : props.isReit && props.buildingZpid
+                      ? `/analytics/building/${encodeURIComponent(props.buildingZpid)}`
+                      : `/analytics/listings/${props.id}`;
 
                 popupRoot.current.render(
                     <PropertyPopupContent
@@ -387,10 +397,11 @@ export const PropertyMap = ({
                 popupRoot.current = createRoot(popupContainer.current);
             }
 
-            const selectedPopupHref =
-                property.isReit && property.buildingZpid
-                    ? `/analytics/building/${encodeURIComponent(property.buildingZpid)}`
-                    : `/analytics/listings/${property.id}`;
+            const selectedPopupHref = disableLinksRef.current
+                ? undefined
+                : property.isReit && property.buildingZpid
+                  ? `/analytics/building/${encodeURIComponent(property.buildingZpid)}`
+                  : `/analytics/listings/${property.id}`;
 
             popupRoot.current.render(
                 <PropertyPopupContent

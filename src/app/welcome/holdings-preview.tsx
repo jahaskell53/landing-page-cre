@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { PreviewSelectable, usePreviewSelection } from "./preview-interaction";
 
 const CARD = "rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800";
 
@@ -205,18 +206,18 @@ function OccupancyBar({ pct }: { pct: number }) {
     );
 }
 
-function StatTile({ label, value }: { label: string; value: string }) {
+function StatTile({ label, value, selected, onSelect }: { label: string; value: string; selected: boolean; onSelect: () => void }) {
     return (
-        <div className={cn(CARD, "p-4")}>
+        <PreviewSelectable selected={selected} onSelect={onSelect} className={cn(CARD, "p-4")}>
             <div className="text-base font-semibold text-gray-900 tabular-nums dark:text-gray-100">{value}</div>
             <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">{label}</div>
-        </div>
+        </PreviewSelectable>
     );
 }
 
 // Rent gap analysis — market vs. in-place rent by unit type, with the captured
 // monthly upside called out at the bottom. This is the "here's the money" hook.
-function RentGapCard() {
+function RentGapCard({ selectedType, onSelectType }: { selectedType: string; onSelectType: (type: string) => void }) {
     return (
         <div className={cn(CARD, "overflow-hidden")}>
             <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-gray-700">
@@ -251,7 +252,14 @@ function RentGapCard() {
                 </thead>
                 <tbody>
                     {RENT_GAP.map((r) => (
-                        <tr key={r.type} className="border-b border-gray-50 dark:border-gray-700/50">
+                        <PreviewSelectable
+                            key={r.type}
+                            as="tr"
+                            variant="row"
+                            selected={selectedType === r.type}
+                            onSelect={() => onSelectType(r.type)}
+                            className="border-b border-gray-50 dark:border-gray-700/50"
+                        >
                             <td className="truncate px-3 py-1.5 font-medium text-gray-900 dark:text-gray-100">{r.type}</td>
                             <td className="px-1 py-1.5 text-right text-gray-600 tabular-nums dark:text-gray-400">{r.count}</td>
                             <td className="px-1 py-1.5 text-right text-gray-900 tabular-nums dark:text-gray-100">{r.market}</td>
@@ -259,7 +267,7 @@ function RentGapCard() {
                             <td className="px-1 py-1.5 text-right font-semibold text-emerald-600 tabular-nums dark:text-emerald-400">{r.gap}</td>
                             <td className="px-1 py-1.5 text-right font-medium text-emerald-600 tabular-nums dark:text-emerald-400">{r.upside}</td>
                             <td className="px-2 py-1.5 text-right text-gray-500 tabular-nums dark:text-gray-400">{r.comps}</td>
-                        </tr>
+                        </PreviewSelectable>
                     ))}
                 </tbody>
             </table>
@@ -278,6 +286,10 @@ function RentGapCard() {
 }
 
 export function HoldingsPreview() {
+    const [selectedHolding, setSelectedHolding] = usePreviewSelection(HOLDINGS[0].name);
+    const [selectedStat, setSelectedStat] = usePreviewSelection<string>("units");
+    const [selectedGap, setSelectedGap] = usePreviewSelection(RENT_GAP[0].type);
+
     return (
         <>
             <div className="flex items-baseline justify-between border-b border-gray-200 pb-4 dark:border-gray-800">
@@ -305,14 +317,19 @@ export function HoldingsPreview() {
             </div>
 
             <div className="grid grid-cols-3 gap-2.5">
-                <StatTile value="56" label="Total units" />
-                <StatTile value="94%" label="Avg occupancy" />
-                <StatTile value="$965K" label="Annual NOI" />
+                <StatTile value="56" label="Total units" selected={selectedStat === "units"} onSelect={() => setSelectedStat("units")} />
+                <StatTile value="94%" label="Avg occupancy" selected={selectedStat === "occ"} onSelect={() => setSelectedStat("occ")} />
+                <StatTile value="$965K" label="Annual NOI" selected={selectedStat === "noi"} onSelect={() => setSelectedStat("noi")} />
             </div>
 
             <div className="space-y-2.5">
                 {HOLDINGS.map((h, i) => (
-                    <div key={h.name} className={cn("flex items-center gap-3 p-3", CARD)}>
+                    <PreviewSelectable
+                        key={h.name}
+                        selected={selectedHolding === h.name}
+                        onSelect={() => setSelectedHolding(h.name)}
+                        className={cn("flex w-full items-center gap-3 p-3", CARD)}
+                    >
                         <MiniMapTile scene={MAP_SCENES[i]} />
                         <div className="min-w-0 flex-1">
                             <div className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">{h.name}</div>
@@ -336,11 +353,11 @@ export function HoldingsPreview() {
                                 </span>
                             </div>
                         </div>
-                    </div>
+                    </PreviewSelectable>
                 ))}
             </div>
 
-            <RentGapCard />
+            <RentGapCard selectedType={selectedGap} onSelectType={setSelectedGap} />
         </>
     );
 }

@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { CompCoverageBadge } from "@/components/analytics/comp-coverage-badge";
 import { SegmentedControl } from "@/components/analytics/filters/segmented-control";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { getScoreColor } from "@/lib/analytics/sales-comps";
 import { cn } from "@/lib/utils";
+import { CompsMiniMap } from "./comps-mini-map";
 import {
     COMPS_PREVIEW_SHELL,
     DistributionBar,
@@ -15,7 +17,7 @@ import {
     MockSearchByToggle,
     StatCell,
 } from "./comps-preview-shared";
-import { CompsMiniMap } from "./comps-mini-map";
+import { PreviewChip, PreviewFade, PreviewSelectable, usePreviewSelection } from "./preview-interaction";
 
 const SUBJECT = {
     street: "850 Main St",
@@ -32,14 +34,18 @@ const COMP_COORDS: [number, number][] = [
 ];
 
 const MOCK_COMPS = [
-    { street: "755 Middlefield Rd", city: "Redwood City, CA", price: "$3.6M", ppu: "$150k", cap: "5.6%", score: 94 },
-    { street: "892 Broadway", city: "Redwood City, CA", price: "$2.9M", ppu: "$161k", cap: "5.2%", score: 89 },
-    { street: "2100 Jefferson Ave", city: "Redwood City, CA", price: "$5.2M", ppu: "$173k", cap: "5.4%", score: 86 },
+    { id: "sale-1", street: "755 Middlefield Rd", city: "Redwood City, CA", price: "$3.6M", ppu: "$150k", cap: "5.6%", score: 94 },
+    { id: "sale-2", street: "892 Broadway", city: "Redwood City, CA", price: "$2.9M", ppu: "$161k", cap: "5.2%", score: 89 },
+    { id: "sale-3", street: "2100 Jefferson Ave", city: "Redwood City, CA", price: "$5.2M", ppu: "$173k", cap: "5.4%", score: 86 },
 ];
 
 export function SalesCompsPreview() {
+    const [searchBy, setSearchBy] = useState<"radius" | "neighborhood">("radius");
+    const [saleWindow, setSaleWindow] = useState("12");
+    const [selectedComp, setSelectedComp] = usePreviewSelection<string>("sale-1");
+
     return (
-        <div aria-hidden className={cn(COMPS_PREVIEW_SHELL, "space-y-2.5")}>
+        <div className={cn(COMPS_PREVIEW_SHELL, "space-y-2.5")}>
             <div className="rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800">
                 <h3 className="mb-2.5 text-xs font-semibold text-gray-900 dark:text-gray-100">Find Comparable Sales</h3>
                 <div className="space-y-2.5">
@@ -49,8 +55,19 @@ export function SalesCompsPreview() {
                     </div>
 
                     <div className="min-w-0">
-                        <MockSearchByToggle />
-                        <MockRadiusSlider value={2} />
+                        <MockSearchByToggle value={searchBy} onChange={setSearchBy} />
+                        <div className="grid overflow-hidden">
+                            <PreviewFade active={searchBy === "radius"} className="col-start-1 row-start-1">
+                                <MockRadiusSlider value={2} />
+                            </PreviewFade>
+                            <PreviewFade active={searchBy === "neighborhood"} className="col-start-1 row-start-1">
+                                <div className="flex flex-wrap gap-1.5 pt-1">
+                                    <PreviewChip selected onSelect={() => setSearchBy("neighborhood")}>
+                                        Downtown Redwood City
+                                    </PreviewChip>
+                                </div>
+                            </PreviewFade>
+                        </div>
                     </div>
 
                     <CompsMiniMap subject={SUBJECT_COORDS} comps={COMP_COORDS} radiusMiles={2} />
@@ -67,8 +84,8 @@ export function SalesCompsPreview() {
                                 { value: "24", label: "24 mo" },
                                 { value: "0", label: "All" },
                             ]}
-                            value="12"
-                            onChange={() => {}}
+                            value={saleWindow}
+                            onChange={setSaleWindow}
                         />
                     </div>
 
@@ -80,7 +97,7 @@ export function SalesCompsPreview() {
                         </div>
                     </div>
 
-                    <Button type="button" tabIndex={-1} className="h-8 w-full text-xs">
+                    <Button type="button" className="h-8 w-full text-xs">
                         Find Sales Comps
                     </Button>
                 </div>
@@ -139,7 +156,14 @@ export function SalesCompsPreview() {
                             <td className="px-1 py-1.5 text-right text-blue-600/70 dark:text-blue-400/70">—</td>
                         </tr>
                         {MOCK_COMPS.map((comp, i) => (
-                            <tr key={comp.street} className="border-b border-gray-50 dark:border-gray-700/50">
+                            <PreviewSelectable
+                                key={comp.id}
+                                as="tr"
+                                variant="row"
+                                selected={selectedComp === comp.id}
+                                onSelect={() => setSelectedComp(comp.id)}
+                                className="border-b border-gray-50 dark:border-gray-700/50"
+                            >
                                 <td className="px-2 py-1.5 text-gray-400">{i + 1}</td>
                                 <td className="min-w-0 px-2 py-1.5">
                                     <div className="truncate font-medium text-gray-900 dark:text-gray-100">{comp.street}</div>
@@ -151,7 +175,7 @@ export function SalesCompsPreview() {
                                 <td className="px-1 py-1.5 text-right">
                                     <span className={cn("font-semibold tabular-nums", getScoreColor(comp.score / 100))}>{comp.score}</span>
                                 </td>
-                            </tr>
+                            </PreviewSelectable>
                         ))}
                     </tbody>
                 </table>

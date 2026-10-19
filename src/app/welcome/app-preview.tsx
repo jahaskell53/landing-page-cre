@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Gauge, Heart, MessageCircle, Newspaper, Sparkles } from "lucide-react";
-import { motion } from "motion/react";
+import { ArrowUpRight, Heart, MessageCircle, Newspaper, Sparkles } from "lucide-react";
 import { generateAuroraGradient, getInitials } from "@/app/(app)/network/utils";
 import { VALUE_ADD_PLAN, ValueAddProjectionChart } from "@/components/application/irr-projection-chart";
-import type { SalesTrendRowV2 } from "@/db/rpc";
 import { cn } from "@/lib/utils";
 import { BrowserWindow } from "./browser-window";
 import { HoldingsPreview } from "./holdings-preview";
@@ -13,6 +11,7 @@ import { ListingsMapPreview } from "./listings-map-preview";
 import { NetworkPreview } from "./network-preview";
 import { NewsPreview } from "./news-preview";
 import { PREVIEW_PANEL_ORDER, PreviewAppShell, type PreviewPanelId } from "./preview-app-shell";
+import { PreviewFade, PreviewSelectable, usePreviewSelection } from "./preview-interaction";
 import { RentCompsPreview } from "./rent-comps-preview";
 import { RentTrendsPreview } from "./rent-trends-preview";
 import { ResearchPreview } from "./research-preview";
@@ -34,17 +33,25 @@ function MockProfileAvatar({ name, className }: { name: string; className?: stri
 
 type TabLabel = PreviewPanelId;
 
-function StatRow({ stats }: { stats: { k: string; v: string; delta?: string }[] }) {
+function StatRow({
+    stats,
+    selected,
+    onSelect,
+}: {
+    stats: { id: string; k: string; v: string; delta?: string }[];
+    selected: string;
+    onSelect: (id: string) => void;
+}) {
     return (
         <div className="grid grid-cols-3 gap-2.5">
             {stats.map((s) => (
-                <div key={s.v} className={`${PREVIEW_CARD} p-4`}>
+                <PreviewSelectable key={s.id} selected={selected === s.id} onSelect={() => onSelect(s.id)} className={`${PREVIEW_CARD} p-4`}>
                     <div className="flex items-baseline gap-1.5">
                         <span className="text-base font-semibold text-gray-900 tabular-nums dark:text-gray-100">{s.k}</span>
                         {s.delta && <span className="text-xs font-semibold text-[#2f855a] tabular-nums dark:text-[#38a06e]">{s.delta}</span>}
                     </div>
                     <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">{s.v}</div>
-                </div>
+                </PreviewSelectable>
             ))}
         </div>
     );
@@ -59,6 +66,10 @@ function MockFeedLinkPost({
     hostname,
     imageSrc,
     imageAlt,
+    selected,
+    onSelect,
+    liked,
+    onToggleLike,
 }: {
     ago: string;
     author: string;
@@ -68,9 +79,18 @@ function MockFeedLinkPost({
     hostname: string;
     imageSrc?: string;
     imageAlt?: string;
+    selected: boolean;
+    onSelect: () => void;
+    liked: boolean;
+    onToggleLike: () => void;
 }) {
     return (
-        <article className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+        <PreviewSelectable
+            as="div"
+            selected={selected}
+            onSelect={onSelect}
+            className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900"
+        >
             <div className="flex flex-1 flex-col justify-between p-4">
                 <div>
                     <div className="mb-3">
@@ -106,8 +126,27 @@ function MockFeedLinkPost({
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{author}</p>
                     </div>
                     <div className="flex gap-1">
-                        <span className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-gray-600 dark:text-gray-400">
-                            <Heart className="size-4" />
+                        <span
+                            role="button"
+                            tabIndex={0}
+                            aria-pressed={liked}
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                onToggleLike();
+                            }}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter" || event.key === " ") {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    onToggleLike();
+                                }
+                            }}
+                            className={cn(
+                                "flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium",
+                                liked ? "text-red-600 dark:text-red-400" : "text-gray-600 dark:text-gray-400",
+                            )}
+                        >
+                            <Heart className="size-4" fill={liked ? "currentColor" : "none"} />
                         </span>
                         <span className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-gray-600 dark:text-gray-400">
                             <MessageCircle className="size-4" />0
@@ -115,7 +154,7 @@ function MockFeedLinkPost({
                     </div>
                 </div>
             </div>
-        </article>
+        </PreviewSelectable>
     );
 }
 
@@ -126,6 +165,10 @@ function MockFeedTextPost({
     hashtags,
     likes,
     comments,
+    selected,
+    onSelect,
+    liked,
+    onToggleLike,
 }: {
     ago: string;
     author: string;
@@ -133,23 +176,46 @@ function MockFeedTextPost({
     hashtags?: string;
     likes?: number;
     comments?: number;
+    selected: boolean;
+    onSelect: () => void;
+    liked: boolean;
+    onToggleLike: () => void;
 }) {
     return (
-        <article className={`${PREVIEW_CARD} p-4`}>
+        <PreviewSelectable as="div" selected={selected} onSelect={onSelect} className={`${PREVIEW_CARD} w-full p-4`}>
             <div className="flex items-center gap-2">
                 <MockProfileAvatar name={author} />
                 <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{author}</div>
                 <div className="ml-auto text-xs text-gray-400">{ago}</div>
             </div>
             <div className="mt-2.5 space-y-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                <p className="line-clamp-6 whitespace-pre-line">{body}</p>
+                <p className={cn("whitespace-pre-line", selected ? "" : "line-clamp-6")}>{body}</p>
                 {hashtags ? <p className="text-xs text-blue-700 dark:text-blue-400">{hashtags}</p> : null}
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400">…more</p>
+                {selected ? null : <p className="text-xs font-medium text-gray-500 dark:text-gray-400">…more</p>}
             </div>
             {(likes != null || comments != null) && (
                 <div className="mt-3 flex gap-1 border-t border-gray-100 pt-2.5 dark:border-gray-700">
-                    <span className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-gray-600 dark:text-gray-400">
-                        <Heart className="size-4" />
+                    <span
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={liked}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            onToggleLike();
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                onToggleLike();
+                            }
+                        }}
+                        className={cn(
+                            "flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium",
+                            liked ? "text-red-600 dark:text-red-400" : "text-gray-600 dark:text-gray-400",
+                        )}
+                    >
+                        <Heart className="size-4" fill={liked ? "currentColor" : "none"} />
                         {likes}
                     </span>
                     <span className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -158,22 +224,43 @@ function MockFeedTextPost({
                     </span>
                 </div>
             )}
-        </article>
+        </PreviewSelectable>
     );
 }
 
 function HomePanel() {
+    const [selectedPost, setSelectedPost] = usePreviewSelection<string>("dana");
+    const [likedOnly, setLikedOnly] = useState(false);
+    const [liked, setLiked] = useState<Record<string, boolean>>({ dana: true, marcus: false });
+
+    const toggleLike = (id: string) => setLiked((current) => ({ ...current, [id]: !current[id] }));
+
     return (
         <>
             <div className="flex items-baseline justify-between border-b border-gray-200 pb-4 dark:border-gray-800">
                 <h2 className="text-base leading-none font-semibold text-gray-900 dark:text-gray-100">Posts</h2>
-                <span className="flex items-center gap-1.5 rounded-md border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                <button
+                    type="button"
+                    aria-pressed={likedOnly}
+                    onClick={() => setLikedOnly((value) => !value)}
+                    className={cn(
+                        "flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium",
+                        likedOnly
+                            ? "border-blue-600 bg-blue-50 text-blue-800 dark:border-blue-400 dark:bg-blue-950/40 dark:text-blue-200"
+                            : "border-gray-200 text-gray-600 dark:border-gray-700 dark:text-gray-400",
+                    )}
+                >
                     Liked
-                </span>
+                </button>
             </div>
+            {(!likedOnly || liked.dana) && (
             <MockFeedTextPost
                 ago="2h"
                 author="Dana R."
+                selected={selectedPost === "dana"}
+                onSelect={() => setSelectedPost("dana")}
+                liked={liked.dana}
+                onToggleLike={() => toggleLike("dana")}
                 body={`Redwood City just delayed a rent-cap vote. And it's being hailed as a win for renters. But read the draft: the cap would apply to renewals and new leases at CPI or 5% — vacancy control by another name.
 
 In practice, that keeps Peninsula development capital on ice. Who writes an 8-figure check when your pro forma could get rewritten in one election cycle?
@@ -191,9 +278,15 @@ Today's delay is a speed bump, not the end of the fight.`}
                 likes={524}
                 comments={53}
             />
+            )}
+            {(!likedOnly || liked.marcus) && (
             <MockFeedLinkPost
                 ago="5 hours ago"
                 author="Marcus L."
+                selected={selectedPost === "marcus"}
+                onSelect={() => setSelectedPost("marcus")}
+                liked={liked.marcus}
+                onToggleLike={() => toggleLike("marcus")}
                 siteName="San Francisco Chronicle"
                 title="Redwood City council delays rent-cap vote"
                 description="City leaders postponed a decision on new rent stabilization rules affecting mid-market multifamily owners across the Peninsula."
@@ -201,6 +294,7 @@ Today's delay is a speed bump, not the end of the fight.`}
                 imageSrc="/welcome/redwood-city-council.jpg"
                 imageAlt="Redwood City welcome sign downtown"
             />
+            )}
         </>
     );
 }
@@ -218,14 +312,19 @@ function PanelHeader({ title, badge, live = false }: { title: string; badge: str
 }
 
 function ValuationPanel() {
+    const [selectedStat, setSelectedStat] = usePreviewSelection<string>("value");
+    const [selectedPlan, setSelectedPlan] = usePreviewSelection<string>(String(VALUE_ADD_PLAN[0].n));
+
     return (
         <>
             <PanelHeader title="Valuation" badge="Estimate + plan" live />
             <StatRow
+                selected={selectedStat}
+                onSelect={setSelectedStat}
                 stats={[
-                    { k: "$4.2M", v: "Est. value today" },
-                    { k: "$5.5M", v: "Stabilized (Y5)", delta: "+31%" },
-                    { k: "5.3%", v: "Implied cap" },
+                    { id: "value", k: "$4.2M", v: "Est. value today" },
+                    { id: "stabilized", k: "$5.5M", v: "Stabilized (Y5)", delta: "+31%" },
+                    { id: "cap", k: "5.3%", v: "Implied cap" },
                 ]}
             />
             <div className={`${PREVIEW_CARD} p-4`}>
@@ -242,7 +341,13 @@ function ValuationPanel() {
                 <p className="text-xs font-medium text-gray-700 dark:text-gray-300">Value-add plan</p>
                 <div className="mt-3 space-y-2.5">
                     {VALUE_ADD_PLAN.map((e) => (
-                        <div key={e.n} className="flex items-center gap-3">
+                        <PreviewSelectable
+                            key={e.n}
+                            variant="row"
+                            selected={selectedPlan === String(e.n)}
+                            onSelect={() => setSelectedPlan(String(e.n))}
+                            className="flex w-full items-center gap-3 rounded-lg px-1 py-1"
+                        >
                             <span className="flex size-5 flex-none items-center justify-center rounded-full bg-gray-900 text-[10px] font-bold text-white dark:bg-gray-100 dark:text-gray-900">
                                 {e.n}
                             </span>
@@ -256,7 +361,7 @@ function ValuationPanel() {
                                 <div className="text-[13px] font-semibold text-[#2f855a] tabular-nums dark:text-[#38a06e]">+${e.noi}k</div>
                                 <div className="text-[9px] text-gray-400 dark:text-gray-500">NOI / yr</div>
                             </div>
-                        </div>
+                        </PreviewSelectable>
                     ))}
                 </div>
             </div>
@@ -276,8 +381,8 @@ function RentTrendsPanel({ showAreaStats = false }: { showAreaStats?: boolean })
     return <RentTrendsPreview showAreaStats={showAreaStats} />;
 }
 
-function SalesTrendsPanel({ initialSalesResults }: { initialSalesResults?: SalesTrendRowV2[] }) {
-    return <SalesTrendsPreview initialSalesResults={initialSalesResults} />;
+function SalesTrendsPanel() {
+    return <SalesTrendsPreview />;
 }
 
 function ListingsPanel() {
@@ -303,7 +408,7 @@ const PANELS: Record<TabLabel, (props: AppPreviewData) => React.JSX.Element> = {
     "rent-comps": () => <RentCompsPanel />,
     "sales-comps": () => <SalesCompsPanel />,
     "rent-trends": ({ showRentAreaStats }) => <RentTrendsPanel showAreaStats={showRentAreaStats} />,
-    "sales-trends": ({ initialSalesResults }) => <SalesTrendsPanel initialSalesResults={initialSalesResults} />,
+    "sales-trends": () => <SalesTrendsPanel />,
     listings: () => <ListingsPanel />,
     research: () => <ResearchPanel />,
     network: () => <NetworkPanel />,
@@ -311,7 +416,6 @@ const PANELS: Record<TabLabel, (props: AppPreviewData) => React.JSX.Element> = {
 };
 
 type AppPreviewData = {
-    initialSalesResults?: SalesTrendRowV2[];
     showRentAreaStats?: boolean;
 };
 
@@ -341,7 +445,6 @@ const HASH_TO_TAB: Record<string, TabLabel> = {
 };
 
 export function AppPreview({
-    initialSalesResults,
     showRentAreaStats = false,
     initialPanel = "home",
     enableAutoCycle = true,
@@ -394,21 +497,17 @@ export function AppPreview({
         <div ref={containerRef} className="scroll-mt-24">
             <BrowserWindow url={browserUrl}>
                 <PreviewAppShell activePanel={activeTab} onPanelSelect={handleTabClick}>
-                    <div className="grid min-h-[420px] min-w-0 overflow-hidden">
+                    <div
+                        className="grid min-h-[420px] min-w-0 overflow-hidden"
+                        onPointerDownCapture={() => setAutoCycle(false)}
+                    >
                         {PREVIEW_PANEL_ORDER.map((panel) => {
                             const Panel = PANELS[panel];
                             const isActive = panel === activeTab;
                             return (
-                                <motion.div
-                                    key={panel}
-                                    className="col-start-1 row-start-1 min-w-0 space-y-4 overflow-hidden p-6"
-                                    animate={{ opacity: isActive ? 1 : 0 }}
-                                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                                    aria-hidden={!isActive}
-                                    style={{ pointerEvents: isActive ? "auto" : "none", zIndex: isActive ? 1 : 0 }}
-                                >
-                                    <Panel initialSalesResults={initialSalesResults} showRentAreaStats={showRentAreaStats} />
-                                </motion.div>
+                                <PreviewFade key={panel} active={isActive} className="col-start-1 row-start-1 min-w-0 space-y-4 overflow-hidden p-6">
+                                    <Panel showRentAreaStats={showRentAreaStats} />
+                                </PreviewFade>
                             );
                         })}
                     </div>

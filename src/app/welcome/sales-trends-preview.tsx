@@ -9,32 +9,50 @@ import { AreaTypeSelect } from "@/components/analytics/filters/area-type-select"
 import { UnitRangeInput } from "@/components/analytics/filters/unit-range-input";
 import { SalesMetricSelector } from "@/components/analytics/sales-metric-selector";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { SalesTrendRowV2 } from "@/db/rpc";
-import { getClosedSalesTrendsByCityV2 } from "@/db/rpc/sales-trends";
+import type { SalesMetricSource, SalesTrendPeriod, SalesTrendSampleComps } from "@/lib/analytics/filters";
 import { SALES_TREND_PERIODS, SALES_TREND_SAMPLE_COMPS } from "@/lib/analytics/filters";
-import { PREVIEW_SALES_AREA_ID, PREVIEW_SALES_CITY, PREVIEW_SALES_MONTHS_PER_BUCKET } from "./sales-trends-preview-config";
+import { PreviewFadeStack, usePreviewSelection } from "./preview-interaction";
+import { PREVIEW_SALES_AREA_ID, PREVIEW_SALES_CITY, PREVIEW_SALES_RESULTS } from "./sales-trends-preview-config";
 
 const LEAD_COLOR_LIGHT = "#1e3a8a";
 const LEAD_COLOR_DARK = "#60a5fa";
 
 const noop = () => {};
 
-function MockSalesFilterPanel({ area }: { area: AreaSelection }) {
-    return (
-        <div
-            aria-hidden
-            className="pointer-events-none mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 select-none dark:border-gray-700 dark:bg-gray-800"
-        >
-            <SalesMetricSelector value="crexi" onChange={noop} />
+const METRIC_VIEWS = [
+    { id: "crexi" as const, rows: PREVIEW_SALES_RESULTS.crexi },
+    { id: "loopnet" as const, rows: PREVIEW_SALES_RESULTS.loopnet },
+];
 
-            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+function MockSalesFilterPanel({
+    area,
+    source,
+    onSourceChange,
+    period,
+    onPeriodChange,
+    sampleComps,
+    onSampleCompsChange,
+}: {
+    area: AreaSelection;
+    source: SalesMetricSource;
+    onSourceChange: (value: SalesMetricSource) => void;
+    period: SalesTrendPeriod;
+    onPeriodChange: (value: SalesTrendPeriod) => void;
+    sampleComps: SalesTrendSampleComps;
+    onSampleCompsChange: (value: SalesTrendSampleComps) => void;
+}) {
+    return (
+        <div className="mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
+            <SalesMetricSelector value={source} onChange={onSourceChange} />
+
+            <div className="pointer-events-none flex min-w-0 flex-col gap-2 select-none sm:flex-row sm:items-center sm:gap-4">
                 <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Area</span>
                 <AreaTypeSelect value="City" onChange={noop} />
             </div>
 
             <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
                 <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Period</span>
-                <Select value="5Y">
+                <Select value={period} onValueChange={(value) => onPeriodChange(value as SalesTrendPeriod)}>
                     <SelectTrigger size="sm" className="min-w-[6rem]">
                         <SelectValue />
                     </SelectTrigger>
@@ -50,7 +68,7 @@ function MockSalesFilterPanel({ area }: { area: AreaSelection }) {
 
             <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
                 <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Sample Comps</span>
-                <Select value="3M">
+                <Select value={sampleComps} onValueChange={(value) => onSampleCompsChange(value as SalesTrendSampleComps)}>
                     <SelectTrigger size="sm" className="min-w-[6rem]">
                         <SelectValue />
                     </SelectTrigger>
@@ -64,7 +82,7 @@ function MockSalesFilterPanel({ area }: { area: AreaSelection }) {
                 </Select>
             </div>
 
-            <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+            <div className="pointer-events-none flex min-w-0 flex-col gap-4 select-none sm:flex-row sm:items-center sm:gap-6">
                 <div className="flex items-center gap-2">
                     <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Sales Price</span>
                     <Select value="Median">
@@ -105,12 +123,14 @@ function MockSalesFilterPanel({ area }: { area: AreaSelection }) {
                 </div>
             </div>
 
-            <UnitRangeInput unitFilter="All" onUnitFilterChange={noop} unitMin="" onUnitMinChange={noop} unitMax="" onUnitMaxChange={noop} />
+            <div className="pointer-events-none select-none">
+                <UnitRangeInput unitFilter="All" onUnitFilterChange={noop} unitMin="" onUnitMinChange={noop} unitMax="" onUnitMaxChange={noop} />
+            </div>
         </div>
     );
 }
 
-export function SalesTrendsPreview({ initialSalesResults }: { initialSalesResults?: SalesTrendRowV2[] }) {
+export function SalesTrendsPreview() {
     const { resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
@@ -128,71 +148,52 @@ export function SalesTrendsPreview({ initialSalesResults }: { initialSalesResult
         [areaColor],
     );
 
-    const [salesResults, setSalesResults] = useState<SalesTrendRowV2[]>(initialSalesResults ?? []);
-    const hasInitialData = (initialSalesResults?.length ?? 0) > 0;
-
-    useEffect(() => {
-        if (hasInitialData) return;
-        let cancelled = false;
-        getClosedSalesTrendsByCityV2({
-            p_city: PREVIEW_SALES_CITY.city,
-            p_state: PREVIEW_SALES_CITY.state,
-            p_min_units: null,
-            p_max_units: null,
-            p_months_per_bucket: PREVIEW_SALES_MONTHS_PER_BUCKET,
-        })
-            .then((rows) => {
-                if (!cancelled) setSalesResults(rows);
-            })
-            .catch(() => {
-                if (!cancelled) setSalesResults([]);
-            });
-        return () => {
-            cancelled = true;
-        };
-    }, [hasInitialData]);
-
-    const chartData = useMemo(() => buildSalesTrendChartData({ [area.id]: salesResults }, [area], [], "5Y", "cost_per_unit", "Median"), [area, salesResults]);
-    const hasData = chartData.length > 0;
-
-    if (!hasData) {
-        return (
-            <>
-                <MockSalesFilterPanel area={area} />
-                <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <p className="text-sm text-gray-400">Loading live sales trends…</p>
-                </div>
-            </>
-        );
-    }
+    const [source, setSource] = usePreviewSelection<SalesMetricSource>("crexi");
+    const [period, setPeriod] = usePreviewSelection<SalesTrendPeriod>("5Y");
+    const [sampleComps, setSampleComps] = usePreviewSelection<SalesTrendSampleComps>("3M");
 
     return (
         <>
-            <MockSalesFilterPanel area={area} />
-            <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-                <SalesTrendsChartHeader
-                    metric="cost_per_unit"
-                    displayType="Median"
-                    chartHasSmallSample={false}
-                    showVolume
-                    salesSource="crexi"
-                    yView="abs"
-                    onYViewChange={noop}
-                />
-                <SalesTrendsChart
-                    allDisplayAreas={[area]}
-                    chartData={chartData}
-                    metric="cost_per_unit"
-                    displayType="Median"
-                    period="5Y"
-                    sampleComps="3M"
-                    unitFilter="All"
-                    showVolume
-                    yView="abs"
-                    salesSource="crexi"
-                    onDotClick={noop}
-                />
-            </div>
+            <MockSalesFilterPanel
+                area={area}
+                source={source}
+                onSourceChange={setSource}
+                period={period}
+                onPeriodChange={setPeriod}
+                sampleComps={sampleComps}
+                onSampleCompsChange={setSampleComps}
+            />
+            <PreviewFadeStack items={METRIC_VIEWS} activeId={source}>
+                {(view) => {
+                    const chartData = buildSalesTrendChartData({ [area.id]: [...view.rows] }, [area], [], period, "cost_per_unit", "Median");
+                    return (
+                        <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+                            <SalesTrendsChartHeader
+                                metric="cost_per_unit"
+                                displayType="Median"
+                                chartHasSmallSample={false}
+                                showVolume
+                                salesSource={view.id}
+                                yView="abs"
+                                onYViewChange={noop}
+                            />
+                            <SalesTrendsChart
+                                allDisplayAreas={[area]}
+                                chartData={chartData}
+                                metric="cost_per_unit"
+                                displayType="Median"
+                                period={period}
+                                sampleComps={sampleComps}
+                                unitFilter="All"
+                                showVolume
+                                yView="abs"
+                                salesSource={view.id}
+                                onDotClick={noop}
+                            />
+                        </div>
+                    );
+                }}
+            </PreviewFadeStack>
         </>
     );
 }

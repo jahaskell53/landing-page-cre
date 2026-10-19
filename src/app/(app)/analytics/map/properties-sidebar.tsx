@@ -17,6 +17,8 @@ interface PropertiesSidebarProps {
     totalCount: number;
     onSelect: (id: string | number) => void;
     className?: string;
+    /** When true, rows highlight instead of navigating — used by the landing-page listings mockup. */
+    disableLinks?: boolean;
 }
 
 export function PropertiesListSkeleton({ count = 6 }: { count?: number }) {
@@ -38,7 +40,7 @@ export function PropertiesListSkeleton({ count = 6 }: { count?: number }) {
     );
 }
 
-export function PropertiesSidebar({ properties, selectedId, loading, totalCount, onSelect, className }: PropertiesSidebarProps) {
+export function PropertiesSidebar({ properties, selectedId, loading, totalCount, onSelect, className, disableLinks = false }: PropertiesSidebarProps) {
     const [visibleCount, setVisibleCount] = useState(INITIAL_BATCH_SIZE);
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -88,24 +90,9 @@ export function PropertiesSidebar({ properties, selectedId, loading, totalCount,
                     <div className="p-6 text-center text-sm text-gray-500 dark:text-gray-400">No properties found</div>
                 ) : (
                     <>
-                        {visibleProperties.map((property) => (
-                            <div
-                                key={property.id}
-                                onClick={() => onSelect(property.id)}
-                                className={cn(
-                                    "cursor-pointer p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800",
-                                    selectedId === property.id && "bg-gray-50 dark:bg-gray-800",
-                                )}
-                            >
-                                <Link
-                                    href={
-                                        property.isReit && property.buildingZpid
-                                            ? `/analytics/building/${encodeURIComponent(property.buildingZpid)}`
-                                            : `/analytics/listings/${property.id}`
-                                    }
-                                    className="group flex gap-3"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
+                        {visibleProperties.map((property) => {
+                            const rowInner = (
+                                <>
                                     <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-gray-800">
                                         {property.thumbnailUrl ? (
                                             <img src={property.thumbnailUrl} alt="" className="h-full w-full object-cover" />
@@ -133,9 +120,35 @@ export function PropertiesSidebar({ properties, selectedId, loading, totalCount,
                                             {property.capRate && <span className="text-[10px] text-gray-500">{property.capRate}</span>}
                                         </div>
                                     </div>
-                                </Link>
-                            </div>
-                        ))}
+                                </>
+                            );
+                            return (
+                                <div
+                                    key={property.id}
+                                    onClick={() => onSelect(property.id)}
+                                    className={cn(
+                                        "cursor-pointer p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800",
+                                        selectedId === property.id && "bg-gray-50 dark:bg-gray-800",
+                                    )}
+                                >
+                                    {disableLinks ? (
+                                        <div className="group flex gap-3">{rowInner}</div>
+                                    ) : (
+                                        <Link
+                                            href={
+                                                property.isReit && property.buildingZpid
+                                                    ? `/analytics/building/${encodeURIComponent(property.buildingZpid)}`
+                                                    : `/analytics/listings/${property.id}`
+                                            }
+                                            className="group flex gap-3"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            {rowInner}
+                                        </Link>
+                                    )}
+                                </div>
+                            );
+                        })}
                         {visibleCount < properties.length && (
                             <div ref={loadMoreRef} aria-label="load-more-sentinel" className="p-3 text-center text-xs text-gray-500 dark:text-gray-400">
                                 Loading more...
