@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Building2 } from "lucide-react";
 import Link from "next/link";
-import type { Property } from "@/components/application/map/property-map";
+import { getPropertyListingHref, type Property } from "@/components/application/map/property-map";
 import { cn } from "@/lib/utils";
 import { formatNumber } from "@/utils/format";
 
@@ -91,6 +91,7 @@ export function PropertiesSidebar({ properties, selectedId, loading, totalCount,
                 ) : (
                     <>
                         {visibleProperties.map((property) => {
+                            const listingHref = disableLinks ? undefined : getPropertyListingHref(property);
                             const rowInner = (
                                 <>
                                     <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-gray-800">
@@ -131,20 +132,12 @@ export function PropertiesSidebar({ properties, selectedId, loading, totalCount,
                                         selectedId === property.id && "bg-gray-50 dark:bg-gray-800",
                                     )}
                                 >
-                                    {disableLinks ? (
-                                        <div className="group flex gap-3">{rowInner}</div>
-                                    ) : (
-                                        <Link
-                                            href={
-                                                property.isReit && property.buildingZpid
-                                                    ? `/analytics/building/${encodeURIComponent(property.buildingZpid)}`
-                                                    : `/analytics/listings/${property.id}`
-                                            }
-                                            className="group flex gap-3"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
+                                    {listingHref ? (
+                                        <Link href={listingHref} className="group flex gap-3" onClick={(e) => e.stopPropagation()}>
                                             {rowInner}
                                         </Link>
+                                    ) : (
+                                        <div className="group flex gap-3">{rowInner}</div>
                                     )}
                                 </div>
                             );

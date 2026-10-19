@@ -39,6 +39,12 @@ export interface Property {
 
 export type MapBounds = { north: number; south: number; east: number; west: number };
 
+export function getPropertyListingHref(property: Pick<Property, "id" | "isReit" | "buildingZpid">): string | undefined {
+    if (String(property.id).startsWith("preview-")) return undefined;
+    if (property.isReit && property.buildingZpid) return `/analytics/building/${encodeURIComponent(property.buildingZpid)}`;
+    return `/analytics/listings/${property.id}`;
+}
+
 interface MapProps {
     className?: string;
     properties: Property[];
@@ -322,9 +328,11 @@ export const PropertyMap = ({
 
                 const popupHref = disableLinksRef.current
                     ? undefined
-                    : props.isReit && props.buildingZpid
-                      ? `/analytics/building/${encodeURIComponent(props.buildingZpid)}`
-                      : `/analytics/listings/${props.id}`;
+                    : getPropertyListingHref({
+                          id: props.id,
+                          isReit: props.isReit,
+                          buildingZpid: props.buildingZpid,
+                      });
 
                 popupRoot.current.render(
                     <PropertyPopupContent
@@ -397,11 +405,7 @@ export const PropertyMap = ({
                 popupRoot.current = createRoot(popupContainer.current);
             }
 
-            const selectedPopupHref = disableLinksRef.current
-                ? undefined
-                : property.isReit && property.buildingZpid
-                  ? `/analytics/building/${encodeURIComponent(property.buildingZpid)}`
-                  : `/analytics/listings/${property.id}`;
+            const selectedPopupHref = disableLinksRef.current ? undefined : getPropertyListingHref(property);
 
             popupRoot.current.render(
                 <PropertyPopupContent

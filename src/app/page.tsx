@@ -13,13 +13,13 @@ import { VideoPanel } from "./welcome/video-panel";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-    title: "OpenMidmarket — Institutional-grade CRE platform. Built for the mid-market.",
+    title: "OpenMidmarket — Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
     description:
-        "A unified ecosystem leveraging predictive AI, real-time data, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
+        "A unified ecosystem for mid-market multifamily: predictive AI, real-time data, rent comps, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
     openGraph: {
-        title: "Institutional-grade CRE platform. Built for the mid-market.",
+        title: "Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
         description:
-            "A unified ecosystem leveraging predictive AI, real-time data, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
+            "A unified ecosystem for mid-market multifamily: predictive AI, real-time data, rent comps, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
         images: "/og-preview.jpeg",
     },
 };
@@ -68,6 +68,10 @@ const FOOTER_LINKS = [
     { label: "Appraisers", href: "#appraisers" },
     { label: "Insurance agents", href: "#insurance-agents" },
     { label: "1031 advisors", href: "#1031-advisors" },
+    { label: "SF rent by neighborhood", href: `${APP_ORIGIN}/rent/sf` },
+    { label: "Free rent comps tool", href: `${APP_ORIGIN}/analytics/rent-comps` },
+    { label: "Rent prices by city", href: `${APP_ORIGIN}/rent` },
+    { label: "Parking costs by city", href: `${APP_ORIGIN}/parking` },
 ];
 
 const VALUE_PILLARS = [
