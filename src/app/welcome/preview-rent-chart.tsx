@@ -212,9 +212,8 @@ export function PreviewRentChart({
 
     const endItems: EndItem[] = series.flatMap((s) => {
         const value = lastNumeric(chartData, s.key);
-        const rent = lastNumeric(absData, s.key);
-        if (value == null || rent == null || !lastWeekLabel) return [];
-        return [{ key: s.key, text: `${s.label} ${formatDollars(rent)}`, color: s.color, value, weekLabel: lastWeekLabel }];
+        if (value == null || !lastWeekLabel) return [];
+        return [{ key: s.key, text: s.label, color: s.color, value, weekLabel: lastWeekLabel }];
     });
 
     const yFormatter = yView === "pct" ? (v: number) => formatPercent(v, 0, { showSign: true }) : (v: number) => formatDollars(v);

@@ -5,7 +5,6 @@ import { useTheme } from "next-themes";
 import { type AreaSelection } from "@/app/(app)/analytics/rent-trends/trends-utils";
 import { AreaTypeSelect } from "@/components/analytics/filters/area-type-select";
 import { BedsSelect } from "@/components/analytics/filters/beds-select";
-import { SegmentToggle, type MarketSegment } from "@/components/analytics/filters/segment-toggle";
 import { ANALYTICS_AREA_TYPES, RENT_TREND_BED_OPTIONS } from "@/lib/analytics/filters";
 import { MAP_ZOOM_EVENT } from "./market-map";
 import { PreviewChip, PreviewFadeStack, usePreviewToggle } from "./preview-interaction";
@@ -36,16 +35,12 @@ function MockFilterPanel({
     onAreaSelect,
     selectedBeds,
     onBedsChange,
-    segment,
-    onSegmentChange,
 }: {
     areas: AreaSelection[];
     activeAreaId: string | null;
     onAreaSelect: (id: string) => void;
     selectedBeds: number[];
     onBedsChange: (beds: number[]) => void;
-    segment: MarketSegment;
-    onSegmentChange: (segment: MarketSegment) => void;
 }) {
     return (
         <div className="mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
@@ -88,12 +83,21 @@ function MockFilterPanel({
 
             <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
                 <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Bedrooms</span>
-                <BedsSelect mode="single" options={RENT_TREND_BED_OPTIONS} selected={selectedBeds} onChange={onBedsChange} />
-            </div>
-
-            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-                <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Segment</span>
-                <SegmentToggle wrap value={segment} onChange={onSegmentChange} />
+                <select
+                    aria-label="Bedrooms"
+                    value={selectedBeds[0] ?? 1}
+                    onChange={(event) => onBedsChange([Number(event.target.value)])}
+                    className="h-9 w-full rounded-md border border-gray-200 bg-white px-2.5 text-sm text-gray-900 sm:hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                >
+                    {RENT_TREND_BED_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+                <div className="hidden min-w-0 sm:block">
+                    <BedsSelect mode="single" options={RENT_TREND_BED_OPTIONS} selected={selectedBeds} onChange={onBedsChange} />
+                </div>
             </div>
         </div>
     );
@@ -124,7 +128,6 @@ export function RentTrendsPreview({ showAreaStats: _showAreaStats = true }: { sh
 
     const [activeAreaId, toggleArea] = usePreviewToggle<string>(null);
     const [selectedBeds, setSelectedBeds] = useState<number[]>(PREVIEW_BEDS);
-    const [segment, setSegment] = useState<MarketSegment>("mid");
 
     useEffect(() => {
         window.dispatchEvent(new CustomEvent(MAP_ZOOM_EVENT));
@@ -144,8 +147,6 @@ export function RentTrendsPreview({ showAreaStats: _showAreaStats = true }: { sh
                 onAreaSelect={toggleArea}
                 selectedBeds={selectedBeds}
                 onBedsChange={setSelectedBeds}
-                segment={segment}
-                onSegmentChange={setSegment}
             />
             <PreviewFadeStack items={views} activeId={activeViewId}>
                 {(view) => (
