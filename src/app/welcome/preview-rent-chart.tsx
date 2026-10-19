@@ -224,24 +224,38 @@ export function PreviewRentChart({
                 <h2 className="min-w-0 text-[15px] leading-snug font-medium text-gray-900 dark:text-gray-100">{title}</h2>
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
                     {buckets.length > 1 && (
-                        <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
-                            {buckets.map((opt) => (
-                                <button
-                                    key={opt.value}
-                                    type="button"
-                                    onClick={() => setGranularity(opt.value)}
-                                    className={`rounded-md px-2.5 py-1 text-xs font-medium tabular-nums ${
-                                        granularity === opt.value
-                                            ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
-                                            : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
-                                    }`}
-                                >
-                                    {opt.label}
-                                </button>
-                            ))}
-                        </div>
+                        <>
+                            <select
+                                aria-label="Time period"
+                                value={granularity}
+                                onChange={(event) => setGranularity(event.target.value as Granularity)}
+                                className="h-9 min-w-0 flex-1 rounded-md border border-gray-200 bg-white px-2.5 text-sm text-gray-900 sm:hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                            >
+                                {buckets.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </option>
+                                ))}
+                            </select>
+                            <div className="hidden items-center gap-1 rounded-lg bg-gray-100 p-1 sm:flex dark:bg-gray-700">
+                                {buckets.map((opt) => (
+                                    <button
+                                        key={opt.value}
+                                        type="button"
+                                        onClick={() => setGranularity(opt.value)}
+                                        className={`rounded-md px-2.5 py-1 text-xs font-medium tabular-nums ${
+                                            granularity === opt.value
+                                                ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
+                                                : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
+                                        }`}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </>
                     )}
-                    <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
+                    <div className="flex shrink-0 items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
                         <button
                             type="button"
                             onClick={() => setYView("pct")}
