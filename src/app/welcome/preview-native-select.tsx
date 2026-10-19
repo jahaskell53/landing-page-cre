@@ -23,7 +23,7 @@ export function PreviewNativeSelect({
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
                 className={cn(
-                    "appearance-none bg-transparent text-base font-semibold text-gray-900 dark:text-gray-100",
+                    "appearance-none bg-transparent text-base font-normal text-gray-900 dark:text-gray-100",
                     "min-h-11 rounded-md py-2.5 pr-7",
                     "hover:bg-gray-50 focus:ring-2 focus:ring-gray-200 focus:outline-none",
                     "dark:hover:bg-gray-700/40 dark:focus:ring-gray-600",

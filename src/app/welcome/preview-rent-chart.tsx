@@ -254,7 +254,7 @@ export function PreviewRentChart({
                         <button
                             type="button"
                             onClick={() => setYView("pct")}
-                            className={`min-h-9 min-w-9 rounded-md px-2.5 text-base font-semibold sm:min-h-0 sm:min-w-0 sm:px-2.5 sm:py-1 sm:text-xs sm:font-medium ${
+                            className={`min-h-9 min-w-9 rounded-md px-2.5 text-base font-normal sm:min-h-0 sm:min-w-0 sm:px-2.5 sm:py-1 sm:text-xs sm:font-medium ${
                                 yView === "pct"
                                     ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
                                     : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
@@ -265,7 +265,7 @@ export function PreviewRentChart({
                         <button
                             type="button"
                             onClick={() => setYView("abs")}
-                            className={`min-h-9 min-w-9 rounded-md px-2.5 text-base font-semibold sm:min-h-0 sm:min-w-0 sm:px-2.5 sm:py-1 sm:text-xs sm:font-medium ${
+                            className={`min-h-9 min-w-9 rounded-md px-2.5 text-base font-normal sm:min-h-0 sm:min-w-0 sm:px-2.5 sm:py-1 sm:text-xs sm:font-medium ${
                                 yView === "abs"
                                     ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
                                     : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
