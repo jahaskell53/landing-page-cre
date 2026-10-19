@@ -134,10 +134,10 @@ export function RentTrendsSection({
     };
 
     return (
-        <div className="h-full rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-            <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-semibold text-gray-900 dark:text-gray-100">Median Rent — {bedLabel}</h2>
-                <div className="flex items-center gap-2">
+        <div className="h-full min-w-0 rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+            <div className="mb-4 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="min-w-0 font-semibold text-gray-900 dark:text-gray-100">Median Rent — {bedLabel}</h2>
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
                     {onlyOnePoint && (
                         <span className="rounded border border-gray-200 bg-gray-50 px-2 py-1 text-xs text-gray-400 dark:border-gray-600 dark:bg-gray-700">
                             More data coming as scrapes accumulate

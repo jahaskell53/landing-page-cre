@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Heart, MessageCircle, Newspaper, Sparkles } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { generateAuroraGradient, getInitials } from "@/app/(app)/network/utils";
 import { VALUE_ADD_PLAN, ValueAddProjectionChart } from "@/components/application/irr-projection-chart";
 import { cn } from "@/lib/utils";
@@ -11,7 +12,7 @@ import { ListingsMapPreview } from "./listings-map-preview";
 import { NetworkPreview } from "./network-preview";
 import { NewsPreview } from "./news-preview";
 import { PREVIEW_PANEL_ORDER, PreviewAppShell, type PreviewPanelId } from "./preview-app-shell";
-import { PreviewFade, PreviewSelectable, usePreviewSelection } from "./preview-interaction";
+import { PREVIEW_FADE_TRANSITION, PreviewSelectable, usePreviewSelection } from "./preview-interaction";
 import { RentCompsPreview } from "./rent-comps-preview";
 import { RentTrendsPreview } from "./rent-trends-preview";
 import { ResearchPreview } from "./research-preview";
@@ -493,23 +494,28 @@ export function AppPreview({
         setActiveTab(label);
     };
 
+    const Panel = PANELS[activeTab];
+
     return (
         <div ref={containerRef} className="scroll-mt-24">
             <BrowserWindow url={browserUrl}>
                 <PreviewAppShell activePanel={activeTab} onPanelSelect={handleTabClick}>
                     <div
-                        className="grid min-h-[420px] min-w-0 overflow-hidden"
+                        className="relative min-h-[420px] min-w-0 overflow-hidden"
                         onPointerDownCapture={() => setAutoCycle(false)}
                     >
-                        {PREVIEW_PANEL_ORDER.map((panel) => {
-                            const Panel = PANELS[panel];
-                            const isActive = panel === activeTab;
-                            return (
-                                <PreviewFade key={panel} active={isActive} className="col-start-1 row-start-1 min-w-0 space-y-4 overflow-hidden p-6">
-                                    <Panel showRentAreaStats={showRentAreaStats} />
-                                </PreviewFade>
-                            );
-                        })}
+                        <AnimatePresence initial={false}>
+                            <motion.div
+                                key={activeTab}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0, position: "absolute", inset: 0 }}
+                                transition={PREVIEW_FADE_TRANSITION}
+                                className="min-w-0 space-y-4 overflow-hidden p-6"
+                            >
+                                <Panel showRentAreaStats={showRentAreaStats} />
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </PreviewAppShell>
             </BrowserWindow>
