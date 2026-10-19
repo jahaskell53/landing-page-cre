@@ -46,7 +46,7 @@ function MockFilterPanel({
     return (
         <div className="mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
             <div className="pointer-events-none flex min-w-0 items-center justify-between gap-3 select-none sm:justify-start sm:gap-4">
-                <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Area type</span>
+                <span className="shrink-0 text-[15px] text-gray-500 sm:w-24 sm:text-sm dark:text-gray-400">Area type</span>
                 <PreviewNativeSelect
                     aria-label="Area type"
                     value="City"
@@ -78,7 +78,7 @@ function MockFilterPanel({
             </div>
 
             <div className="flex min-w-0 items-center justify-between gap-3 sm:justify-start sm:gap-4">
-                <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Bedrooms</span>
+                <span className="shrink-0 text-[15px] text-gray-500 sm:w-24 sm:text-sm dark:text-gray-400">Bedrooms</span>
                 <PreviewNativeSelect
                     aria-label="Bedrooms"
                     value={String(selectedBeds[0] ?? 1)}
