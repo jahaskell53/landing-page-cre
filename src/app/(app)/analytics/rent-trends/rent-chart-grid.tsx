@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownRight, ArrowUpRight, Triangle } from "lucide-react";
+import { Triangle } from "lucide-react";
 import { type ParentTrendContext, compareToParent, formatParentComparisonBadge } from "@/lib/analytics/area-hierarchy";
-import { formatPercent } from "@/utils/format";
 import { MarketActivitySection } from "./market-activity-section";
 import { RentTrendsSection } from "./rent-trends-section";
 import {
@@ -16,8 +15,6 @@ import {
     aggregateTrendRows,
     formatDollars,
     getAvailableGranularities,
-    latestPeriodLabel,
-    pctChange,
 } from "./trends-utils";
 
 interface RentChartGridProps {
@@ -60,12 +57,12 @@ export function RentChartGrid({
     return (
         <div className={showAreaStats ? "grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-4" : "grid min-w-0 grid-cols-1 gap-4"}>
             {showAreaStats && (
-                <div className="col-span-1 flex min-w-0 flex-col gap-5 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
+                <div className="col-span-1 flex min-w-0 flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
                     {displayAreas.map((area) => {
                         const parentCtx = parentByDisplayId.get(area.id);
                         return (
                             <div key={area.id}>
-                                <div className="mb-2 flex items-center gap-1.5">
+                                <div className="mb-1 flex items-center gap-1.5">
                                     <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: area.color }} />
                                     <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{area.label}</span>
                                 </div>
@@ -77,8 +74,6 @@ export function RentChartGrid({
                                             granularity,
                                         );
                                         const latest = rows.length > 0 ? rows[rows.length - 1].median_rent : undefined;
-                                        const first = rows.length > 0 ? rows[0].median_rent : undefined;
-                                        const change = rows.length >= 2 ? pctChange(first, latest) : null;
 
                                         let parentComparison: { pctDelta: number; above: boolean } | null = null;
                                         if (parentCtx && selectedBeds.length === 1) {
@@ -98,11 +93,6 @@ export function RentChartGrid({
                                                         <p className="text-lg font-semibold" style={{ color: area.color }}>
                                                             {formatDollars(latest)}
                                                         </p>
-                                                        {selectedBeds.length === 1 && (
-                                                            <p className="mt-0.5 text-xs text-gray-400">
-                                                                {bedEntry.label} · {latestPeriodLabel(granularity)}
-                                                            </p>
-                                                        )}
                                                         {parentComparison && parentCtx && (
                                                             <div
                                                                 className={`mt-1 flex items-center gap-1 text-xs font-medium ${parentComparison.above ? "text-green-600" : "text-red-600"}`}
@@ -116,14 +106,6 @@ export function RentChartGrid({
                                                                     parentComparison.above,
                                                                     parentCtx.badgeLabel,
                                                                 )}
-                                                            </div>
-                                                        )}
-                                                        {change != null && (
-                                                            <div
-                                                                className={`mt-0.5 flex items-center gap-1 text-xs font-medium ${change >= 0 ? "text-green-600" : "text-red-600"}`}
-                                                            >
-                                                                {change >= 0 ? <ArrowUpRight className="size-3.5" /> : <ArrowDownRight className="size-3.5" />}
-                                                                {formatPercent(Math.abs(change), 1)} over period
                                                             </div>
                                                         )}
                                                     </>
