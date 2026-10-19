@@ -3,10 +3,11 @@
 import { Filter, MapPin } from "lucide-react";
 import { PropertiesSidebar } from "@/app/(app)/analytics/map/properties-sidebar";
 import { type Property, PropertyMap } from "@/components/application/map/property-map";
+import { SegmentedControl } from "@/components/analytics/filters/segmented-control";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { usePreviewSelection } from "./preview-interaction";
 
-const MOCK_LISTINGS: Property[] = [
+const SALES_LISTINGS: Property[] = [
     {
         id: "preview-1",
         name: "421 University Ave",
@@ -59,12 +60,52 @@ const MOCK_LISTINGS: Property[] = [
     },
 ];
 
+const RENT_LISTINGS: Property[] = [
+    {
+        id: "rent-1",
+        name: "421 University Ave",
+        address: "Palo Alto, CA",
+        units: 32,
+        price: "$3,450/mo",
+        coordinates: [-122.161, 37.445],
+        listingSource: "zillow",
+    },
+    {
+        id: "rent-2",
+        name: "855 Alma St",
+        address: "Palo Alto, CA",
+        units: 24,
+        price: "$2,980/mo",
+        coordinates: [-122.158, 37.439],
+        listingSource: "zillow",
+    },
+    {
+        id: "rent-3",
+        name: "525 Bryant St",
+        address: "Palo Alto, CA",
+        units: 18,
+        price: "$2,650/mo",
+        coordinates: [-122.162, 37.448],
+        listingSource: "zillow",
+    },
+];
+
 const PREVIEW_CENTER: [number, number] = [-122.143, 37.4419];
 const PREVIEW_ZOOM = 11.5;
 
 export function ListingsMapPreview() {
+    const [source, setSource] = usePreviewSelection<"loopnet" | "zillow">("loopnet");
+    const [vintage, setVintage] = usePreviewSelection<"Latest" | "Historical">("Latest");
+    const [selectedSalesId, setSelectedSalesId] = usePreviewSelection<string>("preview-1");
+    const [selectedRentId, setSelectedRentId] = usePreviewSelection<string>("rent-1");
+
+    const isSales = source === "loopnet";
+    const properties = isSales ? SALES_LISTINGS : RENT_LISTINGS;
+    const selectedId = isSales ? selectedSalesId : selectedRentId;
+    const onSelect = isSales ? setSelectedSalesId : setSelectedRentId;
+
     return (
-        <div aria-hidden className="pointer-events-none -m-6 flex min-h-[480px] flex-col select-none">
+        <div className="-m-6 flex min-h-[480px] flex-col">
             <div className="flex flex-shrink-0 flex-col gap-3 border-b border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-900">
                 <div className="flex w-full max-w-lg min-w-0 rounded-lg border border-input shadow-xs">
                     <div className="flex h-10 w-[min(38%,7rem)] shrink-0 items-center rounded-l-lg border-r bg-muted/30 px-3 text-sm text-gray-700 dark:text-gray-300">
@@ -79,52 +120,50 @@ export function ListingsMapPreview() {
 
             <div className="relative flex min-h-0 flex-1 overflow-hidden">
                 <PropertiesSidebar
-                    properties={MOCK_LISTINGS}
-                    selectedId="preview-1"
+                    properties={properties}
+                    selectedId={selectedId}
                     loading={false}
-                    totalCount={42}
-                    onSelect={() => {}}
+                    totalCount={isSales ? 42 : 18}
+                    onSelect={(id) => onSelect(String(id))}
+                    disableLinks
                     className="hidden w-44 shrink-0 sm:flex lg:w-48"
                 />
 
                 <div className="relative min-h-0 min-w-0 flex-1">
                     <PropertyMap
-                        properties={MOCK_LISTINGS}
-                        selectedId="preview-1"
+                        properties={properties}
+                        selectedId={selectedId}
                         className="absolute inset-0"
                         initialCenter={PREVIEW_CENTER}
                         initialZoom={PREVIEW_ZOOM}
+                        disableLinks
                     />
                     <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
-                        <Button type="button" variant="outline" size="icon" className="relative bg-background/95 shadow-sm backdrop-blur-sm" tabIndex={-1}>
+                        <Button type="button" variant="outline" size="icon" className="relative bg-background/95 shadow-sm backdrop-blur-sm">
                             <Filter className="size-4" />
                         </Button>
-                        <div className="flex rounded-lg bg-muted p-0.5 shadow-sm">
-                            {(["zillow", "loopnet"] as const).map((source) => (
-                                <span
-                                    key={source}
-                                    className={cn(
-                                        "rounded-md px-2.5 py-1.5 text-xs font-medium",
-                                        source === "loopnet" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
-                                    )}
-                                >
-                                    {source === "loopnet" ? "Sales" : "Rent"}
-                                </span>
-                            ))}
-                        </div>
-                        <div className="flex rounded-lg bg-muted p-0.5 shadow-sm">
-                            {(["Latest", "Historical"] as const).map((label, i) => (
-                                <span
-                                    key={label}
-                                    className={cn(
-                                        "rounded-md px-2.5 py-1.5 text-xs font-medium",
-                                        i === 0 ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
-                                    )}
-                                >
-                                    {label}
-                                </span>
-                            ))}
-                        </div>
+                        <SegmentedControl
+                            size="sm"
+                            ariaLabel="Listing type"
+                            options={[
+                                { value: "zillow", label: "Rent" },
+                                { value: "loopnet", label: "Sales" },
+                            ]}
+                            value={source}
+                            onChange={setSource}
+                            className="bg-muted shadow-sm"
+                        />
+                        <SegmentedControl
+                            size="sm"
+                            ariaLabel="Listing vintage"
+                            options={[
+                                { value: "Latest", label: "Latest" },
+                                { value: "Historical", label: "Historical" },
+                            ]}
+                            value={vintage}
+                            onChange={setVintage}
+                            className="bg-muted shadow-sm"
+                        />
                     </div>
                 </div>
             </div>

@@ -48,7 +48,13 @@ export function MockRadiusSlider({ value }: { value: number }) {
     );
 }
 
-export function MockSearchByToggle() {
+export function MockSearchByToggle({
+    value,
+    onChange,
+}: {
+    value: "radius" | "neighborhood";
+    onChange: (value: "radius" | "neighborhood") => void;
+}) {
     return (
         <div className="mb-3 flex min-w-0 flex-wrap items-center gap-2">
             <Label className="shrink-0 text-xs">Search by</Label>
@@ -61,14 +67,14 @@ export function MockSearchByToggle() {
                     { value: "radius", label: "radius" },
                     { value: "neighborhood", label: "neighborhood" },
                 ]}
-                value="radius"
-                onChange={() => {}}
+                value={value}
+                onChange={onChange}
             />
         </div>
     );
 }
 
-export const COMPS_PREVIEW_SHELL = "pointer-events-none -m-6 min-w-0 max-w-full overflow-hidden bg-gray-50 p-3 select-none dark:bg-gray-900";
+export const COMPS_PREVIEW_SHELL = "-m-6 min-w-0 max-w-full overflow-hidden bg-gray-50 p-3 dark:bg-gray-900";
 
 export function DistributionBar({ medianPos, subjectPos }: { medianPos: number; subjectPos?: number }) {
     return (

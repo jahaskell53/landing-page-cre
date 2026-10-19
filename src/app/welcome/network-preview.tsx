@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { PreviewFadeStack, PreviewSelectable, PreviewUnderlineTabs, usePreviewSelection } from "./preview-interaction";
 
 type MockPerson = {
     id: string;
@@ -121,12 +122,12 @@ const MOCK_PEOPLE: MockPerson[] = [
     },
 ];
 
-const SELECTED_ID = "1";
 const TABS = ["Network", "Board", "Map", "Directory"] as const;
+type NetworkTab = (typeof TABS)[number];
 
-function MockPersonRow({ person, selected }: { person: MockPerson; selected: boolean }) {
+function MockPersonRow({ person, selected, onSelect }: { person: MockPerson; selected: boolean; onSelect: () => void }) {
     return (
-        <div className={cn("flex items-center gap-1.5 px-2.5 py-2", selected && "bg-gray-50 dark:bg-gray-800")}>
+        <PreviewSelectable selected={selected} onSelect={onSelect} variant="row" className="flex w-full items-center gap-1.5 px-2.5 py-2">
             <div className="size-3.5 shrink-0 rounded border border-gray-300 dark:border-gray-600" />
             <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1">
@@ -143,7 +144,7 @@ function MockPersonRow({ person, selected }: { person: MockPerson; selected: boo
                     {getInitials(person.name)}
                 </AvatarFallback>
             </Avatar>
-        </div>
+        </PreviewSelectable>
     );
 }
 
@@ -222,28 +223,33 @@ function MockDetailPanel({ person }: { person: MockPerson }) {
     );
 }
 
+function PeopleList({ selectedId, onSelect }: { selectedId: string; onSelect: (id: string) => void }) {
+    return (
+        <div className="flex min-w-0 flex-[3] flex-col overflow-hidden">
+            <div className="flex items-center justify-between border-b border-gray-100 px-3 py-1.5 dark:border-gray-800">
+                <span className="text-[10px] font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">{MOCK_PEOPLE.length} People</span>
+                <PlusIcon className="size-3.5 text-gray-500 dark:text-gray-400" />
+            </div>
+            <div className="flex-1 divide-y divide-gray-100 overflow-y-auto dark:divide-gray-800">
+                {MOCK_PEOPLE.map((person) => (
+                    <MockPersonRow key={person.id} person={person} selected={person.id === selectedId} onSelect={() => onSelect(person.id)} />
+                ))}
+            </div>
+        </div>
+    );
+}
+
 export function NetworkPreview() {
-    const selected = MOCK_PEOPLE.find((p) => p.id === SELECTED_ID)!;
+    const [tab, setTab] = usePreviewSelection<NetworkTab>("Network");
+    const [selectedId, setSelectedId] = usePreviewSelection<string>("1");
+    const selected = MOCK_PEOPLE.find((p) => p.id === selectedId) ?? MOCK_PEOPLE[0];
+    const tabViews: { id: NetworkTab }[] = TABS.map((id) => ({ id }));
 
     return (
-        <div aria-hidden className="pointer-events-none -m-6 flex min-h-[480px] flex-col overflow-hidden bg-white select-none dark:bg-gray-900">
+        <div className="-m-6 flex min-h-[480px] flex-col overflow-hidden bg-white dark:bg-gray-900">
             <div className="shrink-0 border-b border-gray-200 px-3 py-2.5 dark:border-gray-800">
                 <div className="flex items-center justify-between gap-2 overflow-hidden">
-                    <div className="flex min-w-0 items-center gap-2 overflow-hidden">
-                        {TABS.map((tab) => (
-                            <span
-                                key={tab}
-                                className={cn(
-                                    "shrink-0 border-b-2 pb-0.5 text-[11px] font-medium",
-                                    tab === "Network"
-                                        ? "border-gray-900 text-gray-900 dark:border-gray-100 dark:text-gray-100"
-                                        : "border-transparent text-gray-500 dark:text-gray-400",
-                                )}
-                            >
-                                {tab}
-                            </span>
-                        ))}
-                    </div>
+                    <PreviewUnderlineTabs tabs={TABS} value={tab} onChange={setTab} />
                     <div className="flex shrink-0 items-center gap-1">
                         <StarIcon className="size-3 text-gray-400" />
                         <svg className="size-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -261,23 +267,58 @@ export function NetworkPreview() {
                 </div>
             </div>
 
-            <div className="flex min-h-0 min-w-0 flex-1 overflow-hidden">
-                <div className="flex min-w-0 flex-[3] flex-col overflow-hidden">
-                    <div className="flex items-center justify-between border-b border-gray-100 px-3 py-1.5 dark:border-gray-800">
-                        <span className="text-[10px] font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">{MOCK_PEOPLE.length} People</span>
-                        <PlusIcon className="size-3.5 text-gray-500 dark:text-gray-400" />
-                    </div>
-                    <div className="flex-1 divide-y divide-gray-100 overflow-y-auto dark:divide-gray-800">
-                        {MOCK_PEOPLE.map((person) => (
-                            <MockPersonRow key={person.id} person={person} selected={person.id === SELECTED_ID} />
-                        ))}
-                    </div>
-                </div>
-
-                <div className="w-px shrink-0 bg-gray-200 dark:bg-gray-800" />
-
-                <MockDetailPanel person={selected} />
-            </div>
+            <PreviewFadeStack items={tabViews} activeId={tab} className="min-h-0 flex-1" itemClassName="flex h-full min-h-0 min-w-0 overflow-hidden">
+                {(view) => {
+                    if (view.id === "Board") {
+                        return (
+                            <div className="grid grid-cols-1 gap-2 overflow-y-auto p-3 sm:grid-cols-2">
+                                {MOCK_PEOPLE.filter((person) => person.starred).map((person) => (
+                                    <PreviewSelectable
+                                        key={person.id}
+                                        selected={selectedId === person.id}
+                                        onSelect={() => setSelectedId(person.id)}
+                                        className="rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800"
+                                    >
+                                        <div className="text-xs font-medium text-gray-900 dark:text-gray-100">{person.name}</div>
+                                        <div className="mt-1 text-[10px] text-gray-500 dark:text-gray-400">{person.history[0]?.text ?? "No deals yet"}</div>
+                                    </PreviewSelectable>
+                                ))}
+                            </div>
+                        );
+                    }
+                    if (view.id === "Map") {
+                        return (
+                            <div className="flex h-full flex-wrap content-start gap-2 p-3">
+                                {MOCK_PEOPLE.map((person) => (
+                                    <PreviewSelectable
+                                        key={person.id}
+                                        selected={selectedId === person.id}
+                                        onSelect={() => setSelectedId(person.id)}
+                                        className={cn(
+                                            "rounded-full border border-gray-200 px-2.5 py-1 text-[11px] dark:border-gray-700",
+                                            selectedId === person.id ? "" : "bg-white dark:bg-gray-800",
+                                        )}
+                                    >
+                                        {person.name}
+                                    </PreviewSelectable>
+                                ))}
+                            </div>
+                        );
+                    }
+                    if (view.id === "Directory") {
+                        return <PeopleList selectedId={selectedId} onSelect={setSelectedId} />;
+                    }
+                    return (
+                        <div className="flex h-full min-h-0 min-w-0 overflow-hidden">
+                            <PeopleList selectedId={selectedId} onSelect={setSelectedId} />
+                            <div className="w-px shrink-0 bg-gray-200 dark:bg-gray-800" />
+                            <PreviewFadeStack items={MOCK_PEOPLE} activeId={selected.id} className="h-full w-60 shrink-0">
+                                {(person) => <MockDetailPanel person={person} />}
+                            </PreviewFadeStack>
+                        </div>
+                    );
+                }}
+            </PreviewFadeStack>
         </div>
     );
 }

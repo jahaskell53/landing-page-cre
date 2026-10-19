@@ -6,12 +6,7 @@ import { Button } from "@/components/ui/button";
 import { APP_ORIGIN } from "@/lib/app-origin";
 import { AppPreview } from "./welcome/app-preview";
 import { AudienceCards } from "./welcome/audience-cards";
-import { BrowserWindow } from "./welcome/browser-window";
 import { HeroHighlight } from "./welcome/hero-highlight";
-import { PreviewAppShell } from "./welcome/preview-app-shell";
-import { RentTrendsPreview } from "./welcome/rent-trends-preview";
-import { getWelcomeRentTrends } from "./welcome/rent-trends-server";
-import { getWelcomeSalesTrends } from "./welcome/sales-trends-server";
 import { NavSignupCtaButton, SignupCtaButton } from "./welcome/signup-cta";
 import { VideoPanel } from "./welcome/video-panel";
 
@@ -137,8 +132,7 @@ const STATS = [
     },
 ];
 
-export default async function HomePage() {
-    const [initialRentResults, initialSalesResults] = await Promise.all([getWelcomeRentTrends(), getWelcomeSalesTrends()]);
+export default function HomePage() {
     return (
         <div className="min-h-dvh bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
             <header className="sticky top-0 z-20 border-b border-gray-200/80 bg-gray-50/90 backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
@@ -200,8 +194,8 @@ export default async function HomePage() {
 
                     <p className="mt-6 max-w-2xl text-xl leading-relaxed text-gray-600 dark:text-gray-400">
                         A unified ecosystem leveraging <span className={EMPHASIS}>predictive AI</span>, <span className={EMPHASIS}>real-time data</span>, and a
-                        dedicated <span className={EMPHASIS}>CRE professional network</span>.{" "}
-                        <span className={EMPHASIS}>Gain an edge with institutional power tailored for your speed.</span>
+                        dedicated <span className={EMPHASIS}>CRE professional network</span>. Gain an edge with{" "}
+                        <span className={EMPHASIS}>institutional power</span> tailored for your speed.
                     </p>
                 </div>
             </section>
@@ -213,13 +207,13 @@ export default async function HomePage() {
                             aria-hidden
                             className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-br from-blue-200 via-blue-100 to-transparent opacity-70 blur-2xl dark:from-blue-900/40 dark:via-blue-950/20 dark:opacity-40"
                         />
-                        <BrowserWindow url="app.openmidmarket.com/analytics/rent-trends">
-                            <PreviewAppShell activePanel="rent-trends">
-                                <div className="p-6">
-                                    <RentTrendsPreview initialRentResults={initialRentResults ?? undefined} />
-                                </div>
-                            </PreviewAppShell>
-                        </BrowserWindow>
+                        <AppPreview
+                            initialPanel="rent-trends"
+                            enableAutoCycle={false}
+                            enableHashLinks={false}
+                            browserUrl="app.openmidmarket.com/analytics/rent-trends"
+                            showRentAreaStats
+                        />
                     </div>
                 </div>
             </section>
@@ -266,7 +260,7 @@ export default async function HomePage() {
                         </p>
                     </div>
                     <div className="mx-auto mt-12 max-w-3xl">
-                        <AppPreview initialRentResults={initialRentResults ?? undefined} initialSalesResults={initialSalesResults ?? undefined} />
+                        <AppPreview />
                     </div>
                 </div>
             </section>

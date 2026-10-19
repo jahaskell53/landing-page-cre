@@ -1,10 +1,12 @@
 "use client";
 
-import { SegmentToggle } from "@/components/analytics/filters/segment-toggle";
+import { useState } from "react";
+import { SegmentToggle, type MarketSegment } from "@/components/analytics/filters/segment-toggle";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { getScoreColor } from "@/lib/analytics/comps";
 import { cn } from "@/lib/utils";
+import { CompsMiniMap } from "./comps-mini-map";
 import {
     COMPS_PREVIEW_SHELL,
     DistributionBar,
@@ -14,7 +16,7 @@ import {
     MockSearchByToggle,
     StatCell,
 } from "./comps-preview-shared";
-import { CompsMiniMap } from "./comps-mini-map";
+import { PreviewChip, PreviewFade, PreviewSelectable, usePreviewSelection } from "./preview-interaction";
 
 const SUBJECT = {
     street: "425 2nd Ave",
@@ -33,14 +35,18 @@ const COMP_COORDS: [number, number][] = [
 ];
 
 const MOCK_COMPS = [
-    { street: "88 S Delaware St", city: "San Mateo, CA", rent: "$2,650", bedBa: "2 / 2.0", score: 92 },
-    { street: "140 Claremont Ave", city: "San Mateo, CA", rent: "$2,780", bedBa: "2 / 1.5", score: 88 },
-    { street: "245 Laurel Ave", city: "San Mateo, CA", rent: "$2,950", bedBa: "2 / 2.0", score: 85 },
+    { id: "comp-1", street: "88 S Delaware St", city: "San Mateo, CA", rent: "$2,650", bedBa: "2 / 2.0", score: 92 },
+    { id: "comp-2", street: "140 Claremont Ave", city: "San Mateo, CA", rent: "$2,780", bedBa: "2 / 1.5", score: 88 },
+    { id: "comp-3", street: "245 Laurel Ave", city: "San Mateo, CA", rent: "$2,950", bedBa: "2 / 2.0", score: 85 },
 ];
 
 export function RentCompsPreview() {
+    const [searchBy, setSearchBy] = useState<"radius" | "neighborhood">("radius");
+    const [segment, setSegment] = useState<MarketSegment>("mid");
+    const [selectedComp, setSelectedComp] = usePreviewSelection<string>("comp-1");
+
     return (
-        <div aria-hidden className={cn(COMPS_PREVIEW_SHELL, "space-y-2.5")}>
+        <div className={cn(COMPS_PREVIEW_SHELL, "space-y-2.5")}>
             <div className="rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800">
                 <h3 className="mb-2.5 text-xs font-semibold text-gray-900 dark:text-gray-100">Find Comparable Rentals</h3>
                 <div className="space-y-2.5">
@@ -50,8 +56,19 @@ export function RentCompsPreview() {
                     </div>
 
                     <div className="min-w-0">
-                        <MockSearchByToggle />
-                        <MockRadiusSlider value={2} />
+                        <MockSearchByToggle value={searchBy} onChange={setSearchBy} />
+                        <div className="grid overflow-hidden">
+                            <PreviewFade active={searchBy === "radius"} className="col-start-1 row-start-1">
+                                <MockRadiusSlider value={2} />
+                            </PreviewFade>
+                            <PreviewFade active={searchBy === "neighborhood"} className="col-start-1 row-start-1">
+                                <div className="flex flex-wrap gap-1.5 pt-1">
+                                    <PreviewChip selected onSelect={() => setSearchBy("neighborhood")}>
+                                        Downtown San Mateo
+                                    </PreviewChip>
+                                </div>
+                            </PreviewFade>
+                        </div>
                     </div>
 
                     <CompsMiniMap subject={SUBJECT_COORDS} comps={COMP_COORDS} radiusMiles={2} />
@@ -65,11 +82,11 @@ export function RentCompsPreview() {
                         </div>
                         <div className="mt-2 flex min-w-0 flex-wrap items-center gap-2">
                             <Label className="shrink-0 text-[10px]">Segment</Label>
-                            <SegmentToggle value="mid" onChange={() => {}} />
+                            <SegmentToggle value={segment} onChange={setSegment} />
                         </div>
                     </div>
 
-                    <Button type="button" tabIndex={-1} className="h-8 w-full text-xs">
+                    <Button type="button" className="h-8 w-full text-xs">
                         Find Comps
                     </Button>
                 </div>
@@ -122,7 +139,14 @@ export function RentCompsPreview() {
                             <td className="px-1 py-1.5 text-right text-blue-600/70 dark:text-blue-400/70">—</td>
                         </tr>
                         {MOCK_COMPS.map((comp, i) => (
-                            <tr key={comp.street} className="border-b border-gray-50 dark:border-gray-700/50">
+                            <PreviewSelectable
+                                key={comp.id}
+                                as="tr"
+                                variant="row"
+                                selected={selectedComp === comp.id}
+                                onSelect={() => setSelectedComp(comp.id)}
+                                className="border-b border-gray-50 dark:border-gray-700/50"
+                            >
                                 <td className="px-2 py-1.5 text-gray-400">{i + 1}</td>
                                 <td className="min-w-0 px-2 py-1.5">
                                     <div className="truncate font-medium text-gray-900 dark:text-gray-100">{comp.street}</div>
@@ -133,7 +157,7 @@ export function RentCompsPreview() {
                                 <td className="px-1 py-1.5 text-right">
                                     <span className={cn("font-semibold tabular-nums", getScoreColor(comp.score / 100))}>{comp.score}</span>
                                 </td>
-                            </tr>
+                            </PreviewSelectable>
                         ))}
                     </tbody>
                 </table>
