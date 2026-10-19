@@ -8,6 +8,7 @@ import { BedsSelect } from "@/components/analytics/filters/beds-select";
 import { ANALYTICS_AREA_TYPES, RENT_TREND_BED_OPTIONS } from "@/lib/analytics/filters";
 import { MAP_ZOOM_EVENT } from "./market-map";
 import { PreviewChip, PreviewFadeStack, usePreviewToggle } from "./preview-interaction";
+import { PreviewNativeSelect } from "./preview-native-select";
 import { PreviewRentChart } from "./preview-rent-chart";
 import { PREVIEW_BEDS, PREVIEW_CITIES, PREVIEW_RENT_RESULTS, previewAreaId } from "./rent-trends-preview-config";
 
@@ -44,20 +45,15 @@ function MockFilterPanel({
 }) {
     return (
         <div className="mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
-            <div className="pointer-events-none flex min-w-0 flex-col gap-2 select-none sm:flex-row sm:items-center sm:gap-4">
+            <div className="pointer-events-none flex min-w-0 items-center justify-between gap-3 select-none sm:justify-start sm:gap-4">
                 <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Area type</span>
-                <select
+                <PreviewNativeSelect
                     aria-label="Area type"
                     value="City"
                     onChange={noop}
-                    className="h-9 w-full rounded-md border border-gray-200 bg-white px-2.5 text-sm text-gray-900 sm:hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-                >
-                    {ANALYTICS_AREA_TYPES.map((type) => (
-                        <option key={type} value={type}>
-                            {type}
-                        </option>
-                    ))}
-                </select>
+                    align="end"
+                    options={ANALYTICS_AREA_TYPES.map((type) => ({ value: type, label: type }))}
+                />
                 <div className="hidden min-w-0 sm:block">
                     <AreaTypeSelect value="City" onChange={noop} />
                 </div>
@@ -81,20 +77,15 @@ function MockFilterPanel({
                 </div>
             </div>
 
-            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <div className="flex min-w-0 items-center justify-between gap-3 sm:justify-start sm:gap-4">
                 <span className="shrink-0 text-sm text-gray-500 sm:w-24 dark:text-gray-400">Bedrooms</span>
-                <select
+                <PreviewNativeSelect
                     aria-label="Bedrooms"
-                    value={selectedBeds[0] ?? 1}
-                    onChange={(event) => onBedsChange([Number(event.target.value)])}
-                    className="h-9 w-full rounded-md border border-gray-200 bg-white px-2.5 text-sm text-gray-900 sm:hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-                >
-                    {RENT_TREND_BED_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
+                    value={String(selectedBeds[0] ?? 1)}
+                    onChange={(next) => onBedsChange([Number(next)])}
+                    align="end"
+                    options={RENT_TREND_BED_OPTIONS.map((option) => ({ value: String(option.value), label: option.label }))}
+                />
                 <div className="hidden min-w-0 sm:block">
                     <BedsSelect mode="single" options={RENT_TREND_BED_OPTIONS} selected={selectedBeds} onChange={onBedsChange} />
                 </div>

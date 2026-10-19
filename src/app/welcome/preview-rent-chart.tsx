@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, Tooltip, usePlotArea, useXAxisScale, useYAxisScale, XAxis, YAxis } from "recharts";
 import { AnalyticsChartContainer } from "@/components/analytics/charts/analytics-chart";
 import { formatPercent } from "@/utils/format";
+import { PreviewNativeSelect } from "./preview-native-select";
 import {
     type AreaSelection,
     BED_KEYS,
@@ -222,21 +223,15 @@ export function PreviewRentChart({
         <div className="min-w-0">
             <div className="mb-3 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <h2 className="min-w-0 text-[15px] leading-snug font-medium text-gray-900 dark:text-gray-100">{title}</h2>
-                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <div className="flex min-w-0 items-center justify-between gap-2 sm:justify-end">
                     {buckets.length > 1 && (
                         <>
-                            <select
+                            <PreviewNativeSelect
                                 aria-label="Time period"
                                 value={granularity}
-                                onChange={(event) => setGranularity(event.target.value as Granularity)}
-                                className="h-9 min-w-0 flex-1 rounded-md border border-gray-200 bg-white px-2.5 text-sm text-gray-900 sm:hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-                            >
-                                {buckets.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>
-                                        {opt.label}
-                                    </option>
-                                ))}
-                            </select>
+                                onChange={(next) => setGranularity(next as Granularity)}
+                                options={buckets}
+                            />
                             <div className="hidden items-center gap-1 rounded-lg bg-gray-100 p-1 sm:flex dark:bg-gray-700">
                                 {buckets.map((opt) => (
                                     <button
