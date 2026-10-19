@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, Tooltip, usePlotArea, useXAxisScale, useYAxisScale, XAxis, YAxis } from "recharts";
 import { AnalyticsChartContainer } from "@/components/analytics/charts/analytics-chart";
 import { formatPercent } from "@/utils/format";
+import { PreviewNativeSelect } from "./preview-native-select";
 import {
     type AreaSelection,
     BED_KEYS,
@@ -222,30 +223,38 @@ export function PreviewRentChart({
         <div className="min-w-0">
             <div className="mb-3 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <h2 className="min-w-0 text-[15px] leading-snug font-medium text-gray-900 dark:text-gray-100">{title}</h2>
-                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <div className="flex min-w-0 items-center justify-between gap-2 sm:justify-end">
                     {buckets.length > 1 && (
-                        <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
-                            {buckets.map((opt) => (
-                                <button
-                                    key={opt.value}
-                                    type="button"
-                                    onClick={() => setGranularity(opt.value)}
-                                    className={`rounded-md px-2.5 py-1 text-xs font-medium tabular-nums ${
-                                        granularity === opt.value
-                                            ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
-                                            : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
-                                    }`}
-                                >
-                                    {opt.label}
-                                </button>
-                            ))}
-                        </div>
+                        <>
+                            <PreviewNativeSelect
+                                aria-label="Time period"
+                                value={granularity}
+                                onChange={(next) => setGranularity(next as Granularity)}
+                                options={buckets}
+                            />
+                            <div className="hidden items-center gap-1 rounded-lg bg-gray-100 p-1 sm:flex dark:bg-gray-700">
+                                {buckets.map((opt) => (
+                                    <button
+                                        key={opt.value}
+                                        type="button"
+                                        onClick={() => setGranularity(opt.value)}
+                                        className={`rounded-md px-2.5 py-1 text-xs font-medium tabular-nums ${
+                                            granularity === opt.value
+                                                ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
+                                                : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
+                                        }`}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </>
                     )}
-                    <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
+                    <div className="flex h-11 shrink-0 items-center gap-1 rounded-lg bg-gray-100 p-1 sm:h-auto dark:bg-gray-700">
                         <button
                             type="button"
                             onClick={() => setYView("pct")}
-                            className={`rounded-md px-2.5 py-1 text-xs font-medium ${
+                            className={`min-h-9 min-w-9 rounded-md px-2.5 text-base font-normal sm:min-h-0 sm:min-w-0 sm:px-2.5 sm:py-1 sm:text-xs sm:font-medium ${
                                 yView === "pct"
                                     ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
                                     : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
@@ -256,7 +265,7 @@ export function PreviewRentChart({
                         <button
                             type="button"
                             onClick={() => setYView("abs")}
-                            className={`rounded-md px-2.5 py-1 text-xs font-medium ${
+                            className={`min-h-9 min-w-9 rounded-md px-2.5 text-base font-normal sm:min-h-0 sm:min-w-0 sm:px-2.5 sm:py-1 sm:text-xs sm:font-medium ${
                                 yView === "abs"
                                     ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
                                     : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
