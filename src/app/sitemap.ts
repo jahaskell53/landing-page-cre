@@ -8,5 +8,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: "weekly",
             priority: 1,
         },
+        {
+            url: "https://www.openmidmarket.com/privacy",
+            lastModified: new Date("2026-10-19"),
+            changeFrequency: "yearly",
+            priority: 0.3,
+        },
+        {
+            url: "https://www.openmidmarket.com/terms",
+            lastModified: new Date("2026-10-19"),
+            changeFrequency: "yearly",
+            priority: 0.3,
+        },
     ];
 }
