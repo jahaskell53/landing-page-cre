@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { APP_ORIGIN } from "@/lib/app-origin";
 import { AppPreview } from "./welcome/app-preview";
 import { AudienceCards } from "./welcome/audience-cards";
+import { HeroCopy } from "./welcome/hero-copy";
 import { NavSignupCtaButton, SignupCtaButton } from "./welcome/signup-cta";
 import { VideoPanel } from "./welcome/video-panel";
 
@@ -188,15 +189,7 @@ export default function HomePage() {
 
             <section className={SECTION_WHITE}>
                 <div className="mx-auto w-full max-w-6xl px-4 pt-10 pb-4 sm:px-6 lg:px-8 lg:pt-16 lg:pb-5">
-                    <h1 className="text-4xl leading-[1.1] font-semibold tracking-tight text-gray-900 sm:text-5xl sm:leading-[1.1] lg:text-6xl lg:leading-[1.1] dark:text-gray-100">
-                        <span className="mb-3 block">Institutional-grade CRE platform.</span>
-                        <span className="block">Built for the mid-market.</span>
-                    </h1>
-
-                    <p className="mt-6 max-w-2xl text-xl leading-relaxed text-gray-600 dark:text-gray-400">
-                        A unified ecosystem leveraging predictive AI, real-time data, and a dedicated CRE professional network. Gain an edge with institutional
-                        power tailored for your speed.
-                    </p>
+                    <HeroCopy />
                 </div>
             </section>
 

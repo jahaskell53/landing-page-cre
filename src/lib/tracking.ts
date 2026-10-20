@@ -1,4 +1,5 @@
 import posthog from "posthog-js";
+import { HERO_COPY_TEST_FLAG, HERO_VARIANT_QUERY, type HeroVariant, parseHeroVariant, readHeroOverride, readPersistedHeroVariant } from "@/lib/hero-copy";
 import { APP_ORIGIN } from "@/lib/app-origin";
 import { isPostHogEnabled } from "@/lib/posthog-config";
 
@@ -22,6 +23,25 @@ function getUtmParams(): Record<string, string> {
     return params;
 }
 
+function getResolvedHeroVariant(): { variant: HeroVariant; override: boolean } | null {
+    if (typeof window === "undefined") return null;
+    const override = readHeroOverride();
+    if (override) return { variant: override, override: true };
+    const stored = readPersistedHeroVariant();
+    if (stored) return { variant: stored, override: false };
+    const flag = isPostHogEnabled ? parseHeroVariant(String(posthog.getFeatureFlag(HERO_COPY_TEST_FLAG) ?? "")) : null;
+    if (flag) return { variant: flag, override: false };
+    return null;
+}
+
+function getHeroEventProps(): Record<string, string | boolean> {
+    const resolved = getResolvedHeroVariant();
+    return {
+        hero_variant: resolved?.variant ?? "control",
+        ...(resolved?.override ? { hero_override: true } : {}),
+    };
+}
+
 /** Fire a landing-page CTA click event. No-op when PostHog is not initialized. */
 export function captureLandingCtaClick(location: LandingCtaLocation, href: string, audience?: string) {
     if (!isPostHogEnabled) return;
@@ -29,6 +49,7 @@ export function captureLandingCtaClick(location: LandingCtaLocation, href: strin
         location,
         href,
         ...(audience ? { audience } : {}),
+        ...getHeroEventProps(),
         ...getUtmParams(),
     });
 }
@@ -54,6 +75,9 @@ export function withReferralParams(href: string): string {
     for (const [key, value] of Object.entries(getUtmParams())) {
         url.searchParams.set(key, value);
     }
+
+    const resolvedHero = getResolvedHeroVariant();
+    if (resolvedHero) url.searchParams.set(HERO_VARIANT_QUERY, resolvedHero.variant);
 
     if (isPostHogEnabled && url.origin === new URL(APP_ORIGIN).origin) {
         const distinctId = posthog.get_distinct_id();
@@ -90,6 +114,7 @@ export function captureWaitlistSubmitted(email: string, roles: string[]) {
     posthog.identify(email, { email });
     posthog.capture("waitlist_submitted", {
         roles,
+        ...getHeroEventProps(),
         ...getUtmParams(),
     });
 }
