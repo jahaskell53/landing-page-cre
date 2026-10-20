@@ -17,7 +17,7 @@ export type HeroCopy = {
 
 export const HERO_COPY = {
     control: {
-        lines: ["Institutional-grade CRE platform.", "Built for the mid-market."],
+        lines: ["OpenMidmarket: Institutional-grade CRE platform.", "Built for the mid-market."],
         subtitle:
             "A unified ecosystem leveraging predictive AI, real-time data, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
     },
