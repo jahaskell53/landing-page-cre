@@ -23,7 +23,7 @@ export const HERO_COPY = {
     },
     bov: {
         lines: ["Build a BOV in seconds, not weeks."],
-        subtitle: "Rent comps, sales comps, and rent trends for multifamily, all in one place.",
+        subtitle: "Let AI pull the comps and run the numbers, so you can focus on the deal.",
     },
 } as const satisfies Record<HeroVariant, HeroCopy>;
 
