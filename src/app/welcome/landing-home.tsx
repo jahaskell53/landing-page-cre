@@ -8,14 +8,28 @@ import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import { VideoPanel } from "./video-panel";
 
+const LANDING_DESCRIPTION =
+    "A unified ecosystem for mid-market multifamily: predictive AI, real-time data, rent comps, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.";
+
 export const landingMetadata: Metadata = {
     title: "OpenMidmarket — Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
-    description:
-        "A unified ecosystem for mid-market multifamily: predictive AI, real-time data, rent comps, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
+    description: LANDING_DESCRIPTION,
     openGraph: {
         title: "Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
-        description:
-            "A unified ecosystem for mid-market multifamily: predictive AI, real-time data, rent comps, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
+        description: LANDING_DESCRIPTION,
+        images: "/og-preview.jpeg",
+    },
+};
+
+export const homepageMetadata: Metadata = {
+    metadataBase: new URL("https://www.openmidmarket.com"),
+    title: "OpenMidmarket | Multifamily Rent Comps & BOVs for Brokers",
+    description: LANDING_DESCRIPTION,
+    openGraph: {
+        siteName: "OpenMidmarket",
+        title: "OpenMidmarket — Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
+        description: LANDING_DESCRIPTION,
+        url: "https://www.openmidmarket.com/",
         images: "/og-preview.jpeg",
     },
 };

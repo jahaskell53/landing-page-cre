@@ -18,6 +18,8 @@ import {
 
 const EMPHASIS = "font-semibold text-blue-900 dark:text-blue-400";
 const HIGHLIGHT_CLASS = "bg-blue-900 text-white dark:bg-blue-600 dark:text-white";
+const HERO_HEADING_CLASS =
+    "text-4xl leading-[1.1] font-semibold tracking-tight text-gray-900 sm:text-5xl sm:leading-[1.1] lg:text-6xl lg:leading-[1.1] dark:text-gray-100";
 const subscribe = () => () => {};
 
 function escapeRegExp(value: string): string {
@@ -87,11 +89,10 @@ function useHeroVariant(): HeroVariant {
 
 function HeroVariantView({ variant }: { variant: HeroVariant }) {
     const copy: HeroCopy = HERO_COPY[variant];
+    const Heading = variant === "control" ? "h1" : "h2";
     return (
         <>
-            <h1 className="text-4xl leading-[1.1] font-semibold tracking-tight text-gray-900 sm:text-5xl sm:leading-[1.1] lg:text-6xl lg:leading-[1.1] dark:text-gray-100">
-                {renderHeadline(copy)}
-            </h1>
+            <Heading className={HERO_HEADING_CLASS}>{renderHeadline(copy)}</Heading>
             <p className="mt-6 max-w-2xl text-xl leading-relaxed text-gray-600 dark:text-gray-400">{withEmphasis(copy.subtitle, copy.emphasis)}</p>
         </>
     );
