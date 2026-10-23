@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, Tooltip, usePlotArea, useXAxisScale, useYAxisScale, XAxis, YAxis } from "recharts";
 import { AnalyticsChartContainer } from "@/components/analytics/charts/analytics-chart";
+import { useChartAnimation } from "@/components/analytics/charts/use-chart-animation";
 import { formatPercent } from "@/utils/format";
 import { PreviewNativeSelect } from "./preview-native-select";
 import {
@@ -184,6 +185,7 @@ export function PreviewRentChart({
 }) {
     const [granularity, setGranularity] = useState<Granularity>("wow");
     const [yView, setYView] = useState<YView>("pct");
+    const chartAnimation = useChartAnimation();
     const available = useMemo(() => getAvailableGranularities(areaResults), [areaResults]);
     const buckets = BUCKET_LABELS.filter((opt) => available.includes(opt.value));
 
@@ -339,8 +341,8 @@ export function PreviewRentChart({
                             strokeLinejoin="round"
                             dot={false}
                             activeDot={{ r: 3, strokeWidth: 0, fill: s.color }}
-                            isAnimationActive={false}
                             connectNulls
+                            {...chartAnimation}
                         />
                     ))}
                     <EndLabels items={endItems} halo={halo} />

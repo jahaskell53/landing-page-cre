@@ -25,6 +25,7 @@ import {
     AnalyticsXAxis,
     AnalyticsYAxis,
 } from "@/components/analytics/charts/analytics-chart";
+import { useChartAnimation } from "@/components/analytics/charts/use-chart-animation";
 import { CompCoverageBadge } from "@/components/analytics/comp-coverage-badge";
 import { PARENT_LINE_COLOR, PARENT_LINE_DASH, type ParentTrendContext, formatParentComparisonBadge } from "@/lib/analytics/area-hierarchy";
 import { chartPointCoverage, formatCompCoverageLabel, latestTrendCoverage, salesSourceToCoverageSource } from "@/lib/analytics/comp-coverage";
@@ -83,6 +84,7 @@ export function SalesTrendsChart({
     onDotClick,
 }: SalesTrendsChartProps) {
     const comparisonByAreaId = useMemo(() => new Map(parentComparisons.map((c) => [c.ctx.displayAreaId, c])), [parentComparisons]);
+    const chartAnimation = useChartAnimation();
     const isPct = yView === "pct";
     const isClosed = salesSource === "crexi";
     const sampleLabel = isClosed ? "closed sale" : "listing";
@@ -265,7 +267,7 @@ export function SalesTrendsChart({
                     )}
                     <Tooltip content={<CustomTooltip />} />
                     {isPct && <ReferenceLine yAxisId="left" y={0} stroke="#d1d5db" strokeDasharray="3 3" />}
-                    {showVolume && <Bar yAxisId="right" dataKey="volume" name="Volume" fill="#d1d5db" opacity={0.5} barSize={20} />}
+                    {showVolume && <Bar yAxisId="right" dataKey="volume" name="Volume" fill="#d1d5db" opacity={0.5} barSize={20} {...chartAnimation} />}
                     {allDisplayAreas.map((area) => (
                         <Line
                             key={area.id}
@@ -278,6 +280,7 @@ export function SalesTrendsChart({
                             dot={renderTrendDot(area, 3)}
                             activeDot={renderTrendDot(area, 6, true)}
                             connectNulls
+                            {...chartAnimation}
                         >
                             {displayType === "Candle" && (metric === "cost_per_unit" || metric === "cap_rate") && (
                                 <ErrorBar
@@ -304,6 +307,7 @@ export function SalesTrendsChart({
                             dot={false}
                             activeDot={{ r: 4 }}
                             connectNulls
+                            {...chartAnimation}
                         />
                     ))}
                 </ComposedChart>
