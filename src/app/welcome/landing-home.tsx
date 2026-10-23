@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { AudienceCards } from "./audience-cards";
-import { HeroCopy, HideOnBovHero, HideOnLeadsHero, LeadsOnly } from "./hero-copy";
+import { BrokerOrLeadsOnly, HeroCopy, HideOnBovHero, HideOnLeadsHero, LeadsOnly } from "./hero-copy";
 import { BOV_HERO_PREPAINT_SCRIPT, BOV_HERO_PREPAINT_STYLE, BOV_HIDDEN_SECTION_CLASS } from "@/lib/hero-copy";
 import { HeroRentChart } from "./hero-rent-chart";
 import { HeroRentChartFallback } from "./rent-trends-preview";
@@ -166,6 +166,9 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                 </section>
             </LeadsOnly>
 
+            <BrokerOrLeadsOnly>
+                <LeadsBenefits />
+            </BrokerOrLeadsOnly>
             <HideOnLeadsHero>
                 <section className={SECTION_WHITE}>
                     <div className={SECTION_CONTAINER}>
@@ -185,9 +188,6 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                     </div>
                 </section>
             </HideOnLeadsHero>
-            <LeadsOnly>
-                <LeadsBenefits />
-            </LeadsOnly>
 
             <section id="features" className={SECTION_WHITE}>
                 <div className={SECTION_CONTAINER}>

@@ -11,6 +11,7 @@ import {
     HERO_COPY_TEST_FLAG,
     LEADS_HIDE_CLASS,
     LEADS_SHOW_CLASS,
+    TAGGED_SHOW_CLASS,
     STACKED_HERO_VARIANT_KEYS,
     type HeroCopy,
     type HeroVariant,
@@ -176,3 +177,12 @@ export function LeadsOnly({ children, as: Comp = "div" }: { children: ReactNode;
     if (mounted && variant !== "leads") return null;
     return <Comp className={LEADS_SHOW_CLASS}>{children}</Comp>;
 }
+
+/** Show on `?tag=broker` (bov) and `?tag=leads`. Hidden on the default homepage. */
+export function BrokerOrLeadsOnly({ children, as: Comp = "div" }: { children: ReactNode; as?: "div" | "span" }) {
+    const variant = useHeroVariant();
+    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
+    if (mounted && !hidesHomepageSections(variant)) return null;
+    return <Comp className={TAGGED_SHOW_CLASS}>{children}</Comp>;
+}
+

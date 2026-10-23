@@ -18,11 +18,12 @@ export const HERO_VARIANT_LEGACY_QUERY = "hero";
 export const BOV_HIDDEN_SECTION_CLASS = "js-hide-on-bov-hero";
 export const LEADS_SHOW_CLASS = "js-show-on-leads-hero";
 export const LEADS_HIDE_CLASS = "js-hide-on-leads-hero";
+export const TAGGED_SHOW_CLASS = "js-show-on-tagged-hero";
 
 /** Runs before first paint so BOV/leads URL visitors never see the hidden sections. */
 export const BOV_HERO_PREPAINT_SCRIPT = `(function(){var p=new URLSearchParams(location.search);var tag=p.get(${JSON.stringify(HERO_VARIANT_QUERY)});if(tag===${JSON.stringify(HERO_VARIANT_TAG_BROKER)}||p.get(${JSON.stringify(HERO_VARIANT_LEGACY_QUERY)})==="bov"){document.documentElement.dataset.heroVariant="bov";}else if(tag===${JSON.stringify(HERO_VARIANT_TAG_LEADS)}){document.documentElement.dataset.heroVariant="leads";}})();`;
 
-export const BOV_HERO_PREPAINT_STYLE = `html[data-hero-variant="bov"] .${BOV_HIDDEN_SECTION_CLASS},html[data-hero-variant="leads"] .${BOV_HIDDEN_SECTION_CLASS}{display:none!important}html[data-hero-variant="leads"] .${LEADS_HIDE_CLASS}{display:none!important}html:not([data-hero-variant="leads"]) .${LEADS_SHOW_CLASS}{display:none!important}`;
+export const BOV_HERO_PREPAINT_STYLE = `html[data-hero-variant="bov"] .${BOV_HIDDEN_SECTION_CLASS},html[data-hero-variant="leads"] .${BOV_HIDDEN_SECTION_CLASS}{display:none!important}html[data-hero-variant="leads"] .${LEADS_HIDE_CLASS}{display:none!important}html:not([data-hero-variant="leads"]) .${LEADS_SHOW_CLASS}{display:none!important}html:not([data-hero-variant="bov"]):not([data-hero-variant="leads"]) .${TAGGED_SHOW_CLASS}{display:none!important}`;
 
 export type HeroCopy = {
     /** Headline lines. A single line is one block; two lines match the current stacked hero. */

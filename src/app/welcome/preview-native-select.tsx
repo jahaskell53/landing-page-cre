@@ -9,15 +9,17 @@ export function PreviewNativeSelect({
     options,
     "aria-label": ariaLabel,
     align = "start",
+    alwaysShow = false,
 }: {
     value: string;
     onChange: (value: string) => void;
     options: { value: string; label: string }[];
     "aria-label": string;
     align?: "start" | "end";
+    alwaysShow?: boolean;
 }) {
     return (
-        <div className={cn("relative sm:hidden", align === "end" ? "ml-auto w-fit" : "w-fit")}>
+        <div className={cn("relative", !alwaysShow && "sm:hidden", align === "end" ? "ml-auto w-fit" : "w-fit")}>
             <select
                 aria-label={ariaLabel}
                 value={value}
