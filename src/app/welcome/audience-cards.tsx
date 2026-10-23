@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { captureAudienceTabSelected } from "@/lib/tracking";
+import { PreviewNativeSelect } from "./preview-native-select";
 import { SignupCtaButton } from "./signup-cta";
 
 type Audience = {
@@ -92,7 +93,7 @@ export function AudienceCards() {
         return () => window.removeEventListener("hashchange", selectFromHash);
     }, []);
 
-    const selectTab = (index: number) => {
+    const selectAudience = (index: number) => {
         setInteracted(true);
         setActiveIndex(index);
         captureAudienceTabSelected(AUDIENCES[index].id, AUDIENCES[index].title, index);
@@ -100,27 +101,22 @@ export function AudienceCards() {
 
     return (
         <div className="mt-16">
-            <div role="tablist" className="flex gap-6 overflow-x-auto border-b border-gray-200 pb-px dark:border-gray-800">
-                {AUDIENCES.map(({ title }, index) => {
-                    const isActive = index === activeIndex;
-                    return (
-                        <button
-                            key={title}
-                            role="tab"
-                            aria-selected={isActive}
-                            onClick={() => selectTab(index)}
-                            className={
-                                "-mb-px cursor-pointer border-b-2 pb-4 text-sm font-medium tracking-wide uppercase transition-colors " +
-                                (isActive
-                                    ? "border-blue-900 text-blue-900 dark:border-blue-400 dark:text-blue-400"
-                                    : "border-transparent text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100")
-                            }
-                        >
-                            {title}
-                        </button>
-                    );
-                })}
-            </div>
+            <label htmlFor="audience-select" className="sr-only">
+                Audience
+            </label>
+            <PreviewNativeSelect
+                id="audience-select"
+                alwaysShow
+                aria-label="Audience"
+                value={AUDIENCES[activeIndex].id}
+                onChange={(id) => {
+                    const index = AUDIENCES.findIndex((audience) => audience.id === id);
+                    if (index === -1) return;
+                    selectAudience(index);
+                }}
+                options={AUDIENCES.map((audience) => ({ value: audience.id, label: audience.title }))}
+                className="border border-gray-200 bg-white pr-8 pl-3 font-normal tracking-normal normal-case dark:border-gray-700 dark:bg-transparent"
+            />
             {/* All panels stay mounted and stacked in the same grid cell so the
                 container's height is always the tallest panel — swapping the
                 active one never reflows the sections below. */}
@@ -130,7 +126,6 @@ export function AudienceCards() {
                     return (
                         <motion.div
                             key={title}
-                            role="tabpanel"
                             aria-hidden={!isActive}
                             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
                             transition={{ duration: 0.35, ease: "easeInOut" }}
