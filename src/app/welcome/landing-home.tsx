@@ -169,8 +169,8 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
             <BrokerOrLeadsOnly>
                 <LeadsBenefits />
             </BrokerOrLeadsOnly>
-            <HideOnLeadsHero>
-                <section className={SECTION_WHITE}>
+            <HideOnBovHero>
+                <section className={`${SECTION_WHITE} ${BOV_HIDDEN_SECTION_CLASS}`}>
                     <div className={SECTION_CONTAINER}>
                         <div className="grid gap-12 sm:grid-cols-3">
                             {VALUE_PILLARS.map((pillar) => (
@@ -187,7 +187,7 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                         </div>
                     </div>
                 </section>
-            </HideOnLeadsHero>
+            </HideOnBovHero>
 
             <section id="features" className={SECTION_WHITE}>
                 <div className={SECTION_CONTAINER}>
