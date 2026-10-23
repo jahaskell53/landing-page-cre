@@ -35,6 +35,8 @@ export type HeroCopy = {
     subtitle: string;
     /** Substrings of the subtitle to render in the navy/semibold EMPHASIS style. */
     emphasis?: readonly string[];
+    /** Substrings of the subtitle to render in italic, same weight and color. */
+    italic?: readonly string[];
 };
 
 export const HERO_COPY = {
@@ -47,6 +49,7 @@ export const HERO_COPY = {
         lines: ["Build a BOV in seconds, not weeks."],
         accent: "seconds",
         subtitle: "Let AI pull the comps and run the numbers, so you can focus on the deal.",
+        italic: ["AI", "deal"],
     },
     leads: {
         lines: ["Win more listings with the numbers owners want to see."],
