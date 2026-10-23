@@ -317,13 +317,7 @@ export function SalesTrendsChart({
                 {metric === "cap_rate" &&
                     `${displayType === "Average" ? "Average" : displayType === "Candle" ? (isClosed ? "Min–max range with median" : "Median") : "Median"} cap rate from ${isClosed ? "Crexi closed sales comps" : "LoopNet for-sale listings"}. Period: ${period}${isClosed ? `, Sample: ${sampleComps}` : ""}.${unitFilter !== "All" && isClosed ? ` Units: ${unitFilter}.` : ""}`}
                 {metric === "cost_per_unit" &&
-                    `${displayType === "Average" ? "Average" : displayType === "Candle" ? (isClosed ? "P25–P75 range with median" : "Median") : "Median"} ${isClosed ? "closed-sale price per door from Crexi API comps" : "asking price per door from LoopNet for-sale listings"}. Period: ${period}${isClosed ? `, Sample: ${sampleComps}` : ""}.${unitFilter !== "All" && isClosed ? ` Units: ${unitFilter}.` : ""}`}
-                {isClosed && (
-                    <>
-                        {" · "}
-                        <span className="italic">Click any data point to see individual listings below the chart.</span>
-                    </>
-                )}
+                    `${displayType === "Average" ? "Average" : displayType === "Candle" ? (isClosed ? "P25–P75 range with median" : "Median") : "Median"} ${isClosed ? "closed-sale price per door" : "asking price per door from LoopNet for-sale listings"}. Period: ${period}${isClosed ? `, Sample: ${sampleComps}` : ""}.${unitFilter !== "All" && isClosed ? ` Units: ${unitFilter}.` : ""}`}
             </p>
         </>
     );
