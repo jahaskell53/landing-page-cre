@@ -3,10 +3,12 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { AudienceCards } from "./audience-cards";
-import { HeroCopy, HideOnBovHero } from "./hero-copy";
+import { HeroCopy, HideOnBovHero, HideOnLeadsHero, LeadsOnly } from "./hero-copy";
 import { BOV_HERO_PREPAINT_SCRIPT, BOV_HERO_PREPAINT_STYLE, BOV_HIDDEN_SECTION_CLASS } from "@/lib/hero-copy";
 import { HeroRentChart } from "./hero-rent-chart";
 import { HeroRentChartFallback } from "./rent-trends-preview";
+import { HeroRentUpsideCard } from "./hero-rent-upside-card";
+import { LeadsBenefits } from "./leads-benefits";
 import { SignupCtaButton } from "./signup-cta";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -147,31 +149,45 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                 </div>
             </section>
 
-            <section className={SECTION_GRAY}>
-                <div className="mx-auto w-full max-w-6xl px-4 pt-4 pb-14 sm:px-6 lg:px-8 lg:pt-5 lg:pb-20">
-                    <Suspense fallback={<HeroRentChartFallback />}>
-                        <HeroRentChart />
-                    </Suspense>
-                </div>
-            </section>
-
-            <section className={SECTION_WHITE}>
-                <div className={SECTION_CONTAINER}>
-                    <div className="grid gap-12 sm:grid-cols-3">
-                        {VALUE_PILLARS.map((pillar) => (
-                            <div key={pillar.title}>
-                                <pillar.icon className="size-8 text-blue-900 dark:text-blue-400" />
-                                <h3 className="mt-4 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">{pillar.title}</h3>
-                                <p className="mt-2 text-base leading-relaxed text-gray-600 dark:text-gray-400">{pillar.body}</p>
-                            </div>
-                        ))}
+            <HideOnLeadsHero>
+                <section className={SECTION_GRAY}>
+                    <div className="mx-auto w-full max-w-6xl px-4 pt-4 pb-14 sm:px-6 lg:px-8 lg:pt-5 lg:pb-20">
+                        <Suspense fallback={<HeroRentChartFallback />}>
+                            <HeroRentChart />
+                        </Suspense>
                     </div>
-
-                    <div className="mt-12 flex justify-center">
-                        <SignupCtaButton trackingLocation="value_pillars_get_started" />
+                </section>
+            </HideOnLeadsHero>
+            <LeadsOnly>
+                <section className={SECTION_GRAY}>
+                    <div className="mx-auto w-full max-w-6xl px-4 pt-4 pb-14 sm:px-6 lg:px-8 lg:pt-5 lg:pb-20">
+                        <HeroRentUpsideCard />
                     </div>
-                </div>
-            </section>
+                </section>
+            </LeadsOnly>
+
+            <HideOnLeadsHero>
+                <section className={SECTION_WHITE}>
+                    <div className={SECTION_CONTAINER}>
+                        <div className="grid gap-12 sm:grid-cols-3">
+                            {VALUE_PILLARS.map((pillar) => (
+                                <div key={pillar.title}>
+                                    <pillar.icon className="size-8 text-blue-900 dark:text-blue-400" />
+                                    <h3 className="mt-4 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">{pillar.title}</h3>
+                                    <p className="mt-2 text-base leading-relaxed text-gray-600 dark:text-gray-400">{pillar.body}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-12 flex justify-center">
+                            <SignupCtaButton trackingLocation="value_pillars_get_started" />
+                        </div>
+                    </div>
+                </section>
+            </HideOnLeadsHero>
+            <LeadsOnly>
+                <LeadsBenefits />
+            </LeadsOnly>
 
             <section id="features" className={SECTION_WHITE}>
                 <div className={SECTION_CONTAINER}>
@@ -200,7 +216,16 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                             <div key={stat.label}>
                                 <dt className="text-6xl font-semibold tracking-tight text-blue-900 dark:text-blue-400">{stat.value}</dt>
                                 <dd className="mt-2 text-base font-medium text-gray-900 dark:text-gray-100">{stat.label}</dd>
-                                <dd className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{stat.description}</dd>
+                                <dd className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                                    {stat.label === "Active Brokers" ? (
+                                        <>
+                                            <HideOnLeadsHero as="span">{stat.description}</HideOnLeadsHero>
+                                            <LeadsOnly as="span">Active brokers who specialize in mid-market deals.</LeadsOnly>
+                                        </>
+                                    ) : (
+                                        stat.description
+                                    )}
+                                </dd>
                             </div>
                         ))}
                     </dl>
@@ -231,10 +256,18 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
             >
                 <div className="flex w-full flex-col items-start text-left">
                     <h2 className="max-w-4xl text-left text-[clamp(1.125rem,4.8vw,6rem)] leading-[1.1] font-semibold tracking-tight text-white">
-                        <span className="block">Uncover opportunities</span>
-                        <span className="block">
-                            with <span className="text-blue-400">OpenMidmarket</span> AI
-                        </span>
+                        <HideOnLeadsHero as="span">
+                            <span className="block">Uncover opportunities</span>
+                            <span className="block">
+                                with <span className="text-blue-400">OpenMidmarket</span> AI
+                            </span>
+                        </HideOnLeadsHero>
+                        <LeadsOnly as="span">
+                            <span className="block">Win your next listing</span>
+                            <span className="block">
+                                with <span className="text-blue-400">OpenMidmarket</span>
+                            </span>
+                        </LeadsOnly>
                     </h2>
                     <div className="mt-10">
                         <SignupCtaButton trackingLocation="footer_get_started" />

@@ -5,13 +5,17 @@ import posthog from "posthog-js";
 import { isPostHogEnabled } from "@/lib/posthog-config";
 import { cn } from "@/lib/utils";
 import { HeroHighlight } from "./hero-highlight";
+import { SignupCtaButton, SignupCtaOutlineButton } from "./signup-cta";
 import {
     HERO_COPY,
     HERO_COPY_TEST_FLAG,
-    HERO_VARIANT_KEYS,
+    LEADS_HIDE_CLASS,
+    LEADS_SHOW_CLASS,
+    STACKED_HERO_VARIANT_KEYS,
     type HeroCopy,
     type HeroVariant,
     heroVariantToTag,
+    hidesHomepageSections,
     parseHeroVariant,
     persistHeroVariant,
     readHeroOverride,
@@ -75,7 +79,7 @@ function renderHeadline(copy: HeroCopy): ReactNode {
     });
 }
 
-function useHeroVariant(): HeroVariant {
+export function useHeroVariant(): HeroVariant {
     const override = useSyncExternalStore(subscribe, readHeroOverride, (): HeroVariant | null => null);
     const [flagVariant, setFlagVariant] = useState<HeroVariant | null>(null);
 
@@ -111,11 +115,17 @@ function HeroVariantView({ variant }: { variant: HeroVariant }) {
             <p
                 className={cn(
                     "mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400",
-                    variant === "bov" ? "max-w-4xl" : "max-w-2xl",
+                    variant === "leads" ? "max-w-5xl lg:whitespace-nowrap" : variant === "bov" ? "max-w-4xl" : "max-w-2xl",
                 )}
             >
                 {withEmphasis(copy.subtitle, copy.emphasis)}
             </p>
+            {variant === "leads" && (
+                <div className="mt-8 flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                    <SignupCtaButton trackingLocation="hero_join_waitlist" className="w-full sm:w-auto" />
+                    <SignupCtaOutlineButton trackingLocation="hero_rent_survey" label="Get a rent survey for any building" className="w-full sm:w-auto" />
+                </div>
+            )}
         </>
     );
 }
@@ -125,23 +135,44 @@ export function HeroCopy() {
     const override = useSyncExternalStore(subscribe, readHeroOverride, (): HeroVariant | null => null);
 
     return (
-        <div className="grid">
-            {HERO_VARIANT_KEYS.map((key) => (
-                <div
-                    key={key}
-                    className={cn("col-start-1 row-start-1", key !== variant && (override ? "hidden" : "invisible"))}
-                    aria-hidden={key !== variant}
-                >
-                    <HeroVariantView variant={key} />
+        <>
+            <HideOnLeadsHero>
+                <div className="grid">
+                    {STACKED_HERO_VARIANT_KEYS.map((key) => (
+                        <div
+                            key={key}
+                            className={cn("col-start-1 row-start-1", key !== variant && (override ? "hidden" : "invisible"))}
+                            aria-hidden={key !== variant}
+                        >
+                            <HeroVariantView variant={key} />
+                        </div>
+                    ))}
                 </div>
-            ))}
-        </div>
+            </HideOnLeadsHero>
+            <LeadsOnly>
+                <HeroVariantView variant="leads" />
+            </LeadsOnly>
+        </>
     );
 }
 
-/** Hide homepage-only sections when the resolved hero variant is `bov`. */
+/** Hide homepage-only sections when the resolved hero variant is `bov` or `leads`. */
 export function HideOnBovHero({ children }: { children: ReactNode }) {
     const variant = useHeroVariant();
-    if (variant === "bov") return null;
+    if (hidesHomepageSections(variant)) return null;
     return children;
+}
+
+export function HideOnLeadsHero({ children, as: Comp = "div" }: { children: ReactNode; as?: "div" | "span" }) {
+    const variant = useHeroVariant();
+    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
+    if (mounted && variant === "leads") return null;
+    return <Comp className={LEADS_HIDE_CLASS}>{children}</Comp>;
+}
+
+export function LeadsOnly({ children, as: Comp = "div" }: { children: ReactNode; as?: "div" | "span" }) {
+    const variant = useHeroVariant();
+    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
+    if (mounted && variant !== "leads") return null;
+    return <Comp className={LEADS_SHOW_CLASS}>{children}</Comp>;
 }
