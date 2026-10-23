@@ -3,12 +3,16 @@ import Link from "next/link";
 import { TrackedLink } from "@/components/tracking/tracked-link";
 import { Button } from "@/components/ui/button";
 import { APP_ORIGIN } from "@/lib/app-origin";
+import { BOV_HIDDEN_SECTION_CLASS } from "@/lib/hero-copy";
+import { HideOnBovHero } from "./hero-copy";
 import { NavSignupCtaButton } from "./signup-cta";
 
 type NavLink = {
     label: string;
     href: string;
     children?: { label: string; href: string }[];
+    /** Audience landing link. Hidden on the tagged broker (`?tag=broker`) and leads (`?tag=leads`) heroes. */
+    audience?: boolean;
 };
 
 const NAV_LINKS: NavLink[] = [
@@ -28,9 +32,9 @@ const NAV_LINKS: NavLink[] = [
             { label: "News", href: "/#preview-news" },
         ],
     },
-    { label: "Property owners", href: "/owners" },
-    { label: "CRE brokers", href: "/brokers" },
-    { label: "CRE lenders", href: "/lenders" },
+    { label: "Property owners", href: "/owners", audience: true },
+    { label: "CRE brokers", href: "/brokers", audience: true },
+    { label: "CRE lenders", href: "/lenders", audience: true },
 ];
 
 export function SiteHeader() {
@@ -65,6 +69,12 @@ export function SiteHeader() {
                                     </div>
                                 </div>
                             </div>
+                        ) : link.audience ? (
+                            <HideOnBovHero key={link.label}>
+                                <a href={link.href} className={`${BOV_HIDDEN_SECTION_CLASS} transition-colors hover:text-gray-900 dark:hover:text-gray-100`}>
+                                    {link.label}
+                                </a>
+                            </HideOnBovHero>
                         ) : (
                             <a key={link.label} href={link.href} className="transition-colors hover:text-gray-900 dark:hover:text-gray-100">
                                 {link.label}
