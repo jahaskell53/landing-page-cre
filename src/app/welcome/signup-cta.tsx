@@ -60,12 +60,13 @@ type SignupCtaProps = Omit<React.ComponentProps<"a">, "href" | "children"> & {
     trackingLocation?: LandingCtaLocation;
     audience?: string;
     icon?: React.ReactNode;
+    label?: string;
 };
 
-export function SignupCta({ trackingLocation, audience, onClick, icon, ...props }: SignupCtaProps) {
+export function SignupCta({ trackingLocation, audience, onClick, icon, label: labelOverride, ...props }: SignupCtaProps) {
     const invite = useSyncExternalStore(subscribe, getInviteSnapshot, getServerInviteSnapshot);
     const href = resolveHref(invite);
-    const label = resolveLabel(invite);
+    const label = labelOverride ?? resolveLabel(invite);
 
     return (
         <a
@@ -94,6 +95,14 @@ export function SignupCtaButton({ className, ...props }: SignupCtaButtonProps) {
     return (
         <Button variant="primary" size="cta" className={cn(className)} asChild>
             <SignupCta icon={SIGNUP_CTA_ICON} {...props} />
+        </Button>
+    );
+}
+
+export function SignupCtaOutlineButton({ className, ...props }: SignupCtaButtonProps) {
+    return (
+        <Button variant="outline" size="cta" className={cn(className)} asChild>
+            <SignupCta {...props} />
         </Button>
     );
 }

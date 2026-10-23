@@ -16,7 +16,9 @@ export type LandingCtaLocation =
     | "header_signup"
     | "value_pillars_get_started"
     | "footer_get_started"
-    | "audience_get_started";
+    | "audience_get_started"
+    | "hero_join_waitlist"
+    | "hero_rent_survey";
 
 const UTM_PARAM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
 

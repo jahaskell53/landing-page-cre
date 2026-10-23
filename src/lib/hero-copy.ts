@@ -2,20 +2,27 @@ export const HERO_COPY_TEST_FLAG = "hero-copy-test";
 /** Public URL override: `/?tag=broker` selects the BOV hero copy. */
 export const HERO_VARIANT_QUERY = "tag";
 export const HERO_VARIANT_TAG_BROKER = "broker";
+export const HERO_VARIANT_TAG_LEADS = "leads";
 export const HERO_VARIANT_STORAGE_KEY = "om_hero_variant";
 
-export const HERO_VARIANT_KEYS = ["control", "bov"] as const;
+export const HERO_VARIANT_KEYS = ["control", "bov", "leads"] as const;
 export type HeroVariant = (typeof HERO_VARIANT_KEYS)[number];
+
+/** Control and BOV share one stacked hero grid. Leads is a separate block. */
+export const STACKED_HERO_VARIANT_KEYS = ["control", "bov"] as const;
+export type StackedHeroVariant = (typeof STACKED_HERO_VARIANT_KEYS)[number];
 
 /** Silent legacy alias for the old `?hero=bov` override. */
 export const HERO_VARIANT_LEGACY_QUERY = "hero";
 
 export const BOV_HIDDEN_SECTION_CLASS = "js-hide-on-bov-hero";
+export const LEADS_SHOW_CLASS = "js-show-on-leads-hero";
+export const LEADS_HIDE_CLASS = "js-hide-on-leads-hero";
 
-/** Runs before first paint so BOV URL visitors never see the hidden sections. */
-export const BOV_HERO_PREPAINT_SCRIPT = `(function(){var p=new URLSearchParams(location.search);if(p.get(${JSON.stringify(HERO_VARIANT_QUERY)})===${JSON.stringify(HERO_VARIANT_TAG_BROKER)}||p.get(${JSON.stringify(HERO_VARIANT_LEGACY_QUERY)})==="bov"){document.documentElement.dataset.heroVariant="bov";}})();`;
+/** Runs before first paint so BOV/leads URL visitors never see the hidden sections. */
+export const BOV_HERO_PREPAINT_SCRIPT = `(function(){var p=new URLSearchParams(location.search);var tag=p.get(${JSON.stringify(HERO_VARIANT_QUERY)});if(tag===${JSON.stringify(HERO_VARIANT_TAG_BROKER)}||p.get(${JSON.stringify(HERO_VARIANT_LEGACY_QUERY)})==="bov"){document.documentElement.dataset.heroVariant="bov";}else if(tag===${JSON.stringify(HERO_VARIANT_TAG_LEADS)}){document.documentElement.dataset.heroVariant="leads";}})();`;
 
-export const BOV_HERO_PREPAINT_STYLE = `html[data-hero-variant="bov"] .${BOV_HIDDEN_SECTION_CLASS}{display:none!important}`;
+export const BOV_HERO_PREPAINT_STYLE = `html[data-hero-variant="bov"] .${BOV_HIDDEN_SECTION_CLASS},html[data-hero-variant="leads"] .${BOV_HIDDEN_SECTION_CLASS}{display:none!important}html[data-hero-variant="leads"] .${LEADS_HIDE_CLASS}{display:none!important}html:not([data-hero-variant="leads"]) .${LEADS_SHOW_CLASS}{display:none!important}`;
 
 export type HeroCopy = {
     /** Headline lines. A single line is one block; two lines match the current stacked hero. */
@@ -40,20 +47,29 @@ export const HERO_COPY = {
         accent: "seconds",
         subtitle: "Let AI pull the comps and run the numbers, so you can focus on the deal.",
     },
+    leads: {
+        lines: ["Win more listings with the numbers owners want to see."],
+        accent: "Win more listings",
+        subtitle: "Send owners a rent survey, show their rent upside, and find buyers, all from one place.",
+    },
 } as const satisfies Record<HeroVariant, HeroCopy>;
 
 export function parseHeroVariant(value: string | null | undefined): HeroVariant | null {
-    return value === "control" || value === "bov" ? value : null;
+    return value === "control" || value === "bov" || value === "leads" ? value : null;
 }
 
 /** Map a `?tag=` query value to an internal hero variant. `broker` → `bov`. */
 export function parseHeroTag(value: string | null | undefined): HeroVariant | null {
-    return value === HERO_VARIANT_TAG_BROKER ? "bov" : null;
+    if (value === HERO_VARIANT_TAG_BROKER) return "bov";
+    if (value === HERO_VARIANT_TAG_LEADS) return "leads";
+    return null;
 }
 
-/** URL tag to persist on outbound links when the BOV / broker variant is active. */
+/** URL tag to persist on outbound links when a tagged hero variant is active. */
 export function heroVariantToTag(variant: HeroVariant): string | null {
-    return variant === "bov" ? HERO_VARIANT_TAG_BROKER : null;
+    if (variant === "bov") return HERO_VARIANT_TAG_BROKER;
+    if (variant === "leads") return HERO_VARIANT_TAG_LEADS;
+    return null;
 }
 
 export function readHeroOverride(): HeroVariant | null {
@@ -68,7 +84,7 @@ export function persistHeroVariant(variant: HeroVariant) {
     try {
         sessionStorage.setItem(HERO_VARIANT_STORAGE_KEY, variant);
     } catch {
-        // Private mode / disabled storage — events still carry the in-memory variant.
+        // Private mode or disabled storage. Events still carry the in-memory variant.
     }
 }
 
@@ -79,4 +95,8 @@ export function readPersistedHeroVariant(): HeroVariant | null {
     } catch {
         return null;
     }
+}
+
+export function hidesHomepageSections(variant: HeroVariant): boolean {
+    return variant === "bov" || variant === "leads";
 }
