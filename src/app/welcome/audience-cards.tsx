@@ -1,104 +1,60 @@
 "use client";
 
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { captureAudienceTabSelected } from "@/lib/tracking";
 import { SignupCtaButton } from "./signup-cta";
-
-const EMPHASIS = "font-semibold text-blue-900 dark:text-blue-400";
 
 type Audience = {
     // URL hash slug used for deep-linking from the nav (e.g. /welcome#brokers).
     id: string;
     title: string;
     headline: string;
-    body: ReactNode;
+    body: string;
 };
 
 const AUDIENCES: Audience[] = [
     {
         id: "owners",
         title: "Property owners",
-        headline: "Leverage AI to unlock smarter insights and superior returns.",
-        body: (
-            <>
-                OpenMidmarket <span className={EMPHASIS}>levels the playing field</span> for us as midmarket multifamily investors by providing AI-native,
-                institutional-grade tools. Through unified real-time data, smart analytics, trusted networks, and exclusive preferred member pricing, we{" "}
-                <span className={EMPHASIS}>unlock unique investment opportunities, maximize our returns, and build industry leverage</span>.
-            </>
-        ),
+        headline: "Smarter decisions. Better returns.",
+        body: "Real-time rent and sales data, plus a network of owners like you, so you can spot deals and grow your portfolio.",
     },
     {
         id: "brokers",
         title: "CRE brokers",
-        headline: "Close more deals. Earn higher commissions.",
-        body: (
-            <>
-                OpenMidmarket <span className={EMPHASIS}>empowers</span> brokers with AI-native underwriting tools, automated campaigns, real-time data, an
-                intelligent CRM, and market analytics—
-                <span className={EMPHASIS}>accelerating deals, strengthening relationships, and growing commissions</span>.
-            </>
-        ),
+        headline: "Close more deals. Earn more.",
+        body: "Underwrite faster, stay in touch with owners, and track your market, all in one place.",
     },
     {
         id: "lenders",
         title: "CRE lenders",
-        headline: "Deploy more capital. Fast-track your loan execution.",
-        body: (
-            <>
-                OpenMidmarket <span className={EMPHASIS}>empowers</span> lenders with AI-native underwriting tools, real-time data rooms, an intelligent pipeline
-                manager, and market analytics—
-                <span className={EMPHASIS}>accelerating loan cycles, mitigating risk, and scaling origination volume</span>.
-            </>
-        ),
+        headline: "Close loans faster.",
+        body: "Underwrite deals quickly with live market data and keep your pipeline moving.",
     },
     {
         id: "property-managers",
         title: "Property managers",
-        headline: "Operate with peak efficiency. Scale your management portfolio.",
-        body: (
-            <>
-                OpenMidmarket <span className={EMPHASIS}>empowers</span> property managers with AI-native workflow automation, real-time owner reporting dashboards,
-                and dynamic market insights—
-                <span className={EMPHASIS}>eliminating operational friction, delighting property owners, and securing more properties to manage</span>.
-            </>
-        ),
+        headline: "Run leaner. Win more doors.",
+        body: "Automate owner reports and track your market so you can take on more properties.",
     },
     {
         id: "appraisers",
         title: "Appraisers",
-        headline: "Accelerate valuation turnaround. Deliver bulletproof accuracy.",
-        body: (
-            <>
-                OpenMidmarket <span className={EMPHASIS}>empowers</span> appraisers with AI-native data extraction, real-time transaction tracking, localized market
-                analytics, and intelligent comp verification—
-                <span className={EMPHASIS}>eliminating manual research friction, streamlining workflow execution, and scaling report volume</span>.
-            </>
-        ),
+        headline: "Faster, more accurate valuations.",
+        body: "Pull and check comps in minutes instead of hours.",
     },
     {
         id: "insurance-agents",
         title: "Insurance agents",
-        headline: "Accelerate speed-to-quote. Bind coverage with confidence.",
-        body: (
-            <>
-                OpenMidmarket <span className={EMPHASIS}>empowers</span> insurance agents with AI-native risk data extraction, real-time property specification
-                tracking, localized hazard analytics, and unified exposure mapping—
-                <span className={EMPHASIS}>eliminating manual underwriting friction, optimizing policy placement, and winning more premium volume</span>.
-            </>
-        ),
+        headline: "Quote faster. Bind with confidence.",
+        body: "Get property details and local risk data without the manual digging.",
     },
     {
         id: "1031-advisors",
         title: "1031 advisors",
-        headline: "Beat the identification clock. Protect client wealth.",
-        body: (
-            <>
-                OpenMidmarket <span className={EMPHASIS}>empowers</span> 1031 advisors with AI-native replacement property matching, real-time midmarket inventory
-                tracking, automated timeline compliance alerts, and unified transaction intelligence—
-                <span className={EMPHASIS}>eliminating manual sourcing friction, securing eligible uplegs faster, and scaling transaction volume</span>.
-            </>
-        ),
+        headline: "Beat the 45-day clock.",
+        body: "Find eligible replacement properties fast and stay on top of every deadline.",
     },
 ];
 

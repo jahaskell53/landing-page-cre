@@ -121,10 +121,8 @@ function RegulationSection({ className }: { className: string }) {
                         Fighting Unfair Regulation Through a Collective Midmarket Voice
                     </h2>
                     <p className="mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
-                        OpenMidmarket <span className={EMPHASIS}>pledges</span> ongoing capital and structural resources to{" "}
-                        <span className={EMPHASIS}>actively fight unfair regulation</span> and back balanced policy. Together, we give midmarket property
-                        owners the <span className={EMPHASIS}>collective institutional leverage</span> we need to <span className={EMPHASIS}>thrive</span>,{" "}
-                        <span className={EMPHASIS}>defend our rights</span>, and <span className={EMPHASIS}>protect our investments</span> long term.
+                        We put real money and resources behind fighting unfair regulation and backing balanced policy. Together, midmarket owners get the
+                        leverage to protect their rights and their investments.
                     </p>
                 </div>
             </div>
@@ -240,7 +238,7 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                         <div className={SECTION_CONTAINER}>
                             <div className="max-w-5xl 2xl:max-w-6xl">
                                 <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">Purpose-Built for Every Stakeholder</h2>
-                                <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">AI-tailored workflows for smarter execution</p>
+                                <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">Tools for every role in a deal.</p>
                             </div>
                             <AudienceCards />
                         </div>
