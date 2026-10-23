@@ -36,7 +36,7 @@ export function PropertyPopupContent({ name, address, price, units, capRate, squ
         <Wrapper>
             {thumbnailUrl && (
                 <div className="h-24 w-full overflow-hidden border-b border-gray-100 bg-gray-100 dark:border-gray-800 dark:bg-gray-800">
-                    <img src={thumbnailUrl} className="h-full w-full object-cover" alt={name} />
+                    <img src={thumbnailUrl} alt={name} width={240} height={96} loading="lazy" className="h-full w-full object-cover" />
                 </div>
             )}
             <div className="p-3">

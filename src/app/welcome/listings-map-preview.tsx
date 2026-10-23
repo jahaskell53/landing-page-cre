@@ -1,11 +1,17 @@
 "use client";
 
-import { Filter, MapPin } from "lucide-react";
+import { Filter, MapPin, X } from "lucide-react";
 import { PropertiesSidebar } from "@/app/(app)/analytics/map/properties-sidebar";
 import { type Property, PropertyMap } from "@/components/application/map/property-map";
 import { SegmentedControl } from "@/components/analytics/filters/segmented-control";
 import { Button } from "@/components/ui/button";
 import { usePreviewSelection } from "./preview-interaction";
+
+const PHOTO_UNIVERSITY = "/mockups/listings/listing-1.webp";
+const PHOTO_ALMA = "/mockups/listings/listing-2.webp";
+const PHOTO_BRYANT = "/mockups/listings/listing-3.webp";
+const PHOTO_PAGE_MILL = "/mockups/listings/listing-4.webp";
+const PHOTO_EL_CAMINO = "/mockups/listings/listing-5.webp";
 
 const SALES_LISTINGS: Property[] = [
     {
@@ -17,6 +23,7 @@ const SALES_LISTINGS: Property[] = [
         coordinates: [-122.161, 37.445],
         capRate: "5.0% cap",
         listingSource: "loopnet",
+        thumbnailUrl: PHOTO_UNIVERSITY,
     },
     {
         id: "preview-2",
@@ -27,6 +34,7 @@ const SALES_LISTINGS: Property[] = [
         coordinates: [-122.158, 37.439],
         capRate: "5.6% cap",
         listingSource: "loopnet",
+        thumbnailUrl: PHOTO_ALMA,
     },
     {
         id: "preview-3",
@@ -37,6 +45,7 @@ const SALES_LISTINGS: Property[] = [
         coordinates: [-122.162, 37.448],
         capRate: "5.2% cap",
         listingSource: "loopnet",
+        thumbnailUrl: PHOTO_BRYANT,
     },
     {
         id: "preview-4",
@@ -47,6 +56,7 @@ const SALES_LISTINGS: Property[] = [
         coordinates: [-122.148, 37.428],
         capRate: "4.9% cap",
         listingSource: "loopnet",
+        thumbnailUrl: PHOTO_PAGE_MILL,
     },
     {
         id: "preview-5",
@@ -57,6 +67,7 @@ const SALES_LISTINGS: Property[] = [
         coordinates: [-122.128, 37.435],
         capRate: "5.3% cap",
         listingSource: "loopnet",
+        thumbnailUrl: PHOTO_EL_CAMINO,
     },
 ];
 
@@ -69,6 +80,7 @@ const RENT_LISTINGS: Property[] = [
         price: "$3,450/mo",
         coordinates: [-122.161, 37.445],
         listingSource: "zillow",
+        thumbnailUrl: PHOTO_UNIVERSITY,
     },
     {
         id: "rent-2",
@@ -78,6 +90,7 @@ const RENT_LISTINGS: Property[] = [
         price: "$2,980/mo",
         coordinates: [-122.158, 37.439],
         listingSource: "zillow",
+        thumbnailUrl: PHOTO_ALMA,
     },
     {
         id: "rent-3",
@@ -87,6 +100,7 @@ const RENT_LISTINGS: Property[] = [
         price: "$2,650/mo",
         coordinates: [-122.162, 37.448],
         listingSource: "zillow",
+        thumbnailUrl: PHOTO_BRYANT,
     },
 ];
 
@@ -111,9 +125,12 @@ export function ListingsMapPreview() {
                     <div className="flex h-10 w-[min(38%,7rem)] shrink-0 items-center rounded-l-lg border-r bg-muted/30 px-3 text-sm text-gray-700 dark:text-gray-300">
                         City
                     </div>
-                    <div className="flex min-h-10 min-w-0 flex-1 items-center gap-1.5 border-l border-input bg-blue-50/80 px-3 py-2 text-sm text-blue-800 dark:bg-blue-950/40 dark:text-blue-200">
-                        <MapPin className="size-4 shrink-0 text-blue-600 dark:text-blue-400" />
+                    <div className="flex min-h-10 min-w-0 flex-1 items-center gap-1.5 border-l border-input bg-transparent px-3 py-2 text-sm text-foreground">
+                        <MapPin className="size-4 shrink-0 text-gray-400" />
                         <span className="min-w-0 flex-1 truncate">Palo Alto, CA</span>
+                        <button type="button" className="shrink-0 text-muted-foreground hover:text-foreground" aria-label="Clear area">
+                            <X className="size-4" />
+                        </button>
                     </div>
                 </div>
             </div>
