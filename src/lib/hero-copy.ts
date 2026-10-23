@@ -8,7 +8,14 @@ export const HERO_VARIANT_KEYS = ["control", "bov"] as const;
 export type HeroVariant = (typeof HERO_VARIANT_KEYS)[number];
 
 /** Silent legacy alias for the old `?hero=bov` override. */
-const HERO_VARIANT_LEGACY_QUERY = "hero";
+export const HERO_VARIANT_LEGACY_QUERY = "hero";
+
+export const BOV_HIDDEN_SECTION_CLASS = "js-hide-on-bov-hero";
+
+/** Runs before first paint so BOV URL visitors never see the hidden sections. */
+export const BOV_HERO_PREPAINT_SCRIPT = `(function(){var p=new URLSearchParams(location.search);if(p.get(${JSON.stringify(HERO_VARIANT_QUERY)})===${JSON.stringify(HERO_VARIANT_TAG_BROKER)}||p.get(${JSON.stringify(HERO_VARIANT_LEGACY_QUERY)})==="bov"){document.documentElement.dataset.heroVariant="bov";}})();`;
+
+export const BOV_HERO_PREPAINT_STYLE = `html[data-hero-variant="bov"] .${BOV_HIDDEN_SECTION_CLASS}{display:none!important}`;
 
 export type HeroCopy = {
     /** Headline lines. A single line is one block; two lines match the current stacked hero. */

@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { AudienceCards } from "./audience-cards";
-import { HeroCopy, HideOnBrokerTag } from "./hero-copy";
+import { HeroCopy, HideOnBovHero } from "./hero-copy";
+import { BOV_HERO_PREPAINT_SCRIPT, BOV_HERO_PREPAINT_STYLE, BOV_HIDDEN_SECTION_CLASS } from "@/lib/hero-copy";
 import { HeroRentChart } from "./hero-rent-chart";
 import { HeroRentChartFallback } from "./rent-trends-preview";
 import { SignupCtaButton } from "./signup-cta";
@@ -109,9 +110,35 @@ const STATS = [
     },
 ];
 
+function RegulationSection({ className }: { className: string }) {
+    return (
+        <section className={className}>
+            <div className={SECTION_CONTAINER}>
+                <div className="max-w-3xl">
+                    <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                        Fighting Unfair Regulation Through a Collective Midmarket Voice
+                    </h2>
+                    <p className="mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
+                        OpenMidmarket <span className={EMPHASIS}>pledges</span> ongoing capital and structural resources to{" "}
+                        <span className={EMPHASIS}>actively fight unfair regulation</span> and back balanced policy. Together, we give midmarket property
+                        owners the <span className={EMPHASIS}>collective institutional leverage</span> we need to <span className={EMPHASIS}>thrive</span>,{" "}
+                        <span className={EMPHASIS}>defend our rights</span>, and <span className={EMPHASIS}>protect our investments</span> long term.
+                    </p>
+                </div>
+            </div>
+        </section>
+    );
+}
+
 export function LandingHome({ showAudiences = true }: { showAudiences?: boolean }) {
     return (
         <div className="min-h-dvh bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+            {showAudiences && (
+                <>
+                    <script dangerouslySetInnerHTML={{ __html: BOV_HERO_PREPAINT_SCRIPT }} />
+                    <style dangerouslySetInnerHTML={{ __html: BOV_HERO_PREPAINT_STYLE }} />
+                </>
+            )}
             <SiteHeader />
 
             <section className={SECTION_WHITE}>
@@ -180,9 +207,9 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                 </div>
             </section>
 
-            <HideOnBrokerTag>
-                {showAudiences && (
-                    <section id="audiences" className={SECTION_GRAY}>
+            {showAudiences && (
+                <HideOnBovHero>
+                    <section id="audiences" className={`${SECTION_GRAY} ${BOV_HIDDEN_SECTION_CLASS}`}>
                         <div className={SECTION_CONTAINER}>
                             <div className="max-w-5xl 2xl:max-w-6xl">
                                 <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">Purpose-Built for Every Stakeholder</h2>
@@ -191,24 +218,11 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                             <AudienceCards />
                         </div>
                     </section>
-                )}
+                    <RegulationSection className={`${SECTION_WHITE} ${BOV_HIDDEN_SECTION_CLASS}`} />
+                </HideOnBovHero>
+            )}
 
-                <section className={SECTION_WHITE}>
-                    <div className={SECTION_CONTAINER}>
-                        <div className="max-w-3xl">
-                            <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-                                Fighting Unfair Regulation Through a Collective Midmarket Voice
-                            </h2>
-                            <p className="mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
-                                OpenMidmarket <span className={EMPHASIS}>pledges</span> ongoing capital and structural resources to{" "}
-                                <span className={EMPHASIS}>actively fight unfair regulation</span> and back balanced policy. Together, we give midmarket property
-                                owners the <span className={EMPHASIS}>collective institutional leverage</span> we need to <span className={EMPHASIS}>thrive</span>,{" "}
-                                <span className={EMPHASIS}>defend our rights</span>, and <span className={EMPHASIS}>protect our investments</span> long term.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-            </HideOnBrokerTag>
+            {!showAudiences && <RegulationSection className={SECTION_WHITE} />}
 
             <VideoPanel
                 videoSrc="/videos/sf-residential-aerial.mp4"

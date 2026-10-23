@@ -123,9 +123,9 @@ export function HeroCopy() {
     );
 }
 
-/** Hide campaign-only homepage sections when `?tag=broker` (or the legacy `?hero=bov`) is present. */
-export function HideOnBrokerTag({ children }: { children: ReactNode }) {
-    const override = useSyncExternalStore(subscribe, readHeroOverride, (): HeroVariant | null => null);
-    if (override === "bov") return null;
+/** Hide homepage-only sections when the resolved hero variant is `bov`. */
+export function HideOnBovHero({ children }: { children: ReactNode }) {
+    const variant = useHeroVariant();
+    if (variant === "bov") return null;
     return children;
 }
