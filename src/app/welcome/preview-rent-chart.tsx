@@ -354,7 +354,8 @@ export function PreviewRentChart({
                                     onMouseLeave={(event) => {
                                         if (!isHero) return;
                                         const next = event.relatedTarget;
-                                        const group = event.currentTarget.parentElement;
+                                        const current = event.currentTarget;
+                                        const group = current instanceof Element ? current.parentElement : null;
                                         if (next instanceof Node && group?.contains(next)) return;
                                         setHoverAreaId(null);
                                     }}
