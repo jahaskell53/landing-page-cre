@@ -10,6 +10,8 @@ export function PreviewNativeSelect({
     "aria-label": ariaLabel,
     align = "start",
     alwaysShow = false,
+    id,
+    className,
 }: {
     value: string;
     onChange: (value: string) => void;
@@ -17,10 +19,13 @@ export function PreviewNativeSelect({
     "aria-label": string;
     align?: "start" | "end";
     alwaysShow?: boolean;
+    id?: string;
+    className?: string;
 }) {
     return (
         <div className={cn("relative", !alwaysShow && "sm:hidden", align === "end" ? "ml-auto w-fit" : "w-fit")}>
             <select
+                id={id}
                 aria-label={ariaLabel}
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
@@ -30,6 +35,7 @@ export function PreviewNativeSelect({
                     "hover:bg-gray-50 focus:ring-2 focus:ring-gray-200 focus:outline-none",
                     "dark:hover:bg-gray-700/40 dark:focus:ring-gray-600",
                     align === "end" ? "pl-2 text-right" : "pl-1.5",
+                    className,
                 )}
             >
                 {options.map((option) => (
