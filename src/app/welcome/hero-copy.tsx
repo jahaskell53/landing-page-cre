@@ -57,6 +57,15 @@ function renderHeadline(copy: HeroCopy): ReactNode {
                     <HeroHighlight className={HIGHLIGHT_CLASS}>{copy.highlight}</HeroHighlight>
                 </>
             );
+        } else if (copy.accent && line.includes(copy.accent)) {
+            const start = line.indexOf(copy.accent);
+            content = (
+                <>
+                    {line.slice(0, start)}
+                    <span className={EMPHASIS}>{copy.accent}</span>
+                    {line.slice(start + copy.accent.length)}
+                </>
+            );
         }
         return (
             <span key={line} className={index === 0 && copy.lines.length > 1 ? "mb-3 block" : "block"}>
@@ -99,7 +108,14 @@ function HeroVariantView({ variant }: { variant: HeroVariant }) {
     return (
         <>
             <Heading className={HERO_HEADING_CLASS}>{renderHeadline(copy)}</Heading>
-            <p className="mt-6 max-w-2xl text-xl leading-relaxed text-gray-600 dark:text-gray-400">{withEmphasis(copy.subtitle, copy.emphasis)}</p>
+            <p
+                className={cn(
+                    "mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400",
+                    variant === "bov" ? "max-w-4xl" : "max-w-2xl",
+                )}
+            >
+                {withEmphasis(copy.subtitle, copy.emphasis)}
+            </p>
         </>
     );
 }

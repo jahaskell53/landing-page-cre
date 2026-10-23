@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -125,18 +125,40 @@ export function PreviewChip({
     color,
     className,
     children,
+    onMouseEnter,
+    onMouseLeave,
 }: {
     selected: boolean;
     onSelect: () => void;
     color?: string;
     className?: string;
     children: ReactNode;
+    onMouseEnter?: () => void;
+    onMouseLeave?: (event: MouseEvent) => void;
 }) {
+    const ref = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const enter = onMouseEnter ? () => onMouseEnter() : null;
+        const leave = onMouseLeave ?? null;
+        if (enter) el.addEventListener("mouseenter", enter);
+        if (leave) el.addEventListener("mouseleave", leave);
+        return () => {
+            if (enter) el.removeEventListener("mouseenter", enter);
+            if (leave) el.removeEventListener("mouseleave", leave);
+        };
+    }, [onMouseEnter, onMouseLeave]);
+
     return (
         <button
+            ref={ref}
             type="button"
             aria-pressed={selected}
             onClick={onSelect}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave ? (event) => onMouseLeave(event.nativeEvent) : undefined}
             className={cn(
                 "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-opacity",
                 "cursor-pointer hover:opacity-100",

@@ -197,18 +197,26 @@ export function PreviewRentChart({
     onAreaSelect?: (id: string) => void;
 }) {
     const isHero = variant === "hero";
-    const [granularity, setGranularity] = useState<Granularity>("wow");
+    const [granularity, setGranularity] = useState<Granularity>(isHero ? "mom" : "wow");
     const [yView, setYView] = useState<YView>("pct");
+    const [hoverAreaId, setHoverAreaId] = useState<string | null>(null);
     const chartAnimation = useChartAnimation();
     const available = useMemo(() => getAvailableGranularities(areaResults), [areaResults]);
     const buckets = BUCKET_LABELS.filter(
         (opt) => available.includes(opt.value) && (!isHero || HERO_GRANULARITIES.includes(opt.value)),
     );
 
-    const series = useMemo(() => getRentSeriesList(areas, selectedBeds), [areas, selectedBeds]);
+    const previewAreaId = isHero ? (hoverAreaId ?? activeAreaId) : activeAreaId;
+    const chartAreas = useMemo(() => {
+        const pool = isHero && chipAreas ? chipAreas : areas;
+        if (isHero && previewAreaId) return pool.filter((area) => area.id === previewAreaId);
+        return pool;
+    }, [isHero, chipAreas, areas, previewAreaId]);
+
+    const series = useMemo(() => getRentSeriesList(chartAreas, selectedBeds), [chartAreas, selectedBeds]);
     const absData = useMemo(
-        () => buildMultiAreaRentData(areaResults, areas, selectedBeds, granularity),
-        [areaResults, areas, selectedBeds, granularity],
+        () => buildMultiAreaRentData(areaResults, chartAreas, selectedBeds, granularity),
+        [areaResults, chartAreas, selectedBeds, granularity],
     );
     const pctData = useMemo(() => buildPctChangeData(absData, series), [absData, series]);
     const chartData = yView === "pct" ? pctData : absData;
@@ -323,11 +331,35 @@ export function PreviewRentChart({
             <h2 className="pb-[18px] text-xl leading-snug font-medium text-gray-900 dark:text-gray-100">{title}</h2>
             <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-3 pb-[27px]">
                 {chipAreas && onAreaSelect && (
-                    <div className="flex min-w-0 flex-wrap items-center gap-2">
+                    <div
+                        className="flex min-w-0 flex-wrap items-center gap-2"
+                        onMouseLeave={() => {
+                            if (isHero) setHoverAreaId(null);
+                        }}
+                    >
                         {chipAreas.map((area) => {
-                            const isActive = activeAreaId === null || activeAreaId === area.id;
+                            const isActive = previewAreaId === null || previewAreaId === area.id;
                             return (
-                                <PreviewChip key={area.id} selected={isActive} onSelect={() => onAreaSelect(area.id)} color={area.color}>
+                                <PreviewChip
+                                    key={area.id}
+                                    selected={isActive}
+                                    onSelect={() => {
+                                        if (isHero) setHoverAreaId(null);
+                                        onAreaSelect(area.id);
+                                    }}
+                                    color={area.color}
+                                    onMouseEnter={() => {
+                                        if (isHero) setHoverAreaId(area.id);
+                                    }}
+                                    onMouseLeave={(event) => {
+                                        if (!isHero) return;
+                                        const next = event.relatedTarget;
+                                        const current = event.currentTarget;
+                                        const group = current instanceof Element ? current.parentElement : null;
+                                        if (next instanceof Node && group?.contains(next)) return;
+                                        setHoverAreaId(null);
+                                    }}
+                                >
                                     <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: area.color }} />
                                     {area.label}
                                 </PreviewChip>

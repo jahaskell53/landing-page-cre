@@ -22,6 +22,8 @@ export type HeroCopy = {
     lines: readonly string[];
     /** Substring of a headline line to wrap in the mid-market highlight badge. */
     highlight?: string;
+    /** Substring of a headline line to color with brand accent blue. */
+    accent?: string;
     subtitle: string;
     /** Substrings of the subtitle to render in the navy/semibold EMPHASIS style. */
     emphasis?: readonly string[];
@@ -35,6 +37,7 @@ export const HERO_COPY = {
     },
     bov: {
         lines: ["Build a BOV in seconds, not weeks."],
+        accent: "seconds",
         subtitle: "Let AI pull the comps and run the numbers, so you can focus on the deal.",
     },
 } as const satisfies Record<HeroVariant, HeroCopy>;

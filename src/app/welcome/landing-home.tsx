@@ -173,6 +173,25 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                 </div>
             </section>
 
+            <section id="features" className={SECTION_WHITE}>
+                <div className={SECTION_CONTAINER}>
+                    <div className="max-w-2xl">
+                        <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">The AI-Native Workspace</h2>
+                        <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">
+                            Comps, rent surveys, and market trends in one place, so you spend less time in spreadsheets.
+                        </p>
+                    </div>
+                    <div className="relative mt-12">
+                        <AppPreview
+                            initialPanel="rent-trends"
+                            enableAutoCycle={false}
+                            browserUrl="app.openmidmarket.com/analytics/rent-trends"
+                            showRentAreaStats
+                        />
+                    </div>
+                </div>
+            </section>
+
             <section className={SECTION_GRAY}>
                 <div className={SECTION_CONTAINER}>
                     <p className="text-2xl font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">Quick Stats</p>
@@ -185,25 +204,6 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                             </div>
                         ))}
                     </dl>
-                </div>
-            </section>
-
-            <section id="features" className={SECTION_WHITE}>
-                <div className={SECTION_CONTAINER}>
-                    <div className="max-w-2xl">
-                        <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">The AI-Native Workspace</h2>
-                        <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">
-                            Bring your tools, data, and workflows into a unified interface to accelerate your productivity.
-                        </p>
-                    </div>
-                    <div className="relative mt-12">
-                        <AppPreview
-                            initialPanel="rent-trends"
-                            enableAutoCycle={false}
-                            browserUrl="app.openmidmarket.com/analytics/rent-trends"
-                            showRentAreaStats
-                        />
-                    </div>
                 </div>
             </section>
 
