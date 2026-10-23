@@ -96,7 +96,14 @@ export function PropertiesSidebar({ properties, selectedId, loading, totalCount,
                                 <>
                                     <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100 dark:bg-gray-800">
                                         {property.thumbnailUrl ? (
-                                            <img src={property.thumbnailUrl} alt="" className="h-full w-full object-cover" />
+                                            <img
+                                                src={property.thumbnailUrl}
+                                                alt=""
+                                                width={64}
+                                                height={48}
+                                                loading="lazy"
+                                                className="h-full w-full object-cover"
+                                            />
                                         ) : (
                                             <div className="flex h-full w-full items-center justify-center">
                                                 <Building2 className="size-4 text-gray-400" />
