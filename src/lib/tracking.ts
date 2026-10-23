@@ -1,5 +1,13 @@
 import posthog from "posthog-js";
-import { HERO_COPY_TEST_FLAG, HERO_VARIANT_QUERY, type HeroVariant, parseHeroVariant, readHeroOverride, readPersistedHeroVariant } from "@/lib/hero-copy";
+import {
+    HERO_COPY_TEST_FLAG,
+    HERO_VARIANT_QUERY,
+    type HeroVariant,
+    heroVariantToTag,
+    parseHeroVariant,
+    readHeroOverride,
+    readPersistedHeroVariant,
+} from "@/lib/hero-copy";
 import { APP_ORIGIN } from "@/lib/app-origin";
 import { isPostHogEnabled } from "@/lib/posthog-config";
 
@@ -36,9 +44,12 @@ function getResolvedHeroVariant(): { variant: HeroVariant; override: boolean } |
 
 function getHeroEventProps(): Record<string, string | boolean> {
     const resolved = getResolvedHeroVariant();
+    const variant = resolved?.variant ?? "control";
+    const tag = heroVariantToTag(variant);
     return {
-        hero_variant: resolved?.variant ?? "control",
+        hero_variant: variant,
         ...(resolved?.override ? { hero_override: true } : {}),
+        ...(tag ? { tag } : {}),
     };
 }
 
@@ -77,7 +88,8 @@ export function withReferralParams(href: string): string {
     }
 
     const resolvedHero = getResolvedHeroVariant();
-    if (resolvedHero) url.searchParams.set(HERO_VARIANT_QUERY, resolvedHero.variant);
+    const tag = resolvedHero ? heroVariantToTag(resolvedHero.variant) : null;
+    if (tag) url.searchParams.set(HERO_VARIANT_QUERY, tag);
 
     if (isPostHogEnabled && url.origin === new URL(APP_ORIGIN).origin) {
         const distinctId = posthog.get_distinct_id();

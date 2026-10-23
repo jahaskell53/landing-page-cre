@@ -458,8 +458,8 @@ export function AppPreview({
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Deep-link: when the URL hash targets a tab, select it, stop the
-    // auto-cycle, and scroll the mockup into view. The hero instance opts out
-    // so it doesn't steal hash changes from the features mockup below.
+    // auto-cycle, and scroll the mockup into view. The workspace instance
+    // keeps this on so header feature links land on the product mockup.
     useEffect(() => {
         if (!enableHashLinks) return;
         const applyHash = () => {

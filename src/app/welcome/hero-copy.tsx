@@ -11,10 +11,16 @@ import {
     HERO_VARIANT_KEYS,
     type HeroCopy,
     type HeroVariant,
+    heroVariantToTag,
     parseHeroVariant,
     persistHeroVariant,
     readHeroOverride,
 } from "@/lib/hero-copy";
+
+function heroAnalyticsProps(variant: HeroVariant) {
+    const tag = heroVariantToTag(variant);
+    return { hero_variant: variant, ...(tag ? { tag } : {}) };
+}
 
 const EMPHASIS = "font-semibold text-blue-900 dark:text-blue-400";
 const HIGHLIGHT_CLASS = "bg-blue-900 text-white dark:bg-blue-600 dark:text-white";
@@ -67,7 +73,7 @@ function useHeroVariant(): HeroVariant {
     useEffect(() => {
         if (override) {
             persistHeroVariant(override);
-            if (isPostHogEnabled) posthog.register({ hero_variant: override });
+            if (isPostHogEnabled) posthog.register(heroAnalyticsProps(override));
             return;
         }
         if (!isPostHogEnabled) return;
@@ -77,7 +83,7 @@ function useHeroVariant(): HeroVariant {
             if (!value) return;
             setFlagVariant(value);
             persistHeroVariant(value);
-            posthog.register({ hero_variant: value });
+            posthog.register(heroAnalyticsProps(value));
         };
 
         apply();
@@ -100,14 +106,26 @@ function HeroVariantView({ variant }: { variant: HeroVariant }) {
 
 export function HeroCopy() {
     const variant = useHeroVariant();
+    const override = useSyncExternalStore(subscribe, readHeroOverride, (): HeroVariant | null => null);
 
     return (
         <div className="grid">
             {HERO_VARIANT_KEYS.map((key) => (
-                <div key={key} className={cn("col-start-1 row-start-1", key !== variant && "invisible")} aria-hidden={key !== variant}>
+                <div
+                    key={key}
+                    className={cn("col-start-1 row-start-1", key !== variant && (override ? "hidden" : "invisible"))}
+                    aria-hidden={key !== variant}
+                >
                     <HeroVariantView variant={key} />
                 </div>
             ))}
         </div>
     );
+}
+
+/** Hide campaign-only homepage sections when `?tag=broker` (or the legacy `?hero=bov`) is present. */
+export function HideOnBrokerTag({ children }: { children: ReactNode }) {
+    const override = useSyncExternalStore(subscribe, readHeroOverride, (): HeroVariant | null => null);
+    if (override === "bov") return null;
+    return children;
 }

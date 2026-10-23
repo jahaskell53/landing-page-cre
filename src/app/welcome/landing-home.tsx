@@ -1,12 +1,19 @@
 import { Brain, TrendingUp, Zap } from "lucide-react";
 import type { Metadata } from "next";
-import { AppPreview } from "./app-preview";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import { AudienceCards } from "./audience-cards";
-import { HeroCopy } from "./hero-copy";
+import { HeroCopy, HideOnBrokerTag } from "./hero-copy";
+import { HeroRentChart } from "./hero-rent-chart";
+import { HeroRentChartFallback } from "./rent-trends-preview";
 import { SignupCtaButton } from "./signup-cta";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import { VideoPanel } from "./video-panel";
+
+const AppPreview = dynamic(() => import("./app-preview").then((mod) => mod.AppPreview), {
+    loading: () => <div className="min-h-[520px] w-full rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900" />,
+});
 
 const LANDING_DESCRIPTION =
     "A unified ecosystem for mid-market multifamily: predictive AI, real-time data, rent comps, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.";
@@ -115,19 +122,9 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
 
             <section className={SECTION_GRAY}>
                 <div className="mx-auto w-full max-w-6xl px-4 pt-4 pb-14 sm:px-6 lg:px-8 lg:pt-5 lg:pb-20">
-                    <div className="relative">
-                        <div
-                            aria-hidden
-                            className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-br from-blue-200 via-blue-100 to-transparent opacity-70 blur-2xl dark:from-blue-900/40 dark:via-blue-950/20 dark:opacity-40"
-                        />
-                        <AppPreview
-                            initialPanel="rent-trends"
-                            enableAutoCycle={false}
-                            enableHashLinks={false}
-                            browserUrl="app.openmidmarket.com/analytics/rent-trends"
-                            showRentAreaStats
-                        />
-                    </div>
+                    <Suspense fallback={<HeroRentChartFallback />}>
+                        <HeroRentChart />
+                    </Suspense>
                 </div>
             </section>
 
@@ -172,39 +169,46 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                             Bring your tools, data, and workflows into a unified interface to accelerate your productivity.
                         </p>
                     </div>
-                    <div className="mx-auto mt-12 max-w-3xl">
-                        <AppPreview />
+                    <div className="relative mt-12">
+                        <AppPreview
+                            initialPanel="rent-trends"
+                            enableAutoCycle={false}
+                            browserUrl="app.openmidmarket.com/analytics/rent-trends"
+                            showRentAreaStats
+                        />
                     </div>
                 </div>
             </section>
 
-            {showAudiences && (
-                <section id="audiences" className={SECTION_GRAY}>
-                    <div className={SECTION_CONTAINER}>
-                        <div className="max-w-5xl 2xl:max-w-6xl">
-                            <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">Purpose-Built for Every Stakeholder</h2>
-                            <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">AI-tailored workflows for smarter execution</p>
+            <HideOnBrokerTag>
+                {showAudiences && (
+                    <section id="audiences" className={SECTION_GRAY}>
+                        <div className={SECTION_CONTAINER}>
+                            <div className="max-w-5xl 2xl:max-w-6xl">
+                                <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">Purpose-Built for Every Stakeholder</h2>
+                                <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">AI-tailored workflows for smarter execution</p>
+                            </div>
+                            <AudienceCards />
                         </div>
-                        <AudienceCards />
+                    </section>
+                )}
+
+                <section className={SECTION_WHITE}>
+                    <div className={SECTION_CONTAINER}>
+                        <div className="max-w-3xl">
+                            <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                                Fighting Unfair Regulation Through a Collective Midmarket Voice
+                            </h2>
+                            <p className="mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
+                                OpenMidmarket <span className={EMPHASIS}>pledges</span> ongoing capital and structural resources to{" "}
+                                <span className={EMPHASIS}>actively fight unfair regulation</span> and back balanced policy. Together, we give midmarket property
+                                owners the <span className={EMPHASIS}>collective institutional leverage</span> we need to <span className={EMPHASIS}>thrive</span>,{" "}
+                                <span className={EMPHASIS}>defend our rights</span>, and <span className={EMPHASIS}>protect our investments</span> long term.
+                            </p>
+                        </div>
                     </div>
                 </section>
-            )}
-
-            <section className={SECTION_WHITE}>
-                <div className={SECTION_CONTAINER}>
-                    <div className="max-w-3xl">
-                        <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-                            Fighting Unfair Regulation Through a Collective Midmarket Voice
-                        </h2>
-                        <p className="mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
-                            OpenMidmarket <span className={EMPHASIS}>pledges</span> ongoing capital and structural resources to{" "}
-                            <span className={EMPHASIS}>actively fight unfair regulation</span> and back balanced policy. Together, we give midmarket property
-                            owners the <span className={EMPHASIS}>collective institutional leverage</span> we need to <span className={EMPHASIS}>thrive</span>,{" "}
-                            <span className={EMPHASIS}>defend our rights</span>, and <span className={EMPHASIS}>protect our investments</span> long term.
-                        </p>
-                    </div>
-                </div>
-            </section>
+            </HideOnBrokerTag>
 
             <VideoPanel
                 videoSrc="/videos/sf-residential-aerial.mp4"

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
-import { type AreaSelection } from "@/app/(app)/analytics/rent-trends/trends-utils";
+import { type AreaSelection, type TrendRow } from "@/app/(app)/analytics/rent-trends/trends-utils";
 import { AreaTypeSelect } from "@/components/analytics/filters/area-type-select";
 import { BedsSelect } from "@/components/analytics/filters/beds-select";
 import { ANALYTICS_AREA_TYPES, RENT_TREND_BED_OPTIONS } from "@/lib/analytics/filters";
@@ -94,13 +94,14 @@ function MockFilterPanel({
     );
 }
 
-export function RentTrendsPreview({ showAreaStats: _showAreaStats = true }: { showAreaStats?: boolean }) {
+const subscribe = () => () => {};
+
+function usePreviewRentAreas() {
     // Resolve the lead-series color against the active theme. Guard on `mounted`
     // so SSR and the first client paint both use the light navy (avoids a
-    // hydration mismatch); the effect below flips it to blue-400 if dark.
+    // hydration mismatch); after hydration it flips to blue-400 if dark.
     const { resolvedTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
+    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
     const isDark = mounted && resolvedTheme === "dark";
 
     const colors = useMemo(() => [isDark ? LEAD_COLOR_DARK : LEAD_COLOR_LIGHT, ...PREVIEW_COLORS_REST], [isDark]);
@@ -117,6 +118,39 @@ export function RentTrendsPreview({ showAreaStats: _showAreaStats = true }: { sh
         [colors],
     );
 
+    return { areas, isDark };
+}
+
+const HERO_CARD_CLASS = "overflow-hidden rounded-[14px] bg-white px-6 pt-[34px] pb-12 sm:px-12 dark:bg-gray-950";
+const HERO_CARD_MIN_HEIGHT = "min-h-[520px] sm:min-h-[679px]";
+
+export function HeroRentChartFallback() {
+    return <div className={`${HERO_CARD_CLASS} ${HERO_CARD_MIN_HEIGHT}`} aria-hidden />;
+}
+
+export function HeroRentTrendsCard({ areaResults }: { areaResults: Record<string, TrendRow[]> }) {
+    const { areas, isDark } = usePreviewRentAreas();
+    const [activeAreaId, toggleArea] = usePreviewToggle<string>(null);
+    const chartAreas = activeAreaId ? areas.filter((area) => area.id === activeAreaId) : areas;
+
+    return (
+        <div className={`${HERO_CARD_CLASS} ${HERO_CARD_MIN_HEIGHT}`}>
+            <PreviewRentChart
+                variant="hero"
+                areas={chartAreas}
+                chipAreas={areas}
+                activeAreaId={activeAreaId}
+                onAreaSelect={toggleArea}
+                areaResults={areaResults}
+                selectedBeds={PREVIEW_BEDS}
+                isDark={isDark}
+            />
+        </div>
+    );
+}
+
+export function RentTrendsPreview({ showAreaStats: _showAreaStats = true }: { showAreaStats?: boolean }) {
+    const { areas, isDark } = usePreviewRentAreas();
     const [activeAreaId, toggleArea] = usePreviewToggle<string>(null);
     const [selectedBeds, setSelectedBeds] = useState<number[]>(PREVIEW_BEDS);
 
