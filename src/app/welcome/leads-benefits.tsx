@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronDown, Download, FileSpreadsheet, FileText, Search } from "lucide-react";
+import { Bell, ChevronDown, Download, FileSpreadsheet, FileText, Search } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { SegmentedControl } from "@/components/analytics/filters/segmented-control";
@@ -30,11 +30,11 @@ const LEADS_BENEFITS = [
         Mockup: MarketUpdateMockup,
     },
     {
-        feature: "OM searches",
+        feature: "Listing alerts",
         title: "Find buildings and buyers for your clients",
-        body: "Search the listings map and OMs by brokerage, then see who bought nearby with named buyers on sales comps.",
-        url: "app.openmidmarket.com/analytics/om-searches",
-        Mockup: OmSearchMockup,
+        body: "Luna watches your submarkets for new listings that fit a price range, unit count, or vintage, then names the buyers most likely to want them based on what they have bought before.",
+        url: "app.openmidmarket.com/alerts",
+        Mockup: ListingAlertsMockup,
     },
 ] as const;
 
@@ -501,23 +501,9 @@ function MiniStat({ label, value, positive }: { label: string; value: string; po
     );
 }
 
-/* 3. Saved OM searches per client: Luna sets the parameters, alerts land with the OM and nearby buyers */
+/* 3. Proactive listing alerts: Luna flags new listings that fit a watch and names likely buyers */
 
-const SEARCH_PARAMS = [
-    { label: "Area", value: "Palo Alto, Mtn View" },
-    { label: "Units", value: "10–40" },
-    { label: "Price", value: "< $450K / door" },
-    { label: "Year built", value: "1950–1990" },
-    { label: "Condition", value: "Original, partial reno" },
-    { label: "Listing by", value: "Any brokerage" },
-    { label: "Deal size", value: "$4M–$15M" },
-];
-
-const CLIENT_SEARCHES = [
-    { client: "Chen Family Trust", search: "Palo Alto, Mountain View · 10–40 units · <$450K/door", fresh: 3, alerts: "Email, text" },
-    { client: "Ortiz Holdings", search: "San Mateo County · 5.5%+ cap · $2M–$6M", fresh: 1, alerts: "Email" },
-    { client: "R. Patel", search: "Oakland · built 1960–1980 · original", fresh: 0, alerts: "Text" },
-];
+const WATCH = ["Palo Alto", "$3M–$8M", "20–40 units", "Built 1950–1980"];
 
 const OM_FACTS = [
     { label: "Asking", value: "$5.8M" },
@@ -526,122 +512,110 @@ const OM_FACTS = [
     { label: "Built", value: "1964" },
 ];
 
-function OmSearchMockup() {
+const LIKELY_BUYERS = [
+    {
+        name: "Alder Street Capital LLC",
+        reason: "Bought 330 Hamilton Ave (18 units, Jun 2026) and two more 1960s buildings within 1 mi",
+        fit: "Strong fit",
+    },
+    {
+        name: "Mendoza Family Trust",
+        reason: "Owns 610 Waverley St, 3 blocks away; added 12 units in Mar 2026",
+        fit: "Strong fit",
+    },
+    {
+        name: "Peninsula Housing Partners",
+        reason: "4 Palo Alto purchases since 2021, all 20–40 units at $4M–$7M",
+        fit: "Good fit",
+    },
+];
+
+function ListingAlertsMockup() {
     return (
         <>
-            <PageHeader title="OM searches">
-                <span className="inline-flex h-7 items-center rounded-md bg-blue-600 px-2.5 text-xs font-medium text-white">New search</span>
+            <PageHeader title="Listing alerts">
+                <OutlineButton icon={Bell}>Edit watch</OutlineButton>
             </PageHeader>
             <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-hidden p-3">
-                <div className="grid min-h-0 flex-1 gap-2.5 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-                    <div className={cn(PANEL, "flex min-h-0 flex-col gap-2 p-3")}>
-                        <p className="text-xs font-semibold">
-                            New search <span className="font-normal text-gray-500">· Chen Family Trust</span>
-                        </p>
-                        <p className="ml-auto max-w-[85%] rounded-lg rounded-br-sm bg-blue-600 px-2.5 py-1.5 text-[10px] leading-snug text-white">
-                            Palo Alto or Mountain View, 10–40 units, under $450K a door, built before 1990.
-                        </p>
-                        <div className="max-w-[92%] rounded-lg rounded-bl-sm bg-gray-100 px-2.5 py-2 text-[10px] leading-snug dark:bg-gray-700/60">
-                            <p>Here&apos;s the search. Would you like to add any other parameters?</p>
-                            <dl className="mt-1.5 grid grid-cols-2 gap-x-3 gap-y-0.5">
-                                {SEARCH_PARAMS.map((param) => (
-                                    <div key={param.label} className="flex gap-2">
-                                        <dt className="w-12 shrink-0 text-gray-500 dark:text-gray-400">{param.label}</dt>
-                                        <dd className="min-w-0 truncate font-medium">{param.value}</dd>
-                                    </div>
-                                ))}
-                            </dl>
-                        </div>
-                        <div className="mt-auto flex items-center gap-3 border-t border-gray-100 pt-2 text-[10px] dark:border-gray-700">
-                            <span className="text-gray-500">Notify by</span>
-                            <MockCheckbox label="Email" />
-                            <MockCheckbox label="Text" />
-                            <span className="ml-auto inline-flex h-6 items-center rounded-md bg-blue-600 px-2.5 text-[10px] font-medium text-white">
-                                Save search
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className={cn(PANEL, "flex min-h-0 flex-col overflow-hidden")}>
-                        <div className="flex items-baseline justify-between px-3 py-2">
-                            <p className="text-xs font-semibold">New OM</p>
-                            <p className="text-[10px] text-gray-500">Chen Family Trust · 2m ago</p>
-                        </div>
-                        <div className="flex gap-3 border-t border-gray-100 p-3 dark:border-gray-700">
-                            <OmCoverPreview />
-                            <div className="min-w-0 space-y-1.5 text-[10px]">
-                                <div>
-                                    <p className="text-[11px] font-semibold">421 University Ave</p>
-                                    <p className="text-gray-500">Palo Alto, CA</p>
-                                </div>
-                                <dl className="space-y-0.5 tabular-nums">
-                                    {OM_FACTS.map((fact) => (
-                                        <div key={fact.label} className="flex justify-between gap-2">
-                                            <dt className="text-gray-500">{fact.label}</dt>
-                                            <dd className="font-medium">{fact.value}</dd>
-                                        </div>
-                                    ))}
-                                </dl>
-                                <p className="truncate text-gray-500">Listed by Bayline Realty</p>
-                            </div>
-                        </div>
-                        <p className="mt-auto border-t border-gray-100 px-3 py-2 text-[10px] dark:border-gray-700">
-                            <span className="text-gray-500">Sold nearby: 330 Hamilton Ave to </span>
-                            <span className="font-medium text-blue-700 dark:text-blue-400">Alder Street Capital LLC</span>
-                        </p>
-                    </div>
+                <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
+                    <span className="text-gray-500">Watching</span>
+                    {WATCH.map((item) => (
+                        <span key={item} className="rounded-md border border-gray-200 bg-white px-1.5 py-0.5 font-medium dark:border-gray-700 dark:bg-gray-800">
+                            {item}
+                        </span>
+                    ))}
+                    <span className="ml-auto text-gray-500">Alerts by email and text</span>
                 </div>
 
                 <div className={cn(PANEL, "shrink-0 overflow-hidden")}>
-                    <div className="flex items-baseline justify-between border-b border-gray-100 px-3 py-2 dark:border-gray-700">
-                        <p className="text-xs font-semibold">Client searches</p>
-                        <p className="hidden text-[10px] text-gray-500 sm:block">Results export as a PDF you can email to the client</p>
+                    <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2 dark:border-gray-700">
+                        <LunaAvatar />
+                        <p className="min-w-0 flex-1 truncate text-[11px]">
+                            <span className="font-semibold">New listing fits your Palo Alto watch</span>
+                        </p>
+                        <span className="shrink-0 text-[10px] text-gray-500">2m ago</span>
                     </div>
-                    <table className="w-full table-fixed text-left text-[10px]">
-                        <colgroup>
-                            <col className="w-[28%]" />
-                            <col />
-                            <col className="w-14" />
-                            <col className="w-20" />
-                        </colgroup>
-                        <thead>
-                            <tr className="border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-700/30">
-                                <th className={TH}>Client</th>
-                                <th className={TH}>Search</th>
-                                <th className={cn(TH, "text-right")}>New</th>
-                                <th className={TH}>Alerts</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {CLIENT_SEARCHES.map((row) => (
-                                <tr key={row.client} className="border-b border-gray-50 last:border-0 dark:border-gray-700/50">
-                                    <td className="truncate px-2 py-1 font-medium">{row.client}</td>
-                                    <td className="truncate px-2 py-1 text-gray-600 dark:text-gray-300">{row.search}</td>
-                                    <td className="px-2 py-1 text-right tabular-nums">
-                                        {row.fresh > 0 ? (
-                                            <span className="font-semibold text-blue-700 dark:text-blue-400">{row.fresh}</span>
-                                        ) : (
-                                            <span className="text-gray-400">0</span>
-                                        )}
-                                    </td>
-                                    <td className="truncate px-2 py-1 text-gray-600 dark:text-gray-300">{row.alerts}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <div className="flex gap-3 px-3 py-2">
+                        <OmCoverPreview />
+                        <div className="min-w-0 flex-1 space-y-1.5 text-[10px]">
+                            <div>
+                                <p className="text-[11px] font-semibold">421 University Ave</p>
+                                <p className="text-gray-500">Palo Alto, CA · listed by Bayline Realty</p>
+                            </div>
+                            <dl className="grid max-w-56 grid-cols-2 gap-x-4 gap-y-0.5 tabular-nums">
+                                {OM_FACTS.map((fact) => (
+                                    <div key={fact.label} className="flex justify-between gap-2">
+                                        <dt className="text-gray-500">{fact.label}</dt>
+                                        <dd className="font-medium">{fact.value}</dd>
+                                    </div>
+                                ))}
+                            </dl>
+                            <p className="leading-snug text-gray-700 dark:text-gray-300">
+                                Matches all four rules. Three owners nearby have bought buildings like this in the last two years.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={cn(PANEL, "min-h-0 flex-1 overflow-hidden")}>
+                    <div className="flex items-center justify-between gap-2 border-b border-gray-100 px-3 py-2 dark:border-gray-700">
+                        <p className="text-xs font-semibold">
+                            Likely buyers <span className="hidden font-normal text-gray-500 sm:inline">· from past sales within 1 mi</span>
+                        </p>
+                        <span className="inline-flex h-6 shrink-0 items-center rounded-md bg-blue-600 px-2.5 text-[10px] font-medium whitespace-nowrap text-white">
+                            Draft outreach
+                        </span>
+                    </div>
+                    <ul className="divide-y divide-gray-100 dark:divide-gray-700">
+                        {LIKELY_BUYERS.map((buyer) => (
+                            <li key={buyer.name} className="flex items-start justify-between gap-3 px-3 py-1.5">
+                                <div className="min-w-0">
+                                    <p className="text-[11px] font-medium text-blue-700 dark:text-blue-400">{buyer.name}</p>
+                                    <p className="truncate text-[10px] text-gray-500 dark:text-gray-400">{buyer.reason}</p>
+                                </div>
+                                <span
+                                    className={cn(
+                                        "shrink-0 rounded px-1.5 py-0.5 text-[9px] font-medium",
+                                        buyer.fit === "Strong fit"
+                                            ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                                            : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300",
+                                    )}
+                                >
+                                    {buyer.fit}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
         </>
     );
 }
 
-function MockCheckbox({ label }: { label: string }) {
+function LunaAvatar() {
     return (
-        <span className="inline-flex items-center gap-1">
-            <span className="flex size-3 items-center justify-center rounded-sm bg-blue-600 text-white">
-                <Check className="size-2.5" strokeWidth={3} />
-            </span>
-            {label}
+        <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-900 text-[9px] font-semibold text-white dark:bg-blue-600">
+            L
         </span>
     );
 }
