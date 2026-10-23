@@ -37,18 +37,27 @@ function escapeRegExp(value: string): string {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function withEmphasis(text: string, phrases: readonly string[] = []): ReactNode {
-    if (phrases.length === 0) return text;
-    const pattern = new RegExp(`(${phrases.map(escapeRegExp).join("|")})`, "g");
-    return text.split(pattern).map((part, index) =>
-        phrases.includes(part) ? (
-            <span key={index} className={EMPHASIS}>
-                {part}
-            </span>
-        ) : (
-            part
-        ),
-    );
+function decorateSubtitle(text: string, emphasis: readonly string[] = [], italic: readonly string[] = []): ReactNode {
+    const marks = [...emphasis, ...italic];
+    if (marks.length === 0) return text;
+    const pattern = new RegExp(`(${marks.map(escapeRegExp).join("|")})`, "g");
+    return text.split(pattern).map((part, index) => {
+        if (italic.includes(part)) {
+            return (
+                <em key={index} className="italic">
+                    {part}
+                </em>
+            );
+        }
+        if (emphasis.includes(part)) {
+            return (
+                <span key={index} className={EMPHASIS}>
+                    {part}
+                </span>
+            );
+        }
+        return part;
+    });
 }
 
 function renderHeadline(copy: HeroCopy): ReactNode {
@@ -119,7 +128,7 @@ function HeroVariantView({ variant }: { variant: HeroVariant }) {
                     variant === "leads" ? "max-w-5xl lg:whitespace-nowrap" : variant === "bov" ? "max-w-4xl" : "max-w-2xl",
                 )}
             >
-                {withEmphasis(copy.subtitle, copy.emphasis)}
+                {decorateSubtitle(copy.subtitle, copy.emphasis, copy.italic)}
             </p>
             {variant === "leads" && (
                 <div className="mt-8 flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
