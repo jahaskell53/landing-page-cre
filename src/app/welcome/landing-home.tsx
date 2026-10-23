@@ -199,9 +199,9 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                     </div>
                     <div className="relative mt-12">
                         <AppPreview
-                            initialPanel="rent-trends"
+                            initialPanel="listings"
                             enableAutoCycle={false}
-                            browserUrl="app.openmidmarket.com/analytics/rent-trends"
+                            browserUrl="app.openmidmarket.com/analytics/listings"
                             showRentAreaStats
                         />
                     </div>
