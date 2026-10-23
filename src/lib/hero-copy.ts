@@ -42,6 +42,7 @@ export type HeroCopy = {
 export const HERO_COPY = {
     control: {
         lines: ["Institutional-grade CRE.", "Built for the mid-market."],
+        accent: "mid-market",
         subtitle: "Predictive AI, real-time data, and a dedicated CRE professional network.",
     },
     bov: {

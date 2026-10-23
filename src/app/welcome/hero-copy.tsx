@@ -76,7 +76,7 @@ function renderHeadline(copy: HeroCopy): ReactNode {
             content = (
                 <>
                     {line.slice(0, start)}
-                    <span className={EMPHASIS}>{copy.accent}</span>
+                    <span className={cn(EMPHASIS, copy.accent === "mid-market" && "whitespace-nowrap")}>{copy.accent}</span>
                     {line.slice(start + copy.accent.length)}
                 </>
             );
