@@ -246,13 +246,7 @@ export function PreviewRentChart({
     const yFormatter = yView === "pct" ? (v: number) => formatPercent(v, 0, { showSign: true }) : (v: number) => formatDollars(v);
 
     const periodButtons = buckets.length > 1 && (
-        <div
-            className={
-                isHero
-                    ? "flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700"
-                    : "hidden items-center gap-1 rounded-lg bg-gray-100 p-1 sm:flex dark:bg-gray-700"
-            }
-        >
+        <div className="hidden items-center gap-1 rounded-lg bg-gray-100 p-1 sm:flex dark:bg-gray-700">
             {buckets.map((opt) => (
                 <button
                     key={opt.value}
@@ -311,15 +305,14 @@ export function PreviewRentChart({
         <div className={isHero ? "flex min-w-0 flex-wrap items-center justify-end gap-2" : "flex min-w-0 items-center justify-between gap-2 sm:justify-end"}>
             {buckets.length > 1 && (
                 <>
-                    {!isHero && (
-                        <PreviewNativeSelect
-                            aria-label="Time period"
-                            value={granularity}
-                            onChange={(next) => setGranularity(next as Granularity)}
-                            options={buckets}
-                        />
-                    )}
-                    {periodButtons}
+                    <PreviewNativeSelect
+                        aria-label="Time period"
+                        value={granularity}
+                        onChange={(next) => setGranularity(next as Granularity)}
+                        options={buckets}
+                        alwaysShow={isHero}
+                    />
+                    {!isHero && periodButtons}
                 </>
             )}
             {yViewButtons}

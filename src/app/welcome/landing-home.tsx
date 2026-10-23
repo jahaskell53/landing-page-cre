@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { AudienceCards } from "./audience-cards";
-import { HeroCopy, HideOnBovHero, HideOnLeadsHero, LeadsOnly } from "./hero-copy";
+import { BrokerOrLeadsOnly, HeroCopy, HideOnBovHero, HideOnLeadsHero, LeadsOnly } from "./hero-copy";
 import { BOV_HERO_PREPAINT_SCRIPT, BOV_HERO_PREPAINT_STYLE, BOV_HIDDEN_SECTION_CLASS } from "@/lib/hero-copy";
 import { HeroRentChart } from "./hero-rent-chart";
 import { HeroRentChartFallback } from "./rent-trends-preview";
@@ -166,8 +166,11 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                 </section>
             </LeadsOnly>
 
-            <HideOnLeadsHero>
-                <section className={SECTION_WHITE}>
+            <BrokerOrLeadsOnly>
+                <LeadsBenefits />
+            </BrokerOrLeadsOnly>
+            <HideOnBovHero>
+                <section className={`${SECTION_WHITE} ${BOV_HIDDEN_SECTION_CLASS}`}>
                     <div className={SECTION_CONTAINER}>
                         <div className="grid gap-12 sm:grid-cols-3">
                             {VALUE_PILLARS.map((pillar) => (
@@ -184,10 +187,7 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
                         </div>
                     </div>
                 </section>
-            </HideOnLeadsHero>
-            <LeadsOnly>
-                <LeadsBenefits />
-            </LeadsOnly>
+            </HideOnBovHero>
 
             <section id="features" className={SECTION_WHITE}>
                 <div className={SECTION_CONTAINER}>
