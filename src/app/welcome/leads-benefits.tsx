@@ -1,15 +1,12 @@
 "use client";
 
 import { Check, ChevronDown, Download, FileSpreadsheet, FileText, Search } from "lucide-react";
-import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { SegmentedControl } from "@/components/analytics/filters/segmented-control";
 import { cn } from "@/lib/utils";
 import { BrowserWindow } from "./browser-window";
-import type { LeadsMapPin } from "./leads-listings-map";
 import { SignupCtaButton } from "./signup-cta";
-
-const LeadsListingsMap = dynamic(() => import("./leads-listings-map").then((mod) => mod.LeadsListingsMap), { ssr: false });
 
 // Stripe Checkout-style scrollytelling: copy scrolls on the left while a sticky
 // mockup on the right swaps to match the step crossing the middle of the
@@ -522,12 +519,11 @@ const CLIENT_SEARCHES = [
     { client: "R. Patel", search: "Oakland · built 1960–1980 · original", fresh: 0, alerts: "Text" },
 ];
 
-const MATCH_CENTER: [number, number] = [-122.1615, 37.4452];
-
-const MATCH_PINS: LeadsMapPin[] = [
-    { coordinates: [-122.161, 37.445], color: "#2563eb", kind: "listing", selected: true },
-    { coordinates: [-122.1572, 37.4478], color: "#15803d", kind: "sale" },
-    { coordinates: [-122.1641, 37.4428], color: "#15803d", kind: "sale" },
+const OM_FACTS = [
+    { label: "Asking", value: "$5.8M" },
+    { label: "Per door", value: "$181K" },
+    { label: "Units", value: "32" },
+    { label: "Built", value: "1964" },
 ];
 
 function OmSearchMockup() {
@@ -571,26 +567,28 @@ function OmSearchMockup() {
                             <p className="text-xs font-semibold">New OM</p>
                             <p className="text-[10px] text-gray-500">Chen Family Trust · 2m ago</p>
                         </div>
-                        <div className="relative h-24 shrink-0 border-y border-gray-100 dark:border-gray-700">
-                            <LeadsListingsMap pins={MATCH_PINS} center={MATCH_CENTER} zoom={14.6} />
-                        </div>
-                        <div className="space-y-2 p-3">
-                            <div>
-                                <p className="text-[11px] font-semibold">421 University Ave, Palo Alto</p>
-                                <p className="text-[10px] text-gray-500 tabular-nums">32 units · $5.8M · $181K/door · built 1964</p>
+                        <div className="flex gap-3 border-t border-gray-100 p-3 dark:border-gray-700">
+                            <OmCoverPreview />
+                            <div className="min-w-0 space-y-1.5 text-[10px]">
+                                <div>
+                                    <p className="text-[11px] font-semibold">421 University Ave</p>
+                                    <p className="text-gray-500">Palo Alto, CA</p>
+                                </div>
+                                <dl className="space-y-0.5 tabular-nums">
+                                    {OM_FACTS.map((fact) => (
+                                        <div key={fact.label} className="flex justify-between gap-2">
+                                            <dt className="text-gray-500">{fact.label}</dt>
+                                            <dd className="font-medium">{fact.value}</dd>
+                                        </div>
+                                    ))}
+                                </dl>
+                                <p className="truncate text-gray-500">Listed by Bayline Realty</p>
                             </div>
-                            <div className="flex items-center gap-2 rounded-md border border-gray-200 px-2 py-1.5 dark:border-gray-700">
-                                <FileText className="size-3.5 shrink-0 text-gray-500" />
-                                <p className="min-w-0 truncate text-[10px]">
-                                    <span className="font-medium">Offering memo</span>
-                                    <span className="text-gray-500"> · Bayline Realty</span>
-                                </p>
-                            </div>
-                            <p className="text-[10px]">
-                                <span className="text-gray-500">Sold nearby: 330 Hamilton Ave to </span>
-                                <span className="font-medium text-blue-700 dark:text-blue-400">Alder Street Capital LLC</span>
-                            </p>
                         </div>
+                        <p className="mt-auto border-t border-gray-100 px-3 py-2 text-[10px] dark:border-gray-700">
+                            <span className="text-gray-500">Sold nearby: 330 Hamilton Ave to </span>
+                            <span className="font-medium text-blue-700 dark:text-blue-400">Alder Street Capital LLC</span>
+                        </p>
                     </div>
                 </div>
 
@@ -645,5 +643,47 @@ function MockCheckbox({ label }: { label: string }) {
             </span>
             {label}
         </span>
+    );
+}
+
+const OM_PAGE_WIDTH = 300;
+const OM_THUMB_WIDTH = 92;
+
+// Cover page of the listing's offering memorandum. Like the Rent Gap preview, the
+// page is laid out at full size with readable type and scaled down to a thumbnail.
+function OmCoverPreview() {
+    return (
+        <div className="flex shrink-0 flex-col items-center gap-1">
+            <div
+                className="overflow-hidden rounded-sm border border-gray-200 bg-white shadow-sm dark:border-gray-600"
+                style={{ width: OM_THUMB_WIDTH, height: (OM_THUMB_WIDTH * 11) / 8.5 }}
+            >
+                <div
+                    className="flex origin-top-left flex-col text-gray-900"
+                    style={{ width: OM_PAGE_WIDTH, height: (OM_PAGE_WIDTH * 11) / 8.5, transform: `scale(${OM_THUMB_WIDTH / OM_PAGE_WIDTH})` }}
+                >
+                    <div className="px-6 pt-6">
+                        <p className="text-[11px] font-bold tracking-[0.2em] text-blue-900">BAYLINE REALTY</p>
+                        <p className="mt-1 text-[10px] tracking-wide text-gray-500 uppercase">Offering memorandum</p>
+                    </div>
+                    <div className="relative mt-4 h-[170px]">
+                        <Image src="/videos/sf-residential-aerial-poster.jpg" alt="" fill sizes="300px" className="object-cover object-[50%_85%]" />
+                    </div>
+                    <div className="px-6 pt-5">
+                        <p className="text-[26px] leading-tight font-semibold tracking-tight">421 University Ave</p>
+                        <p className="mt-1 text-[13px] text-gray-600">Palo Alto, California</p>
+                        <p className="mt-3 text-[12px] text-gray-700">32-unit multifamily investment opportunity</p>
+                    </div>
+                    <div className="mt-auto flex items-center justify-between bg-blue-900 px-6 py-3 text-[9px] text-white">
+                        <span>Exclusively listed by Dana Whitfield &amp; Marco Reyes</span>
+                        <span className="font-semibold">Bayline Realty</span>
+                    </div>
+                </div>
+            </div>
+            <span className="flex items-center gap-1 text-[9px] text-gray-500">
+                <FileText className="size-2.5" />
+                OM · 38 pages
+            </span>
+        </div>
     );
 }
