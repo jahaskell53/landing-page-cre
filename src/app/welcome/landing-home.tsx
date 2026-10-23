@@ -118,7 +118,7 @@ function RegulationSection({ className }: { className: string }) {
             <div className={SECTION_CONTAINER}>
                 <div className="max-w-3xl">
                     <h2 className="text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-                        Fighting Unfair Regulation Through a Collective Midmarket Voice
+                        Fighting Unfair Regulation
                     </h2>
                     <p className="mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
                         We put real money and resources behind fighting unfair regulation and backing balanced policy. Together, midmarket owners get the
