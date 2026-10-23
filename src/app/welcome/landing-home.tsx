@@ -23,11 +23,11 @@ export const landingMetadata: Metadata = {
 
 export const homepageMetadata: Metadata = {
     metadataBase: new URL("https://www.openmidmarket.com"),
-    title: "OpenMidmarket | Multifamily Rent Comps & BOVs for Brokers",
+    title: "Multifamily Rent Comps & BOVs for Brokers",
     description: LANDING_DESCRIPTION,
     openGraph: {
         siteName: "OpenMidmarket",
-        title: "OpenMidmarket — Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
+        title: "Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
         description: LANDING_DESCRIPTION,
         url: "https://www.openmidmarket.com/",
         images: "/og-preview.jpeg",
