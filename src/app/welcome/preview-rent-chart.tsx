@@ -264,20 +264,36 @@ export function PreviewRentChart({
         </div>
     );
 
-    const yViewButtons = (
-        <div
-            className={
-                isHero
-                    ? "flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700"
-                    : "flex h-11 shrink-0 items-center gap-1 rounded-lg bg-gray-100 p-1 sm:h-auto dark:bg-gray-700"
-            }
-        >
+    const yViewButtons = isHero ? (
+        <div className="flex items-center" role="group" aria-label="Y-axis unit">
+            <button
+                type="button"
+                aria-pressed={yView === "pct"}
+                onClick={() => setYView("pct")}
+                className={`rounded-md bg-transparent px-1.5 py-2.5 text-base focus:ring-2 focus:ring-gray-200 focus:outline-none dark:focus:ring-gray-600 ${
+                    yView === "pct" ? "font-medium text-gray-900 dark:text-gray-100" : "font-normal text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                }`}
+            >
+                %
+            </button>
+            <span aria-hidden className="h-3.5 w-px bg-gray-300 dark:bg-gray-600" />
+            <button
+                type="button"
+                aria-pressed={yView === "abs"}
+                onClick={() => setYView("abs")}
+                className={`rounded-md bg-transparent px-1.5 py-2.5 text-base focus:ring-2 focus:ring-gray-200 focus:outline-none dark:focus:ring-gray-600 ${
+                    yView === "abs" ? "font-medium text-gray-900 dark:text-gray-100" : "font-normal text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                }`}
+            >
+                $
+            </button>
+        </div>
+    ) : (
+        <div className="flex h-11 shrink-0 items-center gap-1 rounded-lg bg-gray-100 p-1 sm:h-auto dark:bg-gray-700">
             <button
                 type="button"
                 onClick={() => setYView("pct")}
-                className={`rounded-md px-2.5 py-1 text-xs font-medium ${
-                    isHero ? "" : "min-h-9 min-w-9 text-base font-normal sm:min-h-0 sm:min-w-0 sm:text-xs sm:font-medium"
-                } ${
+                className={`rounded-md px-2.5 py-1 text-xs font-medium min-h-9 min-w-9 text-base font-normal sm:min-h-0 sm:min-w-0 sm:text-xs sm:font-medium ${
                     yView === "pct"
                         ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
                         : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
@@ -288,9 +304,7 @@ export function PreviewRentChart({
             <button
                 type="button"
                 onClick={() => setYView("abs")}
-                className={`rounded-md px-2.5 py-1 text-xs font-medium ${
-                    isHero ? "" : "min-h-9 min-w-9 text-base font-normal sm:min-h-0 sm:min-w-0 sm:text-xs sm:font-medium"
-                } ${
+                className={`rounded-md px-2.5 py-1 text-xs font-medium min-h-9 min-w-9 text-base font-normal sm:min-h-0 sm:min-w-0 sm:text-xs sm:font-medium ${
                     yView === "abs"
                         ? "bg-white text-gray-900 shadow-sm dark:bg-gray-600 dark:text-gray-100"
                         : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
