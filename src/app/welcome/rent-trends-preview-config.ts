@@ -1,5 +1,5 @@
 // Shared config for the landing-page rent-trends preview. Lives in its own
-// plain module (no "use client") so the hero mockup and the cycling
+// plain module (no "use client") so the hero chart card and the
 // <AppPreview /> rent-charts tab agree on cities, colors keys, and series.
 
 import type { TrendRow } from "@/app/(app)/analytics/rent-trends/trends-utils";
