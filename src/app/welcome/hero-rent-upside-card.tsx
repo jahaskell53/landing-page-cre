@@ -1,11 +1,11 @@
 import { Download } from "lucide-react";
 
-const METRICS = [
+const METRICS: { label: string; value: string; emphasis?: boolean }[] = [
     { label: "In-place rent / mo", value: "$71,000" },
     { label: "Market rent / mo", value: "$91,150" },
     { label: "Monthly gap", value: "+$20,150", emphasis: true },
     { label: "Annual upside", value: "$241,800" },
-] as const;
+];
 
 const SURVEY_ROWS = [
     { type: "Studio", low: "$2,450", median: "$2,695", high: "$2,950", inPlace: "$2,150" },
