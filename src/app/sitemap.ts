@@ -20,5 +20,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: "yearly",
             priority: 0.3,
         },
+        {
+            url: "https://www.openmidmarket.com/sms-opt-in",
+            lastModified: new Date("2026-10-24"),
+            changeFrequency: "yearly",
+            priority: 0.3,
+        },
     ];
 }
