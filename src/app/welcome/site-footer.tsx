@@ -17,6 +17,7 @@ const FOOTER_LINKS = [
     { label: "Parking costs by city", href: `${APP_ORIGIN}/parking` },
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
+    { label: "SMS Opt-In", href: "/sms-opt-in" },
 ];
 
 export function SiteFooter({ variant = "page" }: { variant?: "page" | "overlay" }) {
