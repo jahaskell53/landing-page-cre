@@ -503,7 +503,7 @@ function MiniStat({ label, value, positive }: { label: string; value: string; po
 
 /* 3. Proactive listing alerts: Luna flags new listings that fit a watch and names likely buyers */
 
-const WATCH = ["Palo Alto", "$3M–$8M", "20–40 units", "Built 1950–1980"];
+const WATCH = ["Palo Alto", "$3M-$8M", "20-40 units", "Built 1950-1980"];
 
 const OM_FACTS = [
     { label: "Asking", value: "$5.8M" },
@@ -525,7 +525,7 @@ const LIKELY_BUYERS = [
     },
     {
         name: "Peninsula Housing Partners",
-        reason: "4 Palo Alto purchases since 2021, all 20–40 units at $4M–$7M",
+        reason: "4 Palo Alto purchases since 2021, all 20-40 units at $4M-$7M",
         fit: "Good fit",
     },
 ];

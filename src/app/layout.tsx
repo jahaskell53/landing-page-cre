@@ -23,7 +23,7 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-    title: "OpenMidmarket — Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
+    title: "OpenMidmarket - Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
     description:
         "A unified ecosystem for mid-market multifamily: predictive AI, real-time data, rent comps, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
     openGraph: {

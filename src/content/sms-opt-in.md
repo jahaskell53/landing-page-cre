@@ -1,4 +1,4 @@
-# SMS opt-in — OpenMidmarket listing alerts
+# SMS opt-in - OpenMidmarket listing alerts
 
 **Program:** OpenMidmarket listing-alert texts
 **Sender:** OpenMidmarket (DBA), toll-free +1 844 409 3684

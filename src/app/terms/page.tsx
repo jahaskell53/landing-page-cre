@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { LegalPage } from "../legal-page";
 
 export const metadata: Metadata = {
-    title: "Terms of Service — OpenMidmarket",
+    title: "Terms of Service - OpenMidmarket",
     description: "The terms that govern your use of OpenMidmarket's website, web application, and related services.",
 };
 

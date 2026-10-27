@@ -11,7 +11,7 @@ import { PreviewFadeStack, PreviewSelectable, usePreviewSelection } from "./prev
 const RESEARCH_INSIGHTS = [
     {
         id: "insight-1",
-        t: "Underwriting summary — 24-unit, San Mateo",
+        t: "Underwriting summary, 24-unit, San Mateo",
         d: "Projected 5.4% stabilized yield on cost.",
         user: "How is the multifamily market in San Mateo, CA?",
         assistant: `San Mateo mid-market multifamily remains tight, with Peninsula fundamentals supporting stable occupancy and rent growth.
@@ -20,7 +20,7 @@ const RESEARCH_INSIGHTS = [
 
 **Sales activity:** Closed $/door runs above the East Bay and tracks closer to core Peninsula markets, which keeps entry caps compressed for value-add buyers.
 
-**News:** Recent headlines around housing supply and permitting on the Peninsula are worth watching for owners with 20–80 unit assets in San Mateo County.`,
+**News:** Recent headlines around housing supply and permitting on the Peninsula are worth watching for owners with 20-80 unit assets in San Mateo County.`,
         tools: [
             { name: "get_rent_trends_by_city", args: "San Mateo, CA · 1BR" },
             { name: "search_cre_news", args: "San Mateo multifamily" },
@@ -28,17 +28,17 @@ const RESEARCH_INSIGHTS = [
     },
     {
         id: "insight-2",
-        t: "Owner watchlist — 3 new off-market leads",
+        t: "Owner watchlist, 3 new off-market leads",
         d: "Matched to your buy-box criteria.",
-        user: "Which off-market owners match my 20–80 unit buy box?",
+        user: "Which off-market owners match my 20-80 unit buy box?",
         assistant: `Three Peninsula owners look like a fit this week:
 
-1. **Lakeshore Apartments** — 32 units in Oakland, 96% occupied.
-2. **Mission Court** — 24 units in San Jose, some in-place rent gap.
+1. **Lakeshore Apartments**, 32 units in Oakland, 96% occupied.
+2. **Mission Court**, 24 units in San Jose, some in-place rent gap.
 3. **A 22-unit El Camino listing** still off-market through a warm intro.
 
 All three sit inside your unit and geography filters.`,
-        tools: [{ name: "match_buy_box", args: "20–80 units · Peninsula" }],
+        tools: [{ name: "match_buy_box", args: "20-80 units · Peninsula" }],
     },
 ];
 

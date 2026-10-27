@@ -368,7 +368,7 @@ function SuccessScreen() {
                 </motion.div>
                 <h1 className="mt-6 text-3xl font-semibold tracking-tight">You&apos;re on the list</h1>
                 <p className="mt-3 max-w-md text-gray-500 dark:text-gray-400">
-                    Thanks for your interest in OpenMidmarket. We&apos;re rolling out early access in waves — keep an eye on your inbox for your invite.
+                    Thanks for your interest in OpenMidmarket. We&apos;re rolling out early access in waves. Keep an eye on your inbox for your invite.
                 </p>
                 <div className="mt-8 flex items-center gap-3">
                     <Button variant="outline" size="lg" asChild>

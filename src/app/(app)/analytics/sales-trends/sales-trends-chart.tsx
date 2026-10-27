@@ -315,9 +315,9 @@ export function SalesTrendsChart({
 
             <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
                 {metric === "cap_rate" &&
-                    `${displayType === "Average" ? "Average" : displayType === "Candle" ? (isClosed ? "Min–max range with median" : "Median") : "Median"} cap rate from ${isClosed ? "Crexi closed sales comps" : "LoopNet for-sale listings"}. Period: ${period}${isClosed ? `, Sample: ${sampleComps}` : ""}.${unitFilter !== "All" && isClosed ? ` Units: ${unitFilter}.` : ""}`}
+                    `${displayType === "Average" ? "Average" : displayType === "Candle" ? (isClosed ? "Min-max range with median" : "Median") : "Median"} cap rate from ${isClosed ? "Crexi closed sales comps" : "LoopNet for-sale listings"}. Period: ${period}${isClosed ? `, Sample: ${sampleComps}` : ""}.${unitFilter !== "All" && isClosed ? ` Units: ${unitFilter}.` : ""}`}
                 {metric === "cost_per_unit" &&
-                    `${displayType === "Average" ? "Average" : displayType === "Candle" ? (isClosed ? "P25–P75 range with median" : "Median") : "Median"} ${isClosed ? "closed-sale price per door" : "asking price per door from LoopNet for-sale listings"}. Period: ${period}${isClosed ? `, Sample: ${sampleComps}` : ""}.${unitFilter !== "All" && isClosed ? ` Units: ${unitFilter}.` : ""}`}
+                    `${displayType === "Average" ? "Average" : displayType === "Candle" ? (isClosed ? "P25-P75 range with median" : "Median") : "Median"} ${isClosed ? "closed-sale price per door" : "asking price per door from LoopNet for-sale listings"}. Period: ${period}${isClosed ? `, Sample: ${sampleComps}` : ""}.${unitFilter !== "All" && isClosed ? ` Units: ${unitFilter}.` : ""}`}
             </p>
         </>
     );
@@ -348,7 +348,7 @@ export function SalesTrendsChartHeader({
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <h2 className="font-semibold text-gray-900 dark:text-gray-100">
-                    {METRIC_OPTIONS.find((m) => m.value === metric)?.label ?? "Sales"} — {displayType} · {isClosed ? "Closed Sales" : "Asking Listings"}
+                    {METRIC_OPTIONS.find((m) => m.value === metric)?.label ?? "Sales"} - {displayType} · {isClosed ? "Closed Sales" : "Asking Listings"}
                 </h2>
                 {chartHasSmallSample && (
                     <span className="shrink-0 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200">

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { LegalPage } from "../legal-page";
 
 export const metadata: Metadata = {
-    title: "Privacy Policy — OpenMidmarket",
+    title: "Privacy Policy - OpenMidmarket",
     description: "How OpenMidmarket collects, uses, and shares information when you use our website, web application, and related services.",
 };
 
