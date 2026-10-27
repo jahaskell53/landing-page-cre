@@ -35,7 +35,7 @@ export function MarketActivitySection({ areas, areaResults, selectedBeds }: Prop
         <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
             <div className="mb-4 flex items-center justify-between">
                 <h2 className="font-semibold text-gray-900 dark:text-gray-100">
-                    {view === "inventory" ? "Inventory" : "Velocity"} — {bedLabel}
+                    {view === "inventory" ? "Inventory" : "Velocity"} - {bedLabel}
                 </h2>
                 <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
                     <button

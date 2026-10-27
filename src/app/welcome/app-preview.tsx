@@ -262,17 +262,17 @@ function HomePanel() {
                 onSelect={() => setSelectedPost("dana")}
                 liked={liked.dana}
                 onToggleLike={() => toggleLike("dana")}
-                body={`Redwood City just delayed a rent-cap vote. And it's being hailed as a win for renters. But read the draft: the cap would apply to renewals and new leases at CPI or 5% — vacancy control by another name.
+                body={`Redwood City just delayed a rent-cap vote. And it's being hailed as a win for renters. But read the draft: the cap would apply to renewals and new leases at CPI or 5%, vacancy control by another name.
 
 In practice, that keeps Peninsula development capital on ice. Who writes an 8-figure check when your pro forma could get rewritten in one election cycle?
 
 Three observations:
 
-1) Mid-market operators already report rent to credit bureaus and offer first right of refusal — the tools policymakers say they want.
+1) Mid-market operators already report rent to credit bureaus and offer first right of refusal, the tools policymakers say they want.
 
 2) Supply is what actually bends the curve. Caps don't add units; permitting and construction do.
 
-3) Wage growth has outpaced rent growth in professionally managed stock for 41 consecutive months. That's the trend worth watching — not the saber rattling.
+3) Wage growth has outpaced rent growth in professionally managed stock for 41 consecutive months. That's the trend worth watching, not the saber rattling.
 
 Today's delay is a speed bump, not the end of the fight.`}
                 hashtags="#housing #rentcontrol #multifamily"

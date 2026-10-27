@@ -83,7 +83,7 @@ const ROLE_OPTIONS = [
 
 const ASSET_CLASS_OPTIONS = ["Multifamily", "Retail", "Industrial / Flex", "Office", "Mixed-Use / Other"];
 
-const DEALS_PER_YEAR_OPTIONS = ["0–2", "3–5", "6–10", "11–25", "25+"];
+const DEALS_PER_YEAR_OPTIONS = ["0-2", "3-5", "6-10", "11-25", "25+"];
 
 const STATE_OPTIONS = [
     "Alabama",

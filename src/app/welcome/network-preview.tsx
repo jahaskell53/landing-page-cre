@@ -30,7 +30,7 @@ const MOCK_PEOPLE: MockPerson[] = [
         auto: true,
         history: [
             { type: "email", text: "Re: 24-unit Oakland listing", date: "2 days ago" },
-            { type: "meeting", text: "Coffee at Philz — deal flow", date: "Nov 12 2025" },
+            { type: "meeting", text: "Coffee at Philz, deal flow", date: "Nov 12 2025" },
         ],
     },
     {
@@ -78,7 +78,7 @@ const MOCK_PEOPLE: MockPerson[] = [
         category: "Realtor",
         networkStrength: "HIGH",
         auto: true,
-        history: [{ type: "email", text: "Menlo Park duplex — off-market", date: "4 days ago" }],
+        history: [{ type: "email", text: "Menlo Park duplex, off-market", date: "4 days ago" }],
     },
     {
         id: "7",
@@ -87,7 +87,7 @@ const MOCK_PEOPLE: MockPerson[] = [
         hasEmail: true,
         category: "Property Owner",
         networkStrength: "MEDIUM",
-        history: [{ type: "meeting", text: "Site walk — Sunnyvale 18-unit", date: "Sep 15 2025" }],
+        history: [{ type: "meeting", text: "Site walk, Sunnyvale 18-unit", date: "Sep 15 2025" }],
     },
     {
         id: "8",

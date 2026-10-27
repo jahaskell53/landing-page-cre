@@ -100,8 +100,8 @@ export const LAUNDRY_OPTIONS: { value: LaundryFilterValue; label: string }[] = [
 /** Unit-count presets for the sales-trends `# of Units` filter (plus a custom min/max escape hatch). */
 export const UNIT_PRESETS: { value: SalesTrendUnitFilter; label: string }[] = [
     { value: "All", label: "All" },
-    { value: "2-4", label: "2–4" },
-    { value: "5-10", label: "5–10" },
+    { value: "2-4", label: "2-4" },
+    { value: "5-10", label: "5-10" },
     { value: "11+", label: "11+" },
     { value: "custom", label: "Custom" },
 ];
