@@ -66,6 +66,13 @@ export const HERO_COPY = {
     },
 } as const satisfies Record<HeroVariant, HeroCopy>;
 
+export const HERO_PAGE_TITLES: Record<HeroVariant, string> = {
+    control: "OpenMidmarket - Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
+    bov: "Multifamily Rent Comps & BOVs for Brokers | OpenMidmarket",
+    leads: "Win More Multifamily Listings | OpenMidmarket",
+    investor: "Underwrite Multifamily Deals in Seconds | OpenMidmarket",
+};
+
 export function parseHeroVariant(value: string | null | undefined): HeroVariant | null {
     return value === "control" || value === "bov" || value === "leads" || value === "investor" ? value : null;
 }
@@ -76,6 +83,11 @@ export function parseHeroTag(value: string | null | undefined): HeroVariant | nu
     if (value === HERO_VARIANT_TAG_LEADS) return "leads";
     if (value === HERO_VARIANT_TAG_INVESTOR) return "investor";
     return null;
+}
+
+/** Resolve a hero variant from `?tag=` (preferred) or legacy `?hero=` query parameters. */
+export function resolveHeroVariantFromParams(tag: string | null | undefined, hero: string | null | undefined): HeroVariant | null {
+    return parseHeroTag(tag) ?? parseHeroVariant(hero);
 }
 
 /** URL tag to persist on outbound links when a tagged hero variant is active. */
@@ -89,9 +101,7 @@ export function heroVariantToTag(variant: HeroVariant): string | null {
 export function readHeroOverride(): HeroVariant | null {
     if (typeof window === "undefined") return null;
     const params = new URLSearchParams(window.location.search);
-    const fromTag = parseHeroTag(params.get(HERO_VARIANT_QUERY));
-    if (fromTag) return fromTag;
-    return parseHeroVariant(params.get(HERO_VARIANT_LEGACY_QUERY));
+    return resolveHeroVariantFromParams(params.get(HERO_VARIANT_QUERY), params.get(HERO_VARIANT_LEGACY_QUERY));
 }
 
 export function persistHeroVariant(variant: HeroVariant) {

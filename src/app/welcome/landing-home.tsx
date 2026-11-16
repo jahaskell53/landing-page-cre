@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { AudienceCards } from "./audience-cards";
 import { BrokerOrLeadsOnly, HeroCopy, HideOnBovHero, HideOnLeadsHero, InvestorOnly, LeadsOnly } from "./hero-copy";
-import { BOV_HERO_PREPAINT_SCRIPT, BOV_HERO_PREPAINT_STYLE, BOV_HIDDEN_SECTION_CLASS } from "@/lib/hero-copy";
+import { BOV_HERO_PREPAINT_SCRIPT, BOV_HERO_PREPAINT_STYLE, BOV_HIDDEN_SECTION_CLASS, HERO_PAGE_TITLES, type HeroVariant } from "@/lib/hero-copy";
 import { HeroRentChart } from "./hero-rent-chart";
 import { HeroRentChartFallback } from "./rent-trends-preview";
 import { HeroRentUpsideCard } from "./hero-rent-upside-card";
@@ -33,16 +33,28 @@ export const landingMetadata: Metadata = {
 
 export const homepageMetadata: Metadata = {
     metadataBase: new URL("https://www.openmidmarket.com"),
-    title: "Multifamily Rent Comps & BOVs for Brokers",
+    title: HERO_PAGE_TITLES.control,
     description: LANDING_DESCRIPTION,
     openGraph: {
         siteName: "OpenMidmarket",
-        title: "Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
+        title: HERO_PAGE_TITLES.control,
         description: LANDING_DESCRIPTION,
         url: "https://www.openmidmarket.com/",
         images: "/og-preview.jpeg",
     },
 };
+
+export function getHomepageMetadata(variant: HeroVariant = "control"): Metadata {
+    const title = HERO_PAGE_TITLES[variant];
+    return {
+        ...homepageMetadata,
+        title,
+        openGraph: {
+            ...homepageMetadata.openGraph,
+            title,
+        },
+    };
+}
 
 const EMPHASIS = "font-semibold text-blue-900 dark:text-blue-400";
 
@@ -73,6 +85,11 @@ const STATS = [
         value: "4.5M+",
         label: "Mid-Market Properties",
         description: "Total number of physical commercial assets tracked by AI within the U.S. inventory core.",
+    },
+    {
+        value: "580K+",
+        label: "Rent Comps",
+        description: "Cleaned rental listings tracked and scored by AI across unit specs, interior condition, finishes, and location.",
     },
     {
         value: "$197B",
