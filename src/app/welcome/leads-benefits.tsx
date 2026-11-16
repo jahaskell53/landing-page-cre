@@ -1,9 +1,10 @@
 "use client";
 
-import { Bell, ChevronDown, Download, FileSpreadsheet, FileText } from "lucide-react";
+import { Bell, ChevronDown, ChevronLeft, ChevronRight, Download, FileSpreadsheet, FileText } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { type KeyboardEvent, type MouseEvent, type PointerEvent, useEffect, useRef, useState } from "react";
 import { SegmentedControl } from "@/components/analytics/filters/segmented-control";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { BrowserWindow } from "./browser-window";
 import { SignupCtaButton } from "./signup-cta";
@@ -26,7 +27,7 @@ const LEADS_BENEFITS: readonly Benefit[] = [
     {
         feature: "Rent comps",
         title: "Open the conversation with vetted rent comps for their building",
-        body: "Enter an address to pull nearby comps ranked by condition, quality, amenities, and location—plus a market rent estimate and a Comps PDF.",
+        body: "Enter an address to pull nearby comps ranked by condition, quality, amenities, and location, plus a market rent estimate and a Comps PDF.",
         url: "app.openmidmarket.com/analytics/rent-comps",
         Mockup: RentCompsMockup,
     },
@@ -49,22 +50,22 @@ const LEADS_BENEFITS: readonly Benefit[] = [
 const INVESTOR_BENEFITS: readonly Benefit[] = [
     {
         feature: "Rent comps",
-        title: "Underwrite market rent with vetted comps before you tour",
-        body: "Enter an address to get a market rent estimate and top 5 comps scored on condition, quality, amenities, and block-level location.",
+        title: "Know the true rent upside before you tour",
+        body: "Drop in any address to search 580,000+ rent comps and get an instant market rent estimate, with the top 5 comps scored on condition, finishes, amenities, and block-level location.",
         url: "app.openmidmarket.com/analytics/rent-comps",
         Mockup: RentCompsMockup,
     },
     {
         feature: "Market trends",
-        title: "Track submarket rent and momentum",
-        body: "Compare rent growth and comps by area in PDF or Excel, or pull them up for your investment committee.",
+        title: "Back every IC memo with live submarket data",
+        body: "Track rent growth, concessions, and comp velocity across neighborhoods, then export clean PDF or Excel decks straight into your underwriting and LP updates.",
         url: "app.openmidmarket.com/analytics/rent-trends",
         Mockup: MarketUpdateMockup,
     },
     {
         feature: "Deal alerts",
-        title: "Spot off-market and mispriced deals first",
-        body: "Luna watches your target submarkets for new listings and price drops matching your buy box—price range, unit count, and vintage—the moment they hit.",
+        title: "See mispriced deals before the market does",
+        body: "Luna monitors your target submarkets 24/7 for new listings and price cuts matching your exact buy box, from unit count and vintage to basis and rent-upside spread, so you can underwrite and offer first.",
         url: "app.openmidmarket.com/alerts",
         Mockup: InvestorDealAlertsMockup,
     },
@@ -154,7 +155,7 @@ function BenefitsShowcase({
                     </div>
 
                     <div className="hidden lg:block">
-                        <div className="sticky top-[calc(50vh-16rem)] h-[34rem]">
+                        <div className="sticky top-[calc(50vh-19.5rem)] h-[39rem]">
                             {benefits.map((item, i) => (
                                 <div
                                     key={item.title}
@@ -221,99 +222,284 @@ function OutlineButton({ icon: Icon, children }: { icon: typeof Download; childr
 
 /* 1. Rent comps: matches app/src/lib/analytics/rent-comps-broker-export.ts document style */
 
-const COMP_CARDS = [
+type GradeRowItem = {
+    label: string;
+    value: string;
+    rationale: string;
+};
+
+const COMP_CARDS: readonly {
+    rank: number;
+    address: string;
+    facts: string;
+    grades: readonly GradeRowItem[];
+    lead: string;
+    why: string;
+    photos: readonly string[];
+}[] = [
     {
         rank: 1,
         address: "1280 Oak Grove Ave",
         facts: "$3,195/mo · 1 bd · 1.0 ba · 710 sqft · 0.2 mi",
         grades: [
-            { label: "Condition", value: "4 / 6 ★" },
-            { label: "Quality", value: "4 / 6 ★" },
-            { label: "Location", value: "1 / 18" },
+            {
+                label: "Condition",
+                value: "5 / 6 ★",
+                rationale: "Interiors show fresh paint, new flooring, and zero visible wear; exterior freshly finished. Like-new C2 condition (5/6).",
+            },
+            {
+                label: "Quality",
+                value: "4 / 6 ★",
+                rationale:
+                    "Quartz counters and island, stainless appliances, marble-look shower tile, and recessed lighting on a standard multifamily layout. Rated Q3 (4/6).",
+            },
+            {
+                label: "Location",
+                value: "1 / 18",
+                rationale: "Quiet residential Oak Grove block steps from Burlingame Ave shops, grocery, and Caltrain; top walkability in this comps pack.",
+            },
         ],
-        why: "Matching 1 bd / 1 ba layout and C3 condition two blocks away.",
-        photo: "/mockups/listings/listing-1.webp",
+        lead: "1 bed / 1 bath, 710 sf vs. 720 sf,",
+        why: " steps off Burlingame Ave with open kitchen-living layout, quartz counters, and in-unit laundry. Lists at $3,195.",
+        photos: [
+            "/mockups/rent-comps/el-camino-1.webp",
+            "/mockups/rent-comps/el-camino-2.webp",
+            "/mockups/rent-comps/el-camino-3.webp",
+            "/mockups/rent-comps/el-camino-4.webp",
+            "/mockups/rent-comps/el-camino-5.webp",
+            "/mockups/rent-comps/el-camino-6.webp",
+        ],
     },
     {
         rank: 2,
         address: "845 Bellevue Ave",
         facts: "$3,275/mo · 1 bd · 1.0 ba · 760 sqft · 0.4 mi",
         grades: [
-            { label: "Condition", value: "5 / 6 ★" },
-            { label: "Quality", value: "4 / 6 ★" },
-            { label: "Location", value: "3 / 18" },
+            {
+                label: "Condition",
+                value: "5 / 6 ★",
+                rationale:
+                    "Comprehensively remodeled interior with new quartz kitchen, updated baths, new plank flooring, and fresh paint throughout. Rated C2 (5/6).",
+            },
+            {
+                label: "Quality",
+                value: "4 / 6 ★",
+                rationale: "Upgraded finishes including quartz island, custom wood cabinets, stainless appliances, and marble-tiled double-vanity bath. Rated Q3 (4/6).",
+            },
+            {
+                label: "Location",
+                value: "3 / 18",
+                rationale: "Peaceful residential street across from Washington Park and two blocks off Burlingame Ave retail, with minimal through-traffic.",
+            },
         ],
-        why: "Renovated kitchen and in-unit laundry; sets the upper bracket.",
-        photo: "/mockups/listings/listing-2.webp",
+        lead: "Remodeled 1 bed / 1 bath, 760 sf vs. 720 sf,",
+        why: " with central A/C, private balcony, and in-unit washer/dryer; adjusting -$125 for size and A/C puts it near $3,150.",
+        photos: [
+            "/mockups/rent-comps/oak-rwc-1.webp",
+            "/mockups/rent-comps/oak-rwc-2.webp",
+            "/mockups/rent-comps/oak-rwc-3.webp",
+            "/mockups/rent-comps/oak-rwc-4.webp",
+            "/mockups/rent-comps/oak-rwc-5.webp",
+            "/mockups/rent-comps/oak-rwc-6.webp",
+        ],
     },
+];
+
+const SUBJECT_PHOTOS = [
+    "/mockups/rent-comps/subject-1.webp",
+    "/mockups/rent-comps/subject-2.webp",
+    "/mockups/rent-comps/subject-3.webp",
+    "/mockups/rent-comps/subject-4.webp",
+    "/mockups/rent-comps/subject-5.webp",
+    "/mockups/rent-comps/subject-6.webp",
 ] as const;
 
-const SUBJECT_GRADES = [
-    { label: "Condition", value: "4 / 6 ★" },
-    { label: "Quality", value: "4 / 6 ★" },
-    { label: "Location", value: "2 / 18" },
-] as const;
+const SUBJECT_GRADES: readonly GradeRowItem[] = [
+    {
+        label: "Condition",
+        value: "5 / 6 ★",
+        rationale: "Recently updated units and common areas show no visible wear, with clean finishes, appliances, and wide-plank flooring. Rated C2 (5/6).",
+    },
+    {
+        label: "Quality",
+        value: "4 / 6 ★",
+        rationale: "Upgraded materials with quartz counters, stainless appliances, tile backsplash, and modern cabinetry on a standard floor plan. Rated Q3 (4/6).",
+    },
+    {
+        label: "Location",
+        value: "2 / 18",
+        rationale: "Tree-lined Floribunda Ave block two blocks south of Burlingame Ave dining and Caltrain, buffered from El Camino traffic.",
+    },
+];
+
+const ESTIMATE_RANGE = "$3,100 - $3,200/mo";
+const ESTIMATE_OVERVIEW_LEAD = "Shared laundry and no central A/C";
+const ESTIMATE_OVERVIEW_BODY = " keep the subject just below the $3,275 top of range.";
+
+function GradeRowWithTooltip({ item, subjectLabel }: { item: GradeRowItem; subjectLabel: string }) {
+    const [open, setOpen] = useState(false);
+    const pointerRef = useRef<{ type: string; wasOpen: boolean } | null>(null);
+
+    return (
+        <Tooltip open={open} onOpenChange={setOpen}>
+            <TooltipTrigger asChild>
+                <button
+                    type="button"
+                    aria-label={`${item.label} ${item.value} for ${subjectLabel}`}
+                    className="inline-flex w-fit cursor-help items-center gap-2 rounded-sm text-left leading-tight transition-colors hover:text-gray-900 hover:underline hover:decoration-dotted hover:underline-offset-2 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none dark:hover:text-gray-100"
+                    onPointerDown={(event: PointerEvent<HTMLButtonElement>) => {
+                        pointerRef.current = { type: event.pointerType, wasOpen: open };
+                    }}
+                    onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        const pointer = pointerRef.current;
+                        pointerRef.current = null;
+                        if (pointer?.type === "mouse") setOpen(true);
+                        else setOpen(!(pointer ? pointer.wasOpen : open));
+                    }}
+                >
+                    <span className="w-[60px] shrink-0 text-gray-500 dark:text-gray-400">{item.label}</span>
+                    <span className="tabular-nums">{item.value}</span>
+                </button>
+            </TooltipTrigger>
+            <TooltipContent
+                side="top"
+                sideOffset={4}
+                className="max-w-xs !bg-white px-3 py-2 text-left text-xs leading-relaxed text-pretty !text-gray-900 shadow-md ring-1 ring-black/10 [&_svg]:!bg-white [&_svg]:!fill-white"
+            >
+                {item.rationale}
+            </TooltipContent>
+        </Tooltip>
+    );
+}
+
+const GALLERY_NAV_BUTTON =
+    "pointer-events-auto absolute top-1/2 z-30 flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-sm ring-1 ring-gray-900/5 backdrop-blur-md transition-[background-color,transform,opacity] duration-200 hover:bg-white active:scale-95";
+
+const GALLERY_NAV_REVEAL =
+    "opacity-0 pointer-events-none group-hover/gallery:pointer-events-auto group-hover/gallery:opacity-100 group-focus-within/gallery:pointer-events-auto group-focus-within/gallery:opacity-100 group-hover/card:pointer-events-auto group-hover/card:opacity-100 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:opacity-100";
+
+function CompPhotoCarousel({ photos, label }: { photos: readonly string[]; label: string }) {
+    const [index, setIndex] = useState(0);
+    const count = photos.length;
+    const goPrev = () => setIndex((i) => (i === 0 ? count - 1 : i - 1));
+    const goNext = () => setIndex((i) => (i === count - 1 ? 0 : i + 1));
+
+    const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            event.stopPropagation();
+            goPrev();
+        } else if (event.key === "ArrowRight") {
+            event.preventDefault();
+            event.stopPropagation();
+            goNext();
+        }
+    };
+
+    const onArrow = (event: MouseEvent<HTMLButtonElement>, action: () => void) => {
+        event.preventDefault();
+        event.stopPropagation();
+        action();
+    };
+
+    return (
+        <div
+            className="group/gallery relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100 outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-gray-700"
+            tabIndex={0}
+            role="group"
+            aria-label={`Photos of ${label}`}
+            onKeyDown={onKeyDown}
+        >
+            <Image
+                src={photos[index]}
+                alt=""
+                width={96}
+                height={64}
+                className="size-full object-cover outline outline-1 -outline-offset-1 outline-black/10 transition duration-150 group-hover/card:scale-105 dark:outline-white/10"
+            />
+            <button
+                type="button"
+                aria-label={`Previous photo for ${label}`}
+                className={cn(GALLERY_NAV_BUTTON, GALLERY_NAV_REVEAL, "left-1")}
+                onPointerDown={(event) => event.stopPropagation()}
+                onClick={(event) => onArrow(event, goPrev)}
+            >
+                <ChevronLeft className="size-3" />
+            </button>
+            <button
+                type="button"
+                aria-label={`Next photo for ${label}`}
+                className={cn(GALLERY_NAV_BUTTON, GALLERY_NAV_REVEAL, "right-1")}
+                onPointerDown={(event) => event.stopPropagation()}
+                onClick={(event) => onArrow(event, goNext)}
+            >
+                <ChevronRight className="size-3" />
+            </button>
+            <div className="pointer-events-none absolute right-1 bottom-1 z-20 rounded-full bg-gray-950/60 px-1.5 py-px text-[9px] font-medium text-white tabular-nums backdrop-blur-md">
+                {index + 1} / {count}
+            </div>
+        </div>
+    );
+}
 
 function RentCompsMockup() {
     return (
         <>
-            <PageHeader title="Rent comps">
-                <OutlineButton icon={Download}>Comps PDF</OutlineButton>
-            </PageHeader>
-            <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-white p-3.5 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-                <div className="flex items-center justify-between border-b border-gray-200 pb-1.5 dark:border-gray-800">
-                    <span className="flex items-center gap-1.5 text-xs font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-                        <span className="flex size-5 items-center justify-center rounded bg-blue-900 text-[9px] font-bold text-white dark:bg-blue-600">OM</span>
-                        OpenMidmarket
-                    </span>
-                    <span className="text-right text-[10px] leading-tight text-gray-500 dark:text-gray-400">
-                        Rent comps
-                        <br />
-                        Oct 23, 2026
-                    </span>
-                </div>
-
-                <div className={cn(PANEL, "mt-2 px-3 py-1.5")}>
-                    <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                            <p className="text-base leading-tight font-semibold tracking-tight text-gray-900 dark:text-gray-100">1450 Floribunda Ave</p>
-                            <p className="mt-0.5 text-[11px] text-gray-600 dark:text-gray-300">1 bd · 1.0 ba · 720 sqft · 24 units</p>
-                        </div>
-                        <div className="shrink-0 text-right tabular-nums">
-                            <p className="text-[9px] font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">Est. market rent</p>
-                            <p className={cn("text-sm font-semibold", GREEN)}>$3,150/mo</p>
-                        </div>
-                    </div>
-                    <div className="mt-1 space-y-0.5 text-[10px] text-gray-600 dark:text-gray-300">
-                        {SUBJECT_GRADES.map((g) => (
-                            <div key={g.label} className="flex gap-2 leading-tight">
-                                <span className="w-[68px] shrink-0 text-gray-500 dark:text-gray-400">{g.label}</span>
-                                <span>{g.value}</span>
+            <PageHeader title="Rent comps" />
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-gray-50 p-3.5 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+                <div className={cn(PANEL, "group/card flex gap-3 px-3 py-2")}>
+                    <CompPhotoCarousel photos={SUBJECT_PHOTOS} label="1450 Floribunda Ave" />
+                    <div className="min-w-0 flex-1">
+                        <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                    <p className="text-sm leading-tight font-semibold tracking-tight text-gray-900 dark:text-gray-100">1450 Floribunda Ave</p>
+                                    <span className="rounded bg-blue-50 px-1.5 py-px text-[9px] font-semibold text-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
+                                        Subject
+                                    </span>
+                                </div>
+                                <p className="mt-0.5 text-[10px] text-gray-600 dark:text-gray-300">1 bd · 1.0 ba · 720 sqft · 24 units</p>
                             </div>
-                        ))}
+                            <div className="shrink-0 text-right tabular-nums">
+                                <p className="text-[9px] font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">In-place avg</p>
+                                <p className="text-xs font-semibold text-gray-900 dark:text-gray-100">$2,475/mo</p>
+                            </div>
+                        </div>
+                        <div className="mt-1 flex flex-col items-start gap-0.5 text-[10px] text-gray-600 dark:text-gray-300">
+                            {SUBJECT_GRADES.map((g) => (
+                                <GradeRowWithTooltip key={g.label} item={g} subjectLabel="1450 Floribunda Ave" />
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                <p className="mt-2 mb-1 text-xs font-semibold text-gray-900 dark:text-gray-100">Top 5 comps</p>
+                <p className="mt-2.5 text-xs font-semibold text-gray-900 dark:text-gray-100">Top 5 comps</p>
+                <p className="mt-1 text-base font-bold tracking-tight text-emerald-600 tabular-nums dark:text-emerald-400">{ESTIMATE_RANGE}</p>
+                <p className="mt-0.5 mb-1.5 text-[10.5px] leading-snug text-gray-700 dark:text-gray-200">
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">{ESTIMATE_OVERVIEW_LEAD}</span>
+                    {ESTIMATE_OVERVIEW_BODY}
+                </p>
 
                 <ul className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-hidden">
                     {COMP_CARDS.map((pick) => (
-                        <li key={pick.rank} className={cn(PANEL, "flex gap-3 px-3 py-1.5")}>
-                            <Image src={pick.photo} alt="" width={72} height={56} className="h-12 w-[68px] shrink-0 rounded-md bg-gray-100 object-cover dark:bg-gray-700" />
+                        <li key={pick.rank} className={cn(PANEL, "group/card flex gap-3 px-3 py-1.5")}>
+                            <CompPhotoCarousel photos={pick.photos} label={pick.address} />
                             <div className="min-w-0 flex-1">
                                 <p className="text-xs leading-tight font-semibold text-gray-900 dark:text-gray-100">
                                     {pick.rank}. {pick.address}
                                 </p>
                                 <p className="mt-0.5 text-[10px] text-gray-500 tabular-nums dark:text-gray-400">{pick.facts}</p>
-                                <div className="mt-1 space-y-0.5 text-[10px] text-gray-600 dark:text-gray-300">
+                                <div className="mt-1 flex flex-col items-start gap-0.5 text-[10px] text-gray-600 dark:text-gray-300">
                                     {pick.grades.map((g) => (
-                                        <div key={g.label} className="flex gap-2 leading-tight">
-                                            <span className="w-[68px] shrink-0 text-gray-500 dark:text-gray-400">{g.label}</span>
-                                            <span>{g.value}</span>
-                                        </div>
+                                        <GradeRowWithTooltip key={g.label} item={g} subjectLabel={pick.address} />
                                     ))}
                                 </div>
-                                <p className="mt-1 text-[11px] leading-snug text-gray-700 dark:text-gray-200">{pick.why}</p>
+                                <p className="mt-1 text-[10.5px] leading-snug text-gray-700 dark:text-gray-200">
+                                    <span className="font-semibold text-gray-900 dark:text-gray-100">{pick.lead}</span>
+                                    {pick.why}
+                                </p>
                             </div>
                         </li>
                     ))}
@@ -495,12 +681,12 @@ const INVESTOR_DEAL_SIGNALS = [
     },
     {
         name: "330 Hamilton Ave · $192K / door",
-        reason: "18 units, 1962 vintage — closed Jun 2026 at 5.1% cap, 2 blocks away",
+        reason: "18 units, 1962 vintage · closed Jun 2026 at 5.1% cap, 2 blocks away",
         fit: "Sales comp",
     },
     {
         name: "610 Waverley St · $188K / door",
-        reason: "12 units, 1958 vintage — closed Mar 2026 at 5.2% cap, 3 blocks away",
+        reason: "12 units, 1958 vintage · closed Mar 2026 at 5.2% cap, 3 blocks away",
         fit: "Sales comp",
     },
 ];
@@ -526,7 +712,7 @@ function InvestorDealAlertsMockup() {
         <ListingAlertsMockup
             headerTitle="Deal alerts"
             alertHeading="New deal fits your Palo Alto buy box"
-            summary="Matches all four rules. Asking $181K/door—6% below recent 1960s comps within 1 mi."
+            summary="Matches all four rules. Asking $181K/door, 6% below recent 1960s comps within 1 mi."
             panelTitle="Comps & upside signals"
             panelSubtitle="· within 1 mi"
             ctaLabel="Run underwriting"

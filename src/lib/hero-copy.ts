@@ -61,8 +61,8 @@ export const HERO_COPY = {
     investor: {
         lines: ["Underwrite deals in seconds, not weeks."],
         accent: "seconds",
-        subtitle: "Let AI pull the comps, spot the rent upside, and stress-test the numbers, so you can move first.",
-        italic: ["AI", "move first"],
+        subtitle: "Let AI pull the comps, quantify the rent upside, and stress-test returns, so you can bid with conviction before anyone else.",
+        italic: ["AI", "conviction"],
     },
 } as const satisfies Record<HeroVariant, HeroCopy>;
 
