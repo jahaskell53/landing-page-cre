@@ -183,6 +183,7 @@ export function PreviewRentChart({
     selectedBeds,
     isDark = false,
     variant = "embedded",
+    defaultYView = "abs",
     height,
     chipAreas,
     activeAreaId = null,
@@ -193,6 +194,7 @@ export function PreviewRentChart({
     selectedBeds: number[];
     isDark?: boolean;
     variant?: PreviewRentChartVariant;
+    defaultYView?: YView;
     height?: number;
     chipAreas?: AreaSelection[];
     activeAreaId?: string | null;
@@ -200,7 +202,7 @@ export function PreviewRentChart({
 }) {
     const isHero = variant === "hero";
     const [granularity, setGranularity] = useState<Granularity>(isHero ? "mom" : "wow");
-    const [yView, setYView] = useState<YView>("pct");
+    const [yView, setYView] = useState<YView>(defaultYView);
     const [hoverAreaId, setHoverAreaId] = useState<string | null>(null);
     const chartAnimation = useChartAnimation();
     const available = useMemo(() => getAvailableGranularities(areaResults), [areaResults]);

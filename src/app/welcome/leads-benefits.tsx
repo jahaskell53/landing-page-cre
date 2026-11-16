@@ -1,12 +1,12 @@
 "use client";
 
-import { Bell, ChevronLeft, ChevronRight, FileText } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import Image from "next/image";
 import { type KeyboardEvent, type MouseEvent, type PointerEvent, useEffect, useRef, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { BrowserWindow } from "./browser-window";
-import { RentTrendsPreview } from "./rent-trends-preview";
+import { ShowcaseRentTrendsCard } from "./rent-trends-preview";
 import { SignupCtaButton } from "./signup-cta";
 
 // Stripe Checkout-style scrollytelling: copy scrolls on the left while a sticky
@@ -199,15 +199,6 @@ function PageHeader({ title, children }: { title: string; children?: React.React
     );
 }
 
-function OutlineButton({ icon: Icon, children }: { icon: typeof Bell; children: React.ReactNode }) {
-    return (
-        <span className="inline-flex h-7 items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2.5 text-xs font-medium dark:border-gray-700 dark:bg-gray-800">
-            <Icon className="size-3.5" />
-            {children}
-        </span>
-    );
-}
-
 /* 1. Rent comps: matches app/src/lib/analytics/rent-comps-broker-export.ts document style */
 
 type GradeRowItem = {
@@ -321,8 +312,9 @@ const SUBJECT_GRADES: readonly GradeRowItem[] = [
 ];
 
 const ESTIMATE_RANGE = "$3,100 - $3,200/mo";
-const ESTIMATE_OVERVIEW_LEAD = "Shared laundry and no central A/C";
-const ESTIMATE_OVERVIEW_BODY = " keep the subject just below the $3,275 top of range.";
+const ESTIMATE_OVERVIEW_LEAD = "Updated finishes and walkable Floribunda location";
+const ESTIMATE_OVERVIEW_BODY =
+    " support pricing near $3,150, with a small discount to top comps that include central A/C and private balconies.";
 
 function GradeRowWithTooltip({ item, subjectLabel }: { item: GradeRowItem; subjectLabel: string }) {
     const [open, setOpen] = useState(false);
@@ -497,237 +489,167 @@ function RentCompsMockup() {
     );
 }
 
-/* 2. Market updates: interactive RentTrendsPreview from the product mockup */
+/* 2. Market updates: hero-style interactive rent chart */
 
 function MarketUpdateMockup() {
-    return (
-        <>
-            <PageHeader title="Rent charts" />
-            <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-4">
-                <RentTrendsPreview compact preset="sf-neighborhoods" />
-            </div>
-        </>
-    );
+    return <ShowcaseRentTrendsCard preset="sf-neighborhoods" />;
 }
 
-/* 3. Proactive listing alerts: Luna flags new listings that fit a watch and names likely buyers */
+/* 3. Listing & deal alerts: sleek quiet-deal-brief layout (Figma 116:3447 for investors, 117:2 for brokers) */
 
-const WATCH = ["Palo Alto", "$3M-$8M", "20-40 units", "Built 1950-1980"];
+const WATCH = ["San Jose", "$3M-$6M", "10-25 units", "Built 1950-1980"] as const;
 
-const OM_FACTS = [
-    { label: "Asking", value: "$5.8M" },
-    { label: "Per door", value: "$181K" },
-    { label: "Units", value: "32" },
-    { label: "Built", value: "1964" },
+type PropertyMetric = { label: string; value: string };
+
+const BROKER_METRICS: readonly PropertyMetric[] = [
+    { value: "$4.15M", label: "Asking" },
+    { value: "12", label: "Units" },
+    { value: "$346K", label: "Per door" },
+    { value: "1957", label: "Built" },
+];
+
+const INVESTOR_METRICS: readonly PropertyMetric[] = [
+    { value: "$4.15M", label: "Asking" },
+    { value: "12", label: "Units" },
+    { value: "5.4%", label: "Cap rate" },
+    { value: "1957", label: "Built" },
 ];
 
 const LIKELY_BUYERS = [
     {
         name: "Alder Street Capital LLC",
-        reason: "Bought 330 Hamilton Ave (18 units, Jun 2026) and two more 1960s buildings within 1 mi",
-        fit: "Strong fit",
+        reason: "Bought 385 S. 7th St (14 units, Jun 2026) and two more 1950s buildings within 1 mi",
     },
     {
         name: "Mendoza Family Trust",
-        reason: "Owns 610 Waverley St, 3 blocks away; added 12 units in Mar 2026",
-        fit: "Strong fit",
+        reason: "Owns 210 E. Reed St, 3 blocks away; added 10 units in Mar 2026",
     },
     {
         name: "Peninsula Housing Partners",
-        reason: "4 Palo Alto purchases since 2021, all 20-40 units at $4M-$7M",
-        fit: "Good fit",
+        reason: "4 San Jose purchases since 2021, all 10-25 units at $3M-$6M",
     },
-];
+] as const;
 
-const INVESTOR_DEAL_SIGNALS = [
-    {
-        name: "Rent upside: +$415 / unit (+19%)",
-        reason: "In-place 1-beds average $2,540 vs. $2,955 market median from 18 nearby comps",
-        fit: "Strong fit",
-    },
-    {
-        name: "330 Hamilton Ave · $192K / door",
-        reason: "18 units, 1962 vintage · closed Jun 2026 at 5.1% cap, 2 blocks away",
-        fit: "Sales comp",
-    },
-    {
-        name: "610 Waverley St · $188K / door",
-        reason: "12 units, 1958 vintage · closed Mar 2026 at 5.2% cap, 3 blocks away",
-        fit: "Sales comp",
-    },
-];
+function ListingAlertsWorkspace({ metrics, children }: { metrics: readonly PropertyMetric[]; children: React.ReactNode }) {
+    return (
+        <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-hidden bg-white p-6 text-gray-900 dark:bg-[#14181e] dark:text-[#f2f4f7]">
+            <div className="flex items-center justify-between gap-3">
+                <p className="text-base leading-[23px] font-semibold text-gray-900 dark:text-[#f2f4f7]">Listing alerts</p>
+                <button
+                    type="button"
+                    className="rounded-[6px] border border-gray-200 px-2 py-1.5 text-xs leading-[17px] font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#343c47] dark:text-[#cfd5de] dark:hover:bg-white/5"
+                >
+                    Edit watch
+                </button>
+            </div>
 
-type AlertPanelRow = { name: string; reason: string; fit: string };
+            <div className="flex flex-wrap items-center gap-2 text-[11px] leading-4 text-gray-500 dark:text-[#9aa3b0]">
+                <span>Watching</span>
+                {WATCH.map((item) => (
+                    <span key={item}>{item}</span>
+                ))}
+            </div>
+
+            <div className="h-px w-full shrink-0 bg-gray-200 dark:bg-[#2a3039]" />
+
+            <div className="flex flex-col gap-3.5">
+                <div className="flex items-start justify-between gap-3 text-[11px] leading-4">
+                    <p className="font-medium text-gray-600 dark:text-[#abb5c2]">New listing fits your San Jose watch</p>
+                    <p className="shrink-0 text-gray-400 dark:text-[#838e9d]">2m ago</p>
+                </div>
+
+                <div className="flex items-start gap-[22px]">
+                    <OmCoverPreview />
+                    <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                        <p className="text-[26px] leading-[34px] font-semibold tracking-tight text-gray-900 dark:text-[#f2f4f7]">441 S. 5th Street</p>
+                        <p className="text-xs leading-[17px] text-gray-500 dark:text-[#9aa3b0]">San Jose, CA · listed by Bayline Realty</p>
+
+                        <dl className="grid grid-cols-4 gap-4 pt-3 tabular-nums">
+                            {metrics.map((metric) => (
+                                <div key={metric.label} className="flex min-w-0 flex-col gap-0.5">
+                                    <dd className="text-lg leading-[26px] font-medium text-gray-900 dark:text-[#f2f4f7]">{metric.value}</dd>
+                                    <dt className="text-[11px] leading-4 text-gray-500 dark:text-[#838e9d]">{metric.label}</dt>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+            {children}
+        </div>
+    );
+}
 
 function BrokerListingAlertsMockup() {
     return (
-        <ListingAlertsMockup
-            headerTitle="Listing alerts"
-            alertHeading="New listing fits your Palo Alto watch"
-            summary="Matches all four rules. Three owners nearby have bought buildings like this in the last two years."
-            panelTitle="Likely buyers"
-            panelSubtitle="· from past sales within 1 mi"
-            ctaLabel="Draft outreach"
-            rows={LIKELY_BUYERS}
-        />
+        <ListingAlertsWorkspace metrics={BROKER_METRICS}>
+            <div className="flex min-h-0 flex-col">
+                <p className="pb-3 text-[13px] leading-[19px] font-medium text-gray-900 dark:text-[#f2f4f7]">Likely buyers</p>
+                <ul className="divide-y divide-gray-200 border-t border-gray-200 dark:divide-[#2a3039] dark:border-[#2a3039]">
+                    {LIKELY_BUYERS.map((buyer) => (
+                        <li key={buyer.name} className="flex items-center justify-between gap-5 py-3">
+                            <div className="flex min-w-0 flex-1 flex-col gap-1">
+                                <p className="truncate text-[13px] leading-[19px] font-medium text-gray-900 dark:text-[#e4e8ef]">{buyer.name}</p>
+                                <p className="truncate text-[11px] leading-4 text-gray-500 dark:text-[#9aa3b0]">{buyer.reason}</p>
+                            </div>
+                            <div className="flex shrink-0 items-center gap-1">
+                                <button
+                                    type="button"
+                                    aria-label={`Email ${buyer.name}`}
+                                    className="flex size-8 items-center justify-center rounded-[6px] transition-colors hover:bg-gray-100 dark:hover:bg-white/5"
+                                >
+                                    <Image src="/mockups/icons/envelope.svg" alt="" width={17} height={13} className="opacity-80 dark:opacity-100" />
+                                </button>
+                                <button
+                                    type="button"
+                                    aria-label={`Text ${buyer.name}`}
+                                    className="flex size-8 items-center justify-center rounded-[6px] transition-colors hover:bg-gray-100 dark:hover:bg-white/5"
+                                >
+                                    <Image src="/mockups/icons/sms.svg" alt="" width={16} height={15} className="opacity-80 dark:opacity-100" />
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </ListingAlertsWorkspace>
     );
 }
 
 function InvestorDealAlertsMockup() {
     return (
-        <ListingAlertsMockup
-            headerTitle="Deal alerts"
-            alertHeading="New deal fits your Palo Alto buy box"
-            summary="Matches all four rules. Asking $181K/door, 6% below recent 1960s comps within 1 mi."
-            panelTitle="Comps & upside signals"
-            panelSubtitle="· within 1 mi"
-            ctaLabel="Run underwriting"
-            rows={INVESTOR_DEAL_SIGNALS}
-        />
-    );
-}
-
-function ListingAlertsMockup({
-    headerTitle,
-    alertHeading,
-    summary,
-    panelTitle,
-    panelSubtitle,
-    ctaLabel,
-    rows,
-}: {
-    headerTitle: string;
-    alertHeading: string;
-    summary: string;
-    panelTitle: string;
-    panelSubtitle: string;
-    ctaLabel: string;
-    rows: readonly AlertPanelRow[];
-}) {
-    return (
-        <>
-            <PageHeader title={headerTitle}>
-                <OutlineButton icon={Bell}>Edit watch</OutlineButton>
-            </PageHeader>
-            <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-hidden p-3">
-                <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
-                    <span className="text-gray-500">Watching</span>
-                    {WATCH.map((item) => (
-                        <span key={item} className="rounded-md border border-gray-200 bg-white px-1.5 py-0.5 font-medium dark:border-gray-700 dark:bg-gray-800">
-                            {item}
-                        </span>
-                    ))}
-                    <span className="ml-auto text-gray-500">Alerts by email and text</span>
+        <ListingAlertsWorkspace metrics={INVESTOR_METRICS}>
+            <div className="flex flex-col gap-3 rounded-[10px] border border-emerald-200 bg-emerald-50/70 px-[18px] py-4 dark:border-[#2a4038] dark:bg-[#172320]">
+                <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs leading-4 font-semibold text-emerald-950 dark:text-[#d5dfda]">Analysis</p>
+                    <span className="rounded-[5px] bg-emerald-100 px-[9px] py-1 text-[11px] leading-4 font-medium text-emerald-800 dark:bg-[#233e31] dark:text-[#a9ddb9]">
+                        Undervalued
+                    </span>
                 </div>
-
-                <div className={cn(PANEL, "shrink-0 overflow-hidden")}>
-                    <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2 dark:border-gray-700">
-                        <LunaAvatar />
-                        <p className="min-w-0 flex-1 truncate text-[11px]">
-                            <span className="font-semibold">{alertHeading}</span>
-                        </p>
-                        <span className="shrink-0 text-[10px] text-gray-500">2m ago</span>
-                    </div>
-                    <div className="flex gap-3 px-3 py-2">
-                        <OmCoverPreview />
-                        <div className="min-w-0 flex-1 space-y-1.5 text-[10px]">
-                            <div>
-                                <p className="text-[11px] font-semibold">421 University Ave</p>
-                                <p className="text-gray-500">Palo Alto, CA · listed by Bayline Realty</p>
-                            </div>
-                            <dl className="grid max-w-56 grid-cols-2 gap-x-4 gap-y-0.5 tabular-nums">
-                                {OM_FACTS.map((fact) => (
-                                    <div key={fact.label} className="flex justify-between gap-2">
-                                        <dt className="text-gray-500">{fact.label}</dt>
-                                        <dd className="font-medium">{fact.value}</dd>
-                                    </div>
-                                ))}
-                            </dl>
-                            <p className="leading-snug text-gray-700 dark:text-gray-300">{summary}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className={cn(PANEL, "min-h-0 flex-1 overflow-hidden")}>
-                    <div className="flex items-center justify-between gap-2 border-b border-gray-100 px-3 py-2 dark:border-gray-700">
-                        <p className="text-xs font-semibold">
-                            {panelTitle} <span className="hidden font-normal text-gray-500 sm:inline">{panelSubtitle}</span>
-                        </p>
-                        <span className="inline-flex h-6 shrink-0 items-center rounded-md bg-blue-600 px-2.5 text-[10px] font-medium whitespace-nowrap text-white">
-                            {ctaLabel}
-                        </span>
-                    </div>
-                    <ul className="divide-y divide-gray-100 dark:divide-gray-700">
-                        {rows.map((row) => (
-                            <li key={row.name} className="flex items-start justify-between gap-3 px-3 py-1.5">
-                                <div className="min-w-0">
-                                    <p className="text-[11px] font-medium text-blue-700 dark:text-blue-400">{row.name}</p>
-                                    <p className="truncate text-[10px] text-gray-500 dark:text-gray-400">{row.reason}</p>
-                                </div>
-                                <span
-                                    className={cn(
-                                        "shrink-0 rounded px-1.5 py-0.5 text-[9px] font-medium",
-                                        row.fit === "Strong fit"
-                                            ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                                            : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300",
-                                    )}
-                                >
-                                    {row.fit}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                <p className="text-[13px] leading-5 text-emerald-900 dark:text-[#d1dbd5]">
+                    We think there is significant room to push rents, with in-place rents 27% below market rate and proximity to San Jose State driving strong rental demand.
+                </p>
             </div>
-        </>
+        </ListingAlertsWorkspace>
     );
 }
 
-function LunaAvatar() {
-    return (
-        <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-900 text-[9px] font-semibold text-white dark:bg-blue-600">
-            L
-        </span>
-    );
-}
+const OM_THUMB_WIDTH = 144;
+const OM_THUMB_HEIGHT = 100;
 
-const OM_PAGE_WIDTH = 300;
-const OM_THUMB_WIDTH = 92;
-
-// Cover page of the listing's offering memorandum. Like the Rent Gap preview, the
-// page is laid out at full size with readable type and scaled down to a thumbnail.
 function OmCoverPreview() {
     return (
         <div className="flex shrink-0 flex-col items-center gap-1">
             <div
-                className="overflow-hidden rounded-sm border border-gray-200 bg-white shadow-sm dark:border-gray-600"
-                style={{ width: OM_THUMB_WIDTH, height: (OM_THUMB_WIDTH * 11) / 8.5 }}
+                className="relative overflow-hidden rounded-[6px] border border-gray-200 bg-white shadow-sm dark:border-[#61656c]"
+                style={{ width: OM_THUMB_WIDTH, height: OM_THUMB_HEIGHT }}
             >
-                <div
-                    className="flex origin-top-left flex-col text-gray-900"
-                    style={{ width: OM_PAGE_WIDTH, height: (OM_PAGE_WIDTH * 11) / 8.5, transform: `scale(${OM_THUMB_WIDTH / OM_PAGE_WIDTH})` }}
-                >
-                    <div className="px-6 pt-6">
-                        <p className="text-[11px] font-bold tracking-[0.2em] text-blue-900">BAYLINE REALTY</p>
-                        <p className="mt-1 text-[10px] tracking-wide text-gray-500 uppercase">Offering memorandum</p>
-                    </div>
-                    <div className="relative mt-4 h-[170px]">
-                        <Image src="/videos/sf-residential-aerial-poster.jpg" alt="" fill sizes="300px" className="object-cover object-[50%_85%]" />
-                    </div>
-                    <div className="px-6 pt-5">
-                        <p className="text-[26px] leading-tight font-semibold tracking-tight">421 University Ave</p>
-                        <p className="mt-1 text-[13px] text-gray-600">Palo Alto, California</p>
-                        <p className="mt-3 text-[12px] text-gray-700">32-unit multifamily investment opportunity</p>
-                    </div>
-                    <div className="mt-auto flex items-center justify-between bg-blue-900 px-6 py-3 text-[9px] text-white">
-                        <span>Exclusively listed by Dana Whitfield &amp; Marco Reyes</span>
-                        <span className="font-semibold">Bayline Realty</span>
-                    </div>
-                </div>
+                <Image src="/mockups/veridian.jpg" alt="Veridian on 5th offering memorandum cover" fill sizes="144px" className="object-cover" />
             </div>
             <span className="flex items-center gap-1 text-[9px] text-gray-500">
                 <FileText className="size-2.5" />
-                OM · 38 pages
+                OM · 19 pages
             </span>
         </div>
     );

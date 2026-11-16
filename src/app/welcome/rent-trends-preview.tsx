@@ -45,7 +45,6 @@ function MockFilterPanel({
     onAreaSelect,
     selectedBeds,
     onBedsChange,
-    compact = false,
 }: {
     areaType?: AnalyticsAreaType;
     areas: AreaSelection[];
@@ -53,10 +52,9 @@ function MockFilterPanel({
     onAreaSelect: (id: string) => void;
     selectedBeds: number[];
     onBedsChange: (beds: number[]) => void;
-    compact?: boolean;
 }) {
     return (
-        <div className={compact ? "mb-3.5 space-y-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800" : "mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800"}>
+        <div className="mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
             <div className="pointer-events-none flex min-w-0 items-center justify-between gap-3 select-none sm:justify-start sm:gap-4">
                 <span className="shrink-0 text-[15px] text-gray-500 sm:w-24 sm:text-sm dark:text-gray-400">Area type</span>
                 <PreviewNativeSelect
@@ -169,13 +167,40 @@ export function HeroRentTrendsCard({ areaResults }: { areaResults: Record<string
     );
 }
 
+export function ShowcaseRentTrendsCard({
+    preset = "sf-neighborhoods",
+    height = 395,
+}: {
+    preset?: "cities" | "sf-neighborhoods";
+    height?: number;
+}) {
+    const { areas, isDark } = usePreviewRentAreas(preset);
+    const [activeAreaId, toggleArea] = usePreviewToggle<string>(null);
+    const chartAreas = activeAreaId ? areas.filter((area) => area.id === activeAreaId) : areas;
+    const areaResults = preset === "sf-neighborhoods" ? PREVIEW_SF_NEIGHBORHOOD_RESULTS : PREVIEW_RENT_RESULTS;
+
+    return (
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-white px-6 pt-7 pb-6 sm:px-8 dark:bg-gray-900">
+            <PreviewRentChart
+                variant="hero"
+                areas={chartAreas}
+                chipAreas={areas}
+                activeAreaId={activeAreaId}
+                onAreaSelect={toggleArea}
+                areaResults={areaResults}
+                selectedBeds={PREVIEW_BEDS}
+                isDark={isDark}
+                height={height}
+            />
+        </div>
+    );
+}
+
 export function RentTrendsPreview({
     showAreaStats: _showAreaStats = true,
-    compact = false,
     preset = "cities",
 }: {
     showAreaStats?: boolean;
-    compact?: boolean;
     preset?: "cities" | "sf-neighborhoods";
 }) {
     const { areas, isDark } = usePreviewRentAreas(preset);
@@ -202,7 +227,6 @@ export function RentTrendsPreview({
                 onAreaSelect={toggleArea}
                 selectedBeds={selectedBeds}
                 onBedsChange={setSelectedBeds}
-                compact={compact}
             />
             <PreviewFadeStack items={views} activeId={activeViewId}>
                 {(view) => (
@@ -211,7 +235,6 @@ export function RentTrendsPreview({
                         areaResults={areaResults}
                         selectedBeds={selectedBeds}
                         isDark={isDark}
-                        height={compact ? 235 : undefined}
                     />
                 )}
             </PreviewFadeStack>
