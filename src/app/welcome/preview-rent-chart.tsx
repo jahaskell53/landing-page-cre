@@ -229,20 +229,22 @@ function buildPctChangeData(absData: Array<Record<string, string | number>>, ser
     });
 }
 
-function yDomain(values: number[], isPct: boolean): [number, number] {
+function dollarAxisScale(values: number[]): { domain: [number, number]; ticks: number[] } {
     const min = Math.min(...values);
     const max = Math.max(...values);
-    if (isPct) {
-        const top = Math.max(6, Math.ceil(Math.max(max, 0) / 6) * 6);
-        return [0, top];
-    }
-    const span = max - min || 1;
-    const pad = span * 0.12;
-    return [min - pad, max + pad];
+    const span = max - min || 100;
+    const pad = span * 0.08;
+    const low = Math.floor((min - pad) / 100) * 100;
+    const high = Math.ceil((max + pad) / 100) * 100;
+    const step = Math.max(100, Math.ceil((high - low) / 4 / 100) * 100);
+    const ticks = Array.from({ length: 5 }, (_, i) => low + i * step);
+    return { domain: [ticks[0], ticks[ticks.length - 1]], ticks };
 }
 
-function pctTicks(top: number): number[] {
-    return [0, top / 3, (2 * top) / 3, top];
+function pctAxisScale(values: number[]): { domain: [number, number]; ticks: number[] } {
+    const max = Math.max(...values);
+    const top = Math.max(6, Math.ceil(Math.max(max, 0) / 6) * 6);
+    return { domain: [0, top], ticks: [0, top / 3, (2 * top) / 3, top] };
 }
 
 function xTicks(labels: string[], count = 4): string[] {
@@ -381,6 +383,7 @@ export function PreviewRentChart({
     const [granularity, setGranularity] = useState<Granularity>(isHero ? "mom" : "wow");
     const [yView, setYView] = useState<YView>(defaultYView);
     const [hoverAreaId, setHoverAreaId] = useState<string | null>(null);
+    const [pointerY, setPointerY] = useState<number | null>(null);
     const chartAnimation = useChartAnimation();
     const available = useMemo(() => getAvailableGranularities(areaResults), [areaResults]);
     const buckets = BUCKET_LABELS.filter(
@@ -403,8 +406,12 @@ export function PreviewRentChart({
     const chartData = yView === "pct" ? pctData : absData;
 
     const values = series.flatMap((s) => chartData.map((point) => point[s.key]).filter(isNumber));
-    const domain = values.length > 0 ? yDomain(values, yView === "pct") : ([0, 1] as [number, number]);
-    const yTicks = yView === "pct" ? pctTicks(domain[1]) : undefined;
+    const { domain, ticks: yTicks } =
+        values.length > 0
+            ? yView === "pct"
+                ? pctAxisScale(values)
+                : dollarAxisScale(values)
+            : { domain: [0, 1] as [number, number], ticks: undefined };
     const weekLabels = chartData.map((point) => point.weekLabel).filter((label): label is string => typeof label === "string");
     const shownXTicks = xTicks(weekLabels);
 
@@ -617,11 +624,20 @@ export function PreviewRentChart({
         </div>
     );
 
+    const chartHeight = height ?? (isHero ? 485 : 280);
+
     return (
         <div className="min-w-0">
             {header}
 
-            <AnalyticsChartContainer height={height ?? (isHero ? 485 : 280)}>
+            <div
+                onMouseMove={(event) => {
+                    const rect = event.currentTarget.getBoundingClientRect();
+                    setPointerY(event.clientY - rect.top);
+                }}
+                onMouseLeave={() => setPointerY(null)}
+            >
+            <AnalyticsChartContainer height={chartHeight}>
                 <LineChart data={chartData} margin={{ top: 8, right: 118, left: 4, bottom: 4 }}>
                     <CartesianGrid vertical={false} stroke={isDark ? "#1f2937" : "#f1f3f5"} strokeWidth={1} />
                     <XAxis
@@ -647,26 +663,28 @@ export function PreviewRentChart({
                         cursor={{ stroke: isDark ? "#374151" : "#e5e7eb", strokeWidth: 1 }}
                         content={({ active, payload, label }) => {
                             if (!active || !payload?.length) return null;
+                            const numericEntries = payload.filter((entry) => isNumber(entry.value));
+                            if (numericEntries.length === 0) return null;
+                            const plotTop = 8;
+                            const plotHeight = Math.max(1, chartHeight - 42);
+                            const span = domain[1] - domain[0] || 1;
+                            const chosen =
+                                pointerY == null
+                                    ? numericEntries[0]
+                                    : numericEntries.reduce((best, entry) => {
+                                          const entryY = plotTop + ((domain[1] - (entry.value as number)) / span) * plotHeight;
+                                          const bestY = plotTop + ((domain[1] - (best.value as number)) / span) * plotHeight;
+                                          return Math.abs(entryY - pointerY) < Math.abs(bestY - pointerY) ? entry : best;
+                                      });
+                            const val = chosen.value as number;
                             return (
-                                <div className="rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                                    <div className="mb-1 text-gray-500 dark:text-gray-400">{label}</div>
-                                    {payload.map((entry) => {
-                                        const key = String(entry.dataKey);
-                                        const rent = lastNumeric(
-                                            absData.filter((p) => p.weekLabel === label),
-                                            key,
-                                        );
-                                        const pct = lastNumeric(
-                                            pctData.filter((p) => p.weekLabel === label),
-                                            key,
-                                        );
-                                        return (
-                                            <div key={key} className="tabular-nums" style={{ color: String(entry.color) }}>
-                                                {entry.name} {rent != null ? formatDollars(rent) : ""}
-                                                {pct != null ? ` · ${formatPercent(pct, 1, { showSign: true })}` : ""}
-                                            </div>
-                                        );
-                                    })}
+                                <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                                    <div className="text-[11px] font-medium" style={{ color: String(chosen.color) }}>
+                                        {chosen.name} · <span className="font-normal text-gray-400 dark:text-gray-500">{label}</span>
+                                    </div>
+                                    <div className="mt-0.5 text-base leading-tight font-semibold tracking-tight text-gray-900 tabular-nums dark:text-gray-100">
+                                        {yView === "pct" ? formatPercent(val, 1, { showSign: true }) : formatDollars(val)}
+                                    </div>
                                 </div>
                             );
                         }}
@@ -690,6 +708,7 @@ export function PreviewRentChart({
                     <EndLabels items={endItems} halo={halo} />
                 </LineChart>
             </AnalyticsChartContainer>
+            </div>
         </div>
     );
 }
