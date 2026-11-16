@@ -41,7 +41,7 @@ const LEADS_BENEFITS: readonly Benefit[] = [
     {
         feature: "Listing alerts",
         title: "Find buildings and buyers for your clients",
-        body: "Luna watches your submarkets for new listings that fit a price range, unit count, or vintage, then names the buyers most likely to want them based on what they have bought before.",
+        body: "Agents monitor your submarkets for new listings that fit a price range, unit count, or vintage, then name the buyers most likely to want them based on what they have bought before.",
         url: "app.openmidmarket.com/alerts",
         Mockup: BrokerListingAlertsMockup,
     },
@@ -65,7 +65,7 @@ const INVESTOR_BENEFITS: readonly Benefit[] = [
     {
         feature: "Deal alerts",
         title: "See mispriced deals before the market does",
-        body: "Luna monitors your target submarkets 24/7 for new listings and price cuts matching your exact buy box, from unit count and vintage to basis and rent-upside spread, so you can underwrite and offer first.",
+        body: "Agents monitor your target submarkets 24/7 for new listings and price cuts matching your exact buy box, from unit count and vintage to basis and rent-upside spread, so you can underwrite and offer first.",
         url: "app.openmidmarket.com/alerts",
         Mockup: InvestorDealAlertsMockup,
     },
@@ -159,7 +159,7 @@ function BenefitsShowcase({
                                     key={item.title}
                                     aria-hidden={active !== i}
                                     className={cn(
-                                        "absolute inset-0 transition-all duration-500 ease-out",
+                                        "absolute inset-0 flex items-center transition-all duration-500 ease-out",
                                         active === i ? "translate-y-0 opacity-100" : "pointer-events-none opacity-0",
                                         active < i && "translate-y-6",
                                         active > i && "-translate-y-6",
@@ -182,7 +182,7 @@ function BenefitsShowcase({
 
 function MockupFrame({ item }: { item: Benefit }) {
     return (
-        <BrowserWindow url={item.url} className="flex h-full flex-col">
+        <BrowserWindow url={item.url} className="flex w-full flex-col">
             <div className="flex min-h-0 flex-1 flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
                 <item.Mockup />
             </div>

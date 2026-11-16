@@ -3,6 +3,7 @@
 // <AppPreview /> rent-charts tab agree on cities, colors keys, and series.
 
 import type { TrendRow } from "@/app/(app)/analytics/rent-trends/trends-utils";
+import type { AnalyticsAreaType } from "@/lib/analytics/filters";
 
 export const PREVIEW_CITIES = [
     { city: "Burlingame", state: "CA" },
@@ -72,4 +73,64 @@ export const PREVIEW_SF_NEIGHBORHOOD_RESULTS: Record<string, TrendRow[]> = {
     [previewNeighborhoodId("Mission", "San Francisco", "CA")]: mockSeries(WEEKS, 3405, 4045, 0.4),
     [previewNeighborhoodId("Hayes Valley", "San Francisco", "CA")]: mockSeries(WEEKS, 4000, 4298, 1.5),
     [previewNeighborhoodId("Pacific Heights", "San Francisco", "CA")]: mockSeries(WEEKS, 4990, 5195, 2.3),
+};
+
+export type ShowcaseAreaOption = {
+    id: string;
+    label: string;
+    city: string;
+    state: string;
+    defaultSelected?: boolean;
+};
+
+export const PREVIEW_SHOWCASE_AREAS_BY_TYPE: Record<AnalyticsAreaType, readonly ShowcaseAreaOption[]> = {
+    Neighborhood: [
+        { id: previewNeighborhoodId("Mission", "San Francisco", "CA"), label: "Mission", city: "San Francisco", state: "CA", defaultSelected: true },
+        { id: previewNeighborhoodId("Hayes Valley", "San Francisco", "CA"), label: "Hayes Valley", city: "San Francisco", state: "CA", defaultSelected: true },
+        { id: previewNeighborhoodId("Pacific Heights", "San Francisco", "CA"), label: "Pacific Heights", city: "San Francisco", state: "CA", defaultSelected: true },
+        { id: previewNeighborhoodId("Marina", "San Francisco", "CA"), label: "Marina", city: "San Francisco", state: "CA", defaultSelected: false },
+        { id: previewNeighborhoodId("Noe Valley", "San Francisco", "CA"), label: "Noe Valley", city: "San Francisco", state: "CA", defaultSelected: false },
+    ],
+    "ZIP Code": [
+        { id: "zip:94110", label: "94110", city: "San Francisco", state: "CA", defaultSelected: true },
+        { id: "zip:94102", label: "94102", city: "San Francisco", state: "CA", defaultSelected: true },
+        { id: "zip:94115", label: "94115", city: "San Francisco", state: "CA", defaultSelected: true },
+        { id: "zip:94123", label: "94123", city: "San Francisco", state: "CA", defaultSelected: false },
+    ],
+    City: [
+        { id: previewAreaId("Burlingame", "CA"), label: "Burlingame", city: "Burlingame", state: "CA", defaultSelected: true },
+        { id: previewAreaId("Santa Clara", "CA"), label: "Santa Clara", city: "Santa Clara", state: "CA", defaultSelected: true },
+        { id: previewAreaId("San Mateo", "CA"), label: "San Mateo", city: "San Mateo", state: "CA", defaultSelected: true },
+        { id: previewAreaId("Redwood City", "CA"), label: "Redwood City", city: "Redwood City", state: "CA", defaultSelected: false },
+    ],
+    County: [
+        { id: "county:San Francisco:CA", label: "San Francisco", city: "San Francisco", state: "CA", defaultSelected: true },
+        { id: "county:San Mateo:CA", label: "San Mateo", city: "San Mateo", state: "CA", defaultSelected: true },
+        { id: "county:Santa Clara:CA", label: "Santa Clara", city: "Santa Clara", state: "CA", defaultSelected: true },
+        { id: "county:Alameda:CA", label: "Alameda", city: "Oakland", state: "CA", defaultSelected: false },
+    ],
+    MSA: [
+        { id: "msa:sf-oakland", label: "SF-Oakland MSA", city: "San Francisco", state: "CA", defaultSelected: true },
+        { id: "msa:san-jose", label: "San Jose MSA", city: "San Jose", state: "CA", defaultSelected: true },
+        { id: "msa:sacramento", label: "Sacramento MSA", city: "Sacramento", state: "CA", defaultSelected: true },
+    ],
+};
+
+export const PREVIEW_SHOWCASE_RESULTS: Record<string, TrendRow[]> = {
+    ...PREVIEW_RENT_RESULTS,
+    ...PREVIEW_SF_NEIGHBORHOOD_RESULTS,
+    [previewNeighborhoodId("Marina", "San Francisco", "CA")]: mockSeries(WEEKS, 4350, 4680, 0.9),
+    [previewNeighborhoodId("Noe Valley", "San Francisco", "CA")]: mockSeries(WEEKS, 3890, 4210, 1.9),
+    "zip:94110": mockSeries(WEEKS, 3390, 4010, 0.5),
+    "zip:94102": mockSeries(WEEKS, 3850, 4190, 1.4),
+    "zip:94115": mockSeries(WEEKS, 4820, 5095, 2.1),
+    "zip:94123": mockSeries(WEEKS, 4310, 4640, 1.0),
+    [previewAreaId("Redwood City", "CA")]: mockSeries(WEEKS, 2640, 2890, 1.7),
+    "county:San Francisco:CA": mockSeries(WEEKS, 3690, 4120, 0.6),
+    "county:San Mateo:CA": mockSeries(WEEKS, 2720, 2940, 1.3),
+    "county:Santa Clara:CA": mockSeries(WEEKS, 2580, 2790, 2.2),
+    "county:Alameda:CA": mockSeries(WEEKS, 2290, 2485, 0.8),
+    "msa:sf-oakland": mockSeries(WEEKS, 3120, 3390, 0.5),
+    "msa:san-jose": mockSeries(WEEKS, 2650, 2860, 1.6),
+    "msa:sacramento": mockSeries(WEEKS, 1840, 1975, 2.4),
 };

@@ -1,9 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Check, ChevronDown } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CartesianGrid, Line, LineChart, Tooltip, usePlotArea, useXAxisScale, useYAxisScale, XAxis, YAxis } from "recharts";
 import { AnalyticsChartContainer } from "@/components/analytics/charts/analytics-chart";
 import { useChartAnimation } from "@/components/analytics/charts/use-chart-animation";
+import { ANALYTICS_AREA_TYPES, type AnalyticsAreaType } from "@/lib/analytics/filters";
+import { cn } from "@/lib/utils";
 import { formatPercent } from "@/utils/format";
 import { PreviewChip } from "./preview-interaction";
 import { PreviewNativeSelect } from "./preview-native-select";
@@ -30,7 +33,171 @@ const BUCKET_LABELS: { value: Granularity; label: string }[] = [
 
 const HERO_GRANULARITIES: Granularity[] = ["wow", "mom", "qoq"];
 
+const HERO_BED_OPTIONS: { value: string; label: string }[] = [
+    { value: "0", label: "Studio" },
+    { value: "1", label: "1-bedroom" },
+    { value: "2", label: "2-bedroom" },
+    { value: "3", label: "3-bedroom+" },
+];
+
 export type PreviewRentChartVariant = "embedded" | "hero";
+
+function useDismissibleMenu() {
+    const [open, setOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!open) return;
+        const onPointerDown = (event: PointerEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") setOpen(false);
+        };
+        document.addEventListener("pointerdown", onPointerDown);
+        document.addEventListener("keydown", onKeyDown);
+        return () => {
+            document.removeEventListener("pointerdown", onPointerDown);
+            document.removeEventListener("keydown", onKeyDown);
+        };
+    }, [open]);
+
+    return { open, setOpen, containerRef };
+}
+
+function InlineDropdown<T extends string>({
+    value,
+    onChange,
+    options,
+    ariaLabel,
+    align = "start",
+    triggerClassName,
+}: {
+    value: T;
+    onChange: (next: T) => void;
+    options: readonly { value: T; label: string }[];
+    ariaLabel: string;
+    align?: "start" | "end";
+    triggerClassName?: string;
+}) {
+    const { open, setOpen, containerRef } = useDismissibleMenu();
+    const selectedLabel = options.find((opt) => opt.value === value)?.label ?? options[0]?.label ?? "";
+
+    return (
+        <div ref={containerRef} className="relative inline-flex">
+            <button
+                type="button"
+                aria-label={ariaLabel}
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                onClick={() => setOpen((o) => !o)}
+                className={triggerClassName}
+            >
+                <span>{selectedLabel}</span>
+                <ChevronDown aria-hidden className={cn("size-3.5 shrink-0 text-gray-400 transition-transform dark:text-gray-500", open && "rotate-180")} />
+            </button>
+            {open && (
+                <div
+                    role="listbox"
+                    aria-label={ariaLabel}
+                    className={cn(
+                        "absolute top-full z-40 mt-1.5 min-w-[9.5rem] rounded-lg border border-gray-200 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800",
+                        align === "end" ? "right-0" : "left-0",
+                    )}
+                >
+                    {options.map((opt) => {
+                        const active = opt.value === value;
+                        return (
+                            <button
+                                key={opt.value}
+                                type="button"
+                                role="option"
+                                aria-selected={active}
+                                onClick={() => {
+                                    onChange(opt.value);
+                                    setOpen(false);
+                                }}
+                                className={cn(
+                                    "flex w-full cursor-pointer items-center justify-between gap-3 rounded-md px-2.5 py-1.5 text-left text-xs font-medium whitespace-nowrap transition-colors",
+                                    active
+                                        ? "bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100"
+                                        : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700/60",
+                                )}
+                            >
+                                <span>{opt.label}</span>
+                                {active && <Check aria-hidden className="size-3.5 shrink-0 text-blue-600 dark:text-blue-400" />}
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+}
+
+function AreaAddMenu({
+    availableAreas,
+    selectedIds,
+    onToggle,
+}: {
+    availableAreas: AreaSelection[];
+    selectedIds: Set<string>;
+    onToggle: (id: string) => void;
+}) {
+    const { open, setOpen, containerRef } = useDismissibleMenu();
+
+    return (
+        <div ref={containerRef} className="relative inline-flex">
+            <button
+                type="button"
+                aria-label="Add or remove areas"
+                aria-haspopup="menu"
+                aria-expanded={open}
+                onClick={() => setOpen((o) => !o)}
+                className="flex size-6 cursor-pointer items-center justify-center rounded-full border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:border-gray-400 hover:text-gray-600 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:text-gray-300"
+            >
+                <span className="mb-px text-base leading-none">+</span>
+            </button>
+            {open && (
+                <div
+                    role="menu"
+                    aria-label="Areas"
+                    className="absolute top-full left-0 z-40 mt-1.5 min-w-[11rem] rounded-lg border border-gray-200 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                >
+                    {availableAreas.map((area) => {
+                        const included = selectedIds.has(area.id);
+                        const locked = included && selectedIds.size <= 1;
+                        return (
+                            <button
+                                key={area.id}
+                                type="button"
+                                role="menuitemcheckbox"
+                                aria-checked={included}
+                                disabled={locked}
+                                onClick={() => onToggle(area.id)}
+                                className={cn(
+                                    "flex w-full cursor-pointer items-center justify-between gap-3 rounded-md px-2.5 py-1.5 text-left text-xs font-medium whitespace-nowrap transition-colors",
+                                    locked && "cursor-not-allowed opacity-50",
+                                    included
+                                        ? "bg-gray-100/80 text-gray-900 dark:bg-gray-700/70 dark:text-gray-100"
+                                        : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700/60",
+                                )}
+                            >
+                                <span className="flex items-center gap-2">
+                                    <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: area.color }} />
+                                    <span>{area.label}</span>
+                                </span>
+                                {included && <Check aria-hidden className="size-3.5 shrink-0 text-blue-600 dark:text-blue-400" />}
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+}
 
 const TICK = { fontSize: 11, fill: "#9ca3af", fontVariantNumeric: "tabular-nums" as const };
 
@@ -188,6 +355,11 @@ export function PreviewRentChart({
     chipAreas,
     activeAreaId = null,
     onAreaSelect,
+    onBedsChange,
+    areaType,
+    onAreaTypeChange,
+    availableAreas,
+    onToggleAreaMembership,
 }: {
     areas: AreaSelection[];
     areaResults: Record<string, TrendRow[]>;
@@ -199,6 +371,11 @@ export function PreviewRentChart({
     chipAreas?: AreaSelection[];
     activeAreaId?: string | null;
     onAreaSelect?: (id: string) => void;
+    onBedsChange?: (beds: number[]) => void;
+    areaType?: AnalyticsAreaType;
+    onAreaTypeChange?: (next: AnalyticsAreaType) => void;
+    availableAreas?: AreaSelection[];
+    onToggleAreaMembership?: (id: string) => void;
 }) {
     const isHero = variant === "hero";
     const [granularity, setGranularity] = useState<Granularity>(isHero ? "mom" : "wow");
@@ -232,10 +409,11 @@ export function PreviewRentChart({
     const shownXTicks = xTicks(weekLabels);
 
     const firstWeek = typeof absData[0]?.week === "string" ? absData[0].week : "";
+    const sinceLabel = firstWeek ? sinceMonth(firstWeek) : "March";
     const title =
         yView === "pct"
-            ? `${bedTitle(selectedBeds)}, change since ${firstWeek ? sinceMonth(firstWeek) : "March"}`
-            : `${bedTitle(selectedBeds)} since ${firstWeek ? sinceMonth(firstWeek) : "March"}`;
+            ? `${bedTitle(selectedBeds)}, change since ${sinceLabel}`
+            : `${bedTitle(selectedBeds)} since ${sinceLabel}`;
 
     const lastPoint = chartData[chartData.length - 1];
     const lastWeekLabel = typeof lastPoint?.weekLabel === "string" ? lastPoint.weekLabel : "";
@@ -320,64 +498,115 @@ export function PreviewRentChart({
     );
 
     const toggles = (
-        <div className={isHero ? "flex min-w-0 flex-wrap items-center justify-end gap-2" : "flex min-w-0 items-center justify-between gap-2 sm:justify-end"}>
-            {buckets.length > 1 && (
-                <>
-                    <PreviewNativeSelect
-                        aria-label="Time period"
+        <div className={isHero ? "flex min-w-0 shrink-0 items-center justify-end gap-2" : "flex min-w-0 items-center justify-between gap-2 sm:justify-end"}>
+            {buckets.length > 1 &&
+                (isHero ? (
+                    <InlineDropdown
+                        ariaLabel="Time period"
                         value={granularity}
                         onChange={(next) => setGranularity(next as Granularity)}
                         options={buckets}
-                        alwaysShow={isHero}
+                        align="end"
+                        triggerClassName="inline-flex cursor-pointer items-center gap-1 rounded-md px-2 py-1.5 text-sm font-normal text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
                     />
-                    {!isHero && periodButtons}
-                </>
-            )}
+                ) : (
+                    <>
+                        <PreviewNativeSelect
+                            aria-label="Time period"
+                            value={granularity}
+                            onChange={(next) => setGranularity(next as Granularity)}
+                            options={buckets}
+                        />
+                        {periodButtons}
+                    </>
+                ))}
             {yViewButtons}
         </div>
     );
 
-    const header = isHero ? (
+    const areaChips = chipAreas && onAreaSelect && (
+        <div
+            className="flex min-w-0 flex-wrap items-center gap-2"
+            onMouseLeave={() => {
+                if (isHero) setHoverAreaId(null);
+            }}
+        >
+            {chipAreas.map((area) => {
+                const isActive = previewAreaId === null || previewAreaId === area.id;
+                return (
+                    <PreviewChip
+                        key={area.id}
+                        selected={isActive}
+                        onSelect={() => {
+                            if (isHero) setHoverAreaId(null);
+                            onAreaSelect(area.id);
+                        }}
+                        color={area.color}
+                        onMouseEnter={() => {
+                            if (isHero) setHoverAreaId(area.id);
+                        }}
+                        onMouseLeave={(event) => {
+                            if (!isHero) return;
+                            const next = event.relatedTarget;
+                            const current = event.currentTarget;
+                            const group = current instanceof Element ? current.parentElement : null;
+                            if (next instanceof Node && group?.contains(next)) return;
+                            setHoverAreaId(null);
+                        }}
+                    >
+                        <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: area.color }} />
+                        {area.label}
+                    </PreviewChip>
+                );
+            })}
+            {availableAreas && onToggleAreaMembership && (
+                <AreaAddMenu
+                    availableAreas={availableAreas}
+                    selectedIds={new Set(chipAreas.map((area) => area.id))}
+                    onToggle={onToggleAreaMembership}
+                />
+            )}
+        </div>
+    );
+
+    const hasInlineSelectors = isHero && Boolean(onBedsChange);
+
+    const header = hasInlineSelectors ? (
+        <>
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 pb-3.5">
+                <h2 className="flex flex-wrap items-baseline gap-x-1.5 text-lg leading-snug font-medium text-gray-900 sm:text-[19px] dark:text-gray-100">
+                    <InlineDropdown
+                        ariaLabel="Bedrooms"
+                        value={String(selectedBeds[0] ?? 1)}
+                        onChange={(next) => onBedsChange?.([Number(next)])}
+                        options={HERO_BED_OPTIONS}
+                        triggerClassName="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 -ml-1.5 text-lg leading-snug font-medium text-gray-900 transition-colors hover:bg-gray-100 sm:text-[19px] dark:text-gray-100 dark:hover:bg-gray-800"
+                    />
+                    <span>{yView === "pct" ? `median rent, change since ${sinceLabel}` : `median rent since ${sinceLabel}`}</span>
+                </h2>
+                {toggles}
+            </div>
+            <div className="flex flex-wrap items-center gap-2 pb-6">
+                {areaType && onAreaTypeChange && (
+                    <>
+                        <InlineDropdown
+                            ariaLabel="Area type"
+                            value={areaType}
+                            onChange={(next) => onAreaTypeChange(next as AnalyticsAreaType)}
+                            options={ANALYTICS_AREA_TYPES.map((type) => ({ value: type, label: type }))}
+                            triggerClassName="inline-flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 -ml-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                        />
+                        <span aria-hidden className="mx-0.5 h-3.5 w-px shrink-0 bg-gray-200 dark:bg-gray-700" />
+                    </>
+                )}
+                {areaChips}
+            </div>
+        </>
+    ) : isHero ? (
         <>
             <h2 className="pb-[18px] text-xl leading-snug font-medium text-gray-900 dark:text-gray-100">{title}</h2>
             <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-3 pb-[27px]">
-                {chipAreas && onAreaSelect && (
-                    <div
-                        className="flex min-w-0 flex-wrap items-center gap-2"
-                        onMouseLeave={() => {
-                            if (isHero) setHoverAreaId(null);
-                        }}
-                    >
-                        {chipAreas.map((area) => {
-                            const isActive = previewAreaId === null || previewAreaId === area.id;
-                            return (
-                                <PreviewChip
-                                    key={area.id}
-                                    selected={isActive}
-                                    onSelect={() => {
-                                        if (isHero) setHoverAreaId(null);
-                                        onAreaSelect(area.id);
-                                    }}
-                                    color={area.color}
-                                    onMouseEnter={() => {
-                                        if (isHero) setHoverAreaId(area.id);
-                                    }}
-                                    onMouseLeave={(event) => {
-                                        if (!isHero) return;
-                                        const next = event.relatedTarget;
-                                        const current = event.currentTarget;
-                                        const group = current instanceof Element ? current.parentElement : null;
-                                        if (next instanceof Node && group?.contains(next)) return;
-                                        setHoverAreaId(null);
-                                    }}
-                                >
-                                    <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: area.color }} />
-                                    {area.label}
-                                </PreviewChip>
-                            );
-                        })}
-                    </div>
-                )}
+                {areaChips}
                 {toggles}
             </div>
         </>

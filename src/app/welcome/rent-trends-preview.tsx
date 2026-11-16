@@ -14,10 +14,9 @@ import {
     PREVIEW_BEDS,
     PREVIEW_CITIES,
     PREVIEW_RENT_RESULTS,
-    PREVIEW_SF_NEIGHBORHOOD_RESULTS,
-    PREVIEW_SF_NEIGHBORHOODS,
+    PREVIEW_SHOWCASE_AREAS_BY_TYPE,
+    PREVIEW_SHOWCASE_RESULTS,
     previewAreaId,
-    previewNeighborhoodId,
 } from "./rent-trends-preview-config";
 
 // Landing-page series palette. The shared analytics `AREA_COLORS`
@@ -34,7 +33,7 @@ import {
 // (buttons, the "mid-market" highlight) resolves in dark.
 const LEAD_COLOR_LIGHT = "#1e3a8a"; // blue-900 — brand navy
 const LEAD_COLOR_DARK = "#60a5fa"; // blue-400 — legible on gray-800
-const PREVIEW_COLORS_REST = ["#0d9488", "#8b5cf6"]; // teal, violet
+const PREVIEW_COLORS_REST = ["#0d9488", "#8b5cf6", "#d97706", "#ec4899"]; // teal, violet, amber, pink
 
 const noop = () => {};
 
@@ -106,35 +105,50 @@ function MockFilterPanel({
 
 const subscribe = () => () => {};
 
-function usePreviewRentAreas(preset: "cities" | "sf-neighborhoods" = "cities") {
+function usePreviewThemeColors() {
     // Resolve the lead-series color against the active theme. Guard on `mounted`
     // so SSR and the first client paint both use the light navy (avoids a
     // hydration mismatch); after hydration it flips to blue-400 if dark.
     const { resolvedTheme } = useTheme();
     const mounted = useSyncExternalStore(subscribe, () => true, () => false);
     const isDark = mounted && resolvedTheme === "dark";
-
     const colors = useMemo(() => [isDark ? LEAD_COLOR_DARK : LEAD_COLOR_LIGHT, ...PREVIEW_COLORS_REST], [isDark]);
+    return { isDark, colors };
+}
 
-    const areas = useMemo<AreaSelection[]>(
-        () =>
-            preset === "sf-neighborhoods"
-                ? PREVIEW_SF_NEIGHBORHOODS.map((nh, i) => ({
-                      id: previewNeighborhoodId(nh.name, nh.city, nh.state),
-                      label: nh.name,
+function buildInitialShowcaseSelection(): Record<AnalyticsAreaType, string[]> {
+    return {
+        Neighborhood: PREVIEW_SHOWCASE_AREAS_BY_TYPE.Neighborhood.filter((a) => a.defaultSelected).map((a) => a.id),
+        "ZIP Code": PREVIEW_SHOWCASE_AREAS_BY_TYPE["ZIP Code"].filter((a) => a.defaultSelected).map((a) => a.id),
+        City: PREVIEW_SHOWCASE_AREAS_BY_TYPE.City.filter((a) => a.defaultSelected).map((a) => a.id),
+        County: PREVIEW_SHOWCASE_AREAS_BY_TYPE.County.filter((a) => a.defaultSelected).map((a) => a.id),
+        MSA: PREVIEW_SHOWCASE_AREAS_BY_TYPE.MSA.filter((a) => a.defaultSelected).map((a) => a.id),
+    };
+}
+
+function usePreviewRentAreas(preset: "cities" | "sf-neighborhoods" = "cities") {
+    const { isDark, colors } = usePreviewThemeColors();
+
+    const areas = useMemo<AreaSelection[]>(() => {
+        const list = preset === "sf-neighborhoods" ? PREVIEW_SHOWCASE_AREAS_BY_TYPE.Neighborhood : PREVIEW_CITIES;
+        return list.map((item, i) =>
+            "id" in item
+                ? {
+                      id: item.id,
+                      label: item.label,
                       color: colors[i % colors.length],
-                      cityName: nh.city,
-                      cityState: nh.state,
-                  }))
-                : PREVIEW_CITIES.map((c, i) => ({
-                      id: previewAreaId(c.city, c.state),
-                      label: c.city,
+                      cityName: item.city,
+                      cityState: item.state,
+                  }
+                : {
+                      id: previewAreaId(item.city, item.state),
+                      label: item.city,
                       color: colors[i % colors.length],
-                      cityName: c.city,
-                      cityState: c.state,
-                  })),
-        [colors, preset],
-    );
+                      cityName: item.city,
+                      cityState: item.state,
+                  },
+        );
+    }, [colors, preset]);
 
     return { areas, isDark };
 }
@@ -169,26 +183,72 @@ export function HeroRentTrendsCard({ areaResults }: { areaResults: Record<string
 
 export function ShowcaseRentTrendsCard({
     preset = "sf-neighborhoods",
-    height = 395,
+    defaultAreaType,
+    height = 360,
 }: {
     preset?: "cities" | "sf-neighborhoods";
+    defaultAreaType?: AnalyticsAreaType;
     height?: number;
 }) {
-    const { areas, isDark } = usePreviewRentAreas(preset);
-    const [activeAreaId, toggleArea] = usePreviewToggle<string>(null);
-    const chartAreas = activeAreaId ? areas.filter((area) => area.id === activeAreaId) : areas;
-    const areaResults = preset === "sf-neighborhoods" ? PREVIEW_SF_NEIGHBORHOOD_RESULTS : PREVIEW_RENT_RESULTS;
+    const { isDark, colors } = usePreviewThemeColors();
+    const [areaType, setAreaType] = useState<AnalyticsAreaType>(defaultAreaType ?? (preset === "cities" ? "City" : "Neighborhood"));
+    const [selectedBeds, setSelectedBeds] = useState<number[]>(PREVIEW_BEDS);
+    const [selectedIdsByType, setSelectedIdsByType] = useState<Record<AnalyticsAreaType, string[]>>(buildInitialShowcaseSelection);
+    const [activeAreaId, setActiveAreaId] = useState<string | null>(null);
+
+    const availableAreas = useMemo<AreaSelection[]>(
+        () =>
+            PREVIEW_SHOWCASE_AREAS_BY_TYPE[areaType].map((item, i) => ({
+                id: item.id,
+                label: item.label,
+                color: colors[i % colors.length],
+                cityName: item.city,
+                cityState: item.state,
+            })),
+        [areaType, colors],
+    );
+
+    const selectedIds = selectedIdsByType[areaType];
+    const chipAreas = useMemo(() => availableAreas.filter((area) => selectedIds.includes(area.id)), [availableAreas, selectedIds]);
+    const chartAreas = activeAreaId ? chipAreas.filter((area) => area.id === activeAreaId) : chipAreas;
+
+    const handleAreaSelect = (id: string) => {
+        setActiveAreaId((current) => (current === id ? null : id));
+    };
+
+    const handleAreaTypeChange = (next: AnalyticsAreaType) => {
+        setAreaType(next);
+        setActiveAreaId(null);
+    };
+
+    const handleToggleAreaMembership = (id: string) => {
+        setSelectedIdsByType((prev) => {
+            const current = prev[areaType];
+            const included = current.includes(id);
+            if (included) {
+                if (current.length <= 1) return prev;
+                if (activeAreaId === id) setActiveAreaId(null);
+                return { ...prev, [areaType]: current.filter((item) => item !== id) };
+            }
+            return { ...prev, [areaType]: [...current, id] };
+        });
+    };
 
     return (
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-white px-6 pt-7 pb-6 sm:px-8 dark:bg-gray-900">
+        <div className="flex min-h-0 flex-1 flex-col bg-white px-6 pt-6 pb-5 sm:px-8 dark:bg-gray-900">
             <PreviewRentChart
                 variant="hero"
-                areas={chartAreas}
-                chipAreas={areas}
+                areas={chartAreas.length > 0 ? chartAreas : chipAreas}
+                chipAreas={chipAreas}
                 activeAreaId={activeAreaId}
-                onAreaSelect={toggleArea}
-                areaResults={areaResults}
-                selectedBeds={PREVIEW_BEDS}
+                onAreaSelect={handleAreaSelect}
+                areaResults={PREVIEW_SHOWCASE_RESULTS}
+                selectedBeds={selectedBeds}
+                onBedsChange={setSelectedBeds}
+                areaType={areaType}
+                onAreaTypeChange={handleAreaTypeChange}
+                availableAreas={availableAreas}
+                onToggleAreaMembership={handleToggleAreaMembership}
                 isDark={isDark}
                 height={height}
             />
@@ -197,7 +257,6 @@ export function ShowcaseRentTrendsCard({
 }
 
 export function RentTrendsPreview({
-    showAreaStats: _showAreaStats = true,
     preset = "cities",
 }: {
     showAreaStats?: boolean;
@@ -206,7 +265,7 @@ export function RentTrendsPreview({
     const { areas, isDark } = usePreviewRentAreas(preset);
     const [activeAreaId, toggleArea] = usePreviewToggle<string>(null);
     const [selectedBeds, setSelectedBeds] = useState<number[]>(PREVIEW_BEDS);
-    const areaResults = preset === "sf-neighborhoods" ? PREVIEW_SF_NEIGHBORHOOD_RESULTS : PREVIEW_RENT_RESULTS;
+    const areaResults = preset === "sf-neighborhoods" ? PREVIEW_SHOWCASE_RESULTS : PREVIEW_RENT_RESULTS;
 
     useEffect(() => {
         window.dispatchEvent(new CustomEvent(MAP_ZOOM_EVENT));
