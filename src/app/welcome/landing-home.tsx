@@ -3,12 +3,12 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { AudienceCards } from "./audience-cards";
-import { BrokerOrLeadsOnly, HeroCopy, HideOnBovHero, HideOnLeadsHero, LeadsOnly } from "./hero-copy";
+import { BrokerOrLeadsOnly, HeroCopy, HideOnBovHero, HideOnLeadsHero, InvestorOnly, LeadsOnly } from "./hero-copy";
 import { BOV_HERO_PREPAINT_SCRIPT, BOV_HERO_PREPAINT_STYLE, BOV_HIDDEN_SECTION_CLASS } from "@/lib/hero-copy";
 import { HeroRentChart } from "./hero-rent-chart";
 import { HeroRentChartFallback } from "./rent-trends-preview";
 import { HeroRentUpsideCard } from "./hero-rent-upside-card";
-import { LeadsBenefits } from "./leads-benefits";
+import { InvestorBenefits, LeadsBenefits } from "./leads-benefits";
 import { SignupCtaButton } from "./signup-cta";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -167,6 +167,9 @@ export function LandingHome({ showAudiences = true }: { showAudiences?: boolean 
             <BrokerOrLeadsOnly>
                 <LeadsBenefits />
             </BrokerOrLeadsOnly>
+            <InvestorOnly>
+                <InvestorBenefits />
+            </InvestorOnly>
             <HideOnBovHero>
                 <section className={`${SECTION_WHITE} ${BOV_HIDDEN_SECTION_CLASS}`}>
                     <div className={SECTION_CONTAINER}>

@@ -1,15 +1,16 @@
 export const HERO_COPY_TEST_FLAG = "hero-copy-test";
-/** Public URL override: `/?tag=broker` selects the BOV hero copy. */
+/** Public URL override: `/?tag=broker` selects the BOV hero copy, `/?tag=investor` selects the investor hero copy. */
 export const HERO_VARIANT_QUERY = "tag";
 export const HERO_VARIANT_TAG_BROKER = "broker";
 export const HERO_VARIANT_TAG_LEADS = "leads";
+export const HERO_VARIANT_TAG_INVESTOR = "investor";
 export const HERO_VARIANT_STORAGE_KEY = "om_hero_variant";
 
-export const HERO_VARIANT_KEYS = ["control", "bov", "leads"] as const;
+export const HERO_VARIANT_KEYS = ["control", "bov", "leads", "investor"] as const;
 export type HeroVariant = (typeof HERO_VARIANT_KEYS)[number];
 
-/** Control and BOV share one stacked hero grid. Leads is a separate block. */
-export const STACKED_HERO_VARIANT_KEYS = ["control", "bov"] as const;
+/** Control, BOV, and Investor share one stacked hero grid. Leads is a separate block. */
+export const STACKED_HERO_VARIANT_KEYS = ["control", "bov", "investor"] as const;
 export type StackedHeroVariant = (typeof STACKED_HERO_VARIANT_KEYS)[number];
 
 /** Silent legacy alias for the old `?hero=bov` override. */
@@ -18,12 +19,13 @@ export const HERO_VARIANT_LEGACY_QUERY = "hero";
 export const BOV_HIDDEN_SECTION_CLASS = "js-hide-on-bov-hero";
 export const LEADS_SHOW_CLASS = "js-show-on-leads-hero";
 export const LEADS_HIDE_CLASS = "js-hide-on-leads-hero";
+export const INVESTOR_SHOW_CLASS = "js-show-on-investor-hero";
 export const TAGGED_SHOW_CLASS = "js-show-on-tagged-hero";
 
-/** Runs before first paint so BOV/leads URL visitors never see the hidden sections. */
-export const BOV_HERO_PREPAINT_SCRIPT = `(function(){var p=new URLSearchParams(location.search);var tag=p.get(${JSON.stringify(HERO_VARIANT_QUERY)});if(tag===${JSON.stringify(HERO_VARIANT_TAG_BROKER)}||p.get(${JSON.stringify(HERO_VARIANT_LEGACY_QUERY)})==="bov"){document.documentElement.dataset.heroVariant="bov";}else if(tag===${JSON.stringify(HERO_VARIANT_TAG_LEADS)}){document.documentElement.dataset.heroVariant="leads";}})();`;
+/** Runs before first paint so BOV/leads/investor URL visitors never see the hidden sections. */
+export const BOV_HERO_PREPAINT_SCRIPT = `(function(){var p=new URLSearchParams(location.search);var tag=p.get(${JSON.stringify(HERO_VARIANT_QUERY)});if(tag===${JSON.stringify(HERO_VARIANT_TAG_BROKER)}||p.get(${JSON.stringify(HERO_VARIANT_LEGACY_QUERY)})==="bov"){document.documentElement.dataset.heroVariant="bov";}else if(tag===${JSON.stringify(HERO_VARIANT_TAG_LEADS)}){document.documentElement.dataset.heroVariant="leads";}else if(tag===${JSON.stringify(HERO_VARIANT_TAG_INVESTOR)}){document.documentElement.dataset.heroVariant="investor";}})();`;
 
-export const BOV_HERO_PREPAINT_STYLE = `html[data-hero-variant="bov"] .${BOV_HIDDEN_SECTION_CLASS},html[data-hero-variant="leads"] .${BOV_HIDDEN_SECTION_CLASS}{display:none!important}html[data-hero-variant="leads"] .${LEADS_HIDE_CLASS}{display:none!important}html:not([data-hero-variant="leads"]) .${LEADS_SHOW_CLASS}{display:none!important}html:not([data-hero-variant="bov"]):not([data-hero-variant="leads"]) .${TAGGED_SHOW_CLASS}{display:none!important}`;
+export const BOV_HERO_PREPAINT_STYLE = `html[data-hero-variant="bov"] .${BOV_HIDDEN_SECTION_CLASS},html[data-hero-variant="leads"] .${BOV_HIDDEN_SECTION_CLASS},html[data-hero-variant="investor"] .${BOV_HIDDEN_SECTION_CLASS}{display:none!important}html[data-hero-variant="leads"] .${LEADS_HIDE_CLASS}{display:none!important}html:not([data-hero-variant="leads"]) .${LEADS_SHOW_CLASS}{display:none!important}html:not([data-hero-variant="investor"]) .${INVESTOR_SHOW_CLASS}{display:none!important}html:not([data-hero-variant="bov"]):not([data-hero-variant="leads"]) .${TAGGED_SHOW_CLASS}{display:none!important}`;
 
 export type HeroCopy = {
     /** Headline lines. A single line is one block; two lines match the current stacked hero. */
@@ -56,16 +58,23 @@ export const HERO_COPY = {
         accent: "Win more listings",
         subtitle: "Send owners a rent survey, show their rent upside, and find buyers, all from one place.",
     },
+    investor: {
+        lines: ["Underwrite deals in seconds, not weeks."],
+        accent: "seconds",
+        subtitle: "Let AI pull the comps, spot the rent upside, and stress-test the numbers, so you can move first.",
+        italic: ["AI", "move first"],
+    },
 } as const satisfies Record<HeroVariant, HeroCopy>;
 
 export function parseHeroVariant(value: string | null | undefined): HeroVariant | null {
-    return value === "control" || value === "bov" || value === "leads" ? value : null;
+    return value === "control" || value === "bov" || value === "leads" || value === "investor" ? value : null;
 }
 
 /** Map a `?tag=` query value to an internal hero variant. `broker` → `bov`. */
 export function parseHeroTag(value: string | null | undefined): HeroVariant | null {
     if (value === HERO_VARIANT_TAG_BROKER) return "bov";
     if (value === HERO_VARIANT_TAG_LEADS) return "leads";
+    if (value === HERO_VARIANT_TAG_INVESTOR) return "investor";
     return null;
 }
 
@@ -73,6 +82,7 @@ export function parseHeroTag(value: string | null | undefined): HeroVariant | nu
 export function heroVariantToTag(variant: HeroVariant): string | null {
     if (variant === "bov") return HERO_VARIANT_TAG_BROKER;
     if (variant === "leads") return HERO_VARIANT_TAG_LEADS;
+    if (variant === "investor") return HERO_VARIANT_TAG_INVESTOR;
     return null;
 }
 
@@ -102,5 +112,5 @@ export function readPersistedHeroVariant(): HeroVariant | null {
 }
 
 export function hidesHomepageSections(variant: HeroVariant): boolean {
-    return variant === "bov" || variant === "leads";
+    return variant === "bov" || variant === "leads" || variant === "investor";
 }

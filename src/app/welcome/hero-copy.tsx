@@ -9,6 +9,7 @@ import { SignupCtaButton, SignupCtaOutlineButton } from "./signup-cta";
 import {
     HERO_COPY,
     HERO_COPY_TEST_FLAG,
+    INVESTOR_SHOW_CLASS,
     LEADS_HIDE_CLASS,
     LEADS_SHOW_CLASS,
     TAGGED_SHOW_CLASS,
@@ -125,7 +126,7 @@ function HeroVariantView({ variant }: { variant: HeroVariant }) {
             <p
                 className={cn(
                     "mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400",
-                    variant === "leads" ? "max-w-5xl lg:whitespace-nowrap" : variant === "bov" ? "max-w-4xl" : "max-w-2xl",
+                    variant === "leads" ? "max-w-5xl lg:whitespace-nowrap" : variant === "bov" || variant === "investor" ? "max-w-4xl" : "max-w-2xl",
                 )}
             >
                 {decorateSubtitle(copy.subtitle, copy.emphasis, copy.italic)}
@@ -187,11 +188,19 @@ export function LeadsOnly({ children, as: Comp = "div" }: { children: ReactNode;
     return <Comp className={LEADS_SHOW_CLASS}>{children}</Comp>;
 }
 
-/** Show on `?tag=broker` (bov) and `?tag=leads`. Hidden on the default homepage. */
+/** Show on `?tag=broker` (bov) and `?tag=leads`. Hidden on the default homepage and `?tag=investor`. */
 export function BrokerOrLeadsOnly({ children, as: Comp = "div" }: { children: ReactNode; as?: "div" | "span" }) {
     const variant = useHeroVariant();
     const mounted = useSyncExternalStore(subscribe, () => true, () => false);
-    if (mounted && !hidesHomepageSections(variant)) return null;
+    if (mounted && variant !== "bov" && variant !== "leads") return null;
     return <Comp className={TAGGED_SHOW_CLASS}>{children}</Comp>;
+}
+
+/** Show on `?tag=investor`. Hidden on all other variants. */
+export function InvestorOnly({ children, as: Comp = "div" }: { children: ReactNode; as?: "div" | "span" }) {
+    const variant = useHeroVariant();
+    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
+    if (mounted && variant !== "investor") return null;
+    return <Comp className={INVESTOR_SHOW_CLASS}>{children}</Comp>;
 }
 

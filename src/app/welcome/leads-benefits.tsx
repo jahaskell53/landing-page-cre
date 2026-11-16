@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, ChevronDown, Download, FileSpreadsheet, FileText, Search } from "lucide-react";
+import { Bell, ChevronDown, Download, FileSpreadsheet, FileText } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { SegmentedControl } from "@/components/analytics/filters/segmented-control";
@@ -14,13 +14,21 @@ import { SignupCtaButton } from "./signup-cta";
 // Mockups mirror the real app screens (same tables, controls, and copy) so they
 // read as product screenshots, not illustrations.
 
-const LEADS_BENEFITS = [
+type Benefit = {
+    feature: string;
+    title: string;
+    body: string;
+    url: string;
+    Mockup: React.ComponentType;
+};
+
+const LEADS_BENEFITS: readonly Benefit[] = [
     {
-        feature: "Rent survey",
-        title: "Open the conversation with a rent survey for their building",
-        body: "Enter an address and get low, median, and high rent by unit type plus top comps. Add the Rent Gap PDF to show the owner their rent upside.",
-        url: "app.openmidmarket.com/analytics/rent-survey",
-        Mockup: RentSurveyMockup,
+        feature: "Rent comps",
+        title: "Open the conversation with vetted rent comps for their building",
+        body: "Enter an address to pull nearby comps ranked by condition, quality, amenities, and location—plus a market rent estimate and a Comps PDF.",
+        url: "app.openmidmarket.com/analytics/rent-comps",
+        Mockup: RentCompsMockup,
     },
     {
         feature: "Rent charts",
@@ -34,18 +42,67 @@ const LEADS_BENEFITS = [
         title: "Find buildings and buyers for your clients",
         body: "Luna watches your submarkets for new listings that fit a price range, unit count, or vintage, then names the buyers most likely to want them based on what they have bought before.",
         url: "app.openmidmarket.com/alerts",
-        Mockup: ListingAlertsMockup,
+        Mockup: BrokerListingAlertsMockup,
     },
-] as const;
+];
 
-type Benefit = (typeof LEADS_BENEFITS)[number];
+const INVESTOR_BENEFITS: readonly Benefit[] = [
+    {
+        feature: "Rent comps",
+        title: "Underwrite market rent with vetted comps before you tour",
+        body: "Enter an address to get a market rent estimate and top 5 comps scored on condition, quality, amenities, and block-level location.",
+        url: "app.openmidmarket.com/analytics/rent-comps",
+        Mockup: RentCompsMockup,
+    },
+    {
+        feature: "Market trends",
+        title: "Track submarket rent and momentum",
+        body: "Compare rent growth and comps by area in PDF or Excel, or pull them up for your investment committee.",
+        url: "app.openmidmarket.com/analytics/rent-trends",
+        Mockup: MarketUpdateMockup,
+    },
+    {
+        feature: "Deal alerts",
+        title: "Spot off-market and mispriced deals first",
+        body: "Luna watches your target submarkets for new listings and price drops matching your buy box—price range, unit count, and vintage—the moment they hit.",
+        url: "app.openmidmarket.com/alerts",
+        Mockup: InvestorDealAlertsMockup,
+    },
+];
 
 const PANEL = "rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800";
-const TH = "px-2 py-1.5 text-[9px] font-semibold tracking-wide text-gray-500 uppercase";
 const GREEN = "text-green-700 dark:text-green-300";
 const noop = () => {};
 
 export function LeadsBenefits() {
+    return (
+        <BenefitsShowcase
+            eyebrow="FOR CRE BROKERS"
+            heading="From first call to closed deal"
+            benefits={LEADS_BENEFITS}
+        />
+    );
+}
+
+export function InvestorBenefits() {
+    return (
+        <BenefitsShowcase
+            eyebrow="FOR CRE INVESTORS"
+            heading="From first look to closed acquisition"
+            benefits={INVESTOR_BENEFITS}
+        />
+    );
+}
+
+function BenefitsShowcase({
+    eyebrow,
+    heading,
+    benefits,
+}: {
+    eyebrow: string;
+    heading: string;
+    benefits: readonly Benefit[];
+}) {
     const [active, setActive] = useState(0);
     const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -70,12 +127,12 @@ export function LeadsBenefits() {
     return (
         <section className="bg-white dark:bg-gray-950">
             <div className="mx-auto max-w-6xl px-4 py-32 sm:px-6 lg:px-8">
-                <p className="text-sm font-semibold tracking-[0.08em] text-blue-900 uppercase dark:text-blue-400">FOR CRE BROKERS</p>
-                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl dark:text-gray-100">From first call to closed deal</h2>
+                <p className="text-sm font-semibold tracking-[0.08em] text-blue-900 uppercase dark:text-blue-400">{eyebrow}</p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl dark:text-gray-100">{heading}</h2>
 
                 <div className="mt-12 lg:mt-0 lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-16">
                     <div>
-                        {LEADS_BENEFITS.map((item, i) => (
+                        {benefits.map((item, i) => (
                             <div
                                 key={item.title}
                                 ref={(el) => {
@@ -98,7 +155,7 @@ export function LeadsBenefits() {
 
                     <div className="hidden lg:block">
                         <div className="sticky top-[calc(50vh-16rem)] h-[34rem]">
-                            {LEADS_BENEFITS.map((item, i) => (
+                            {benefits.map((item, i) => (
                                 <div
                                     key={item.title}
                                     aria-hidden={active !== i}
@@ -162,207 +219,107 @@ function OutlineButton({ icon: Icon, children }: { icon: typeof Download; childr
     );
 }
 
-/* 1. Rent survey: survey by unit type, what it takes to hit top rent, Rent Gap PDF */
+/* 1. Rent comps: matches app/src/lib/analytics/rent-comps-broker-export.ts document style */
 
-const SURVEY_ROWS = [
+const COMP_CARDS = [
     {
-        type: "Studio",
-        low: "$2,425",
-        median: "$2,695",
-        high: "$2,960",
-        comps: 11,
+        rank: 1,
+        address: "1280 Oak Grove Ave",
+        facts: "$3,195/mo · 1 bd · 1.0 ba · 710 sqft · 0.2 mi",
+        grades: [
+            { label: "Condition", value: "4 / 6 ★" },
+            { label: "Quality", value: "4 / 6 ★" },
+            { label: "Location", value: "1 / 18" },
+        ],
+        why: "Matching 1 bd / 1 ba layout and C3 condition two blocks away.",
+        photo: "/mockups/listings/listing-1.webp",
     },
-    { type: "1 bed", low: "$2,850", median: "$3,150", high: "$3,495", comps: 23 },
-    { type: "2 bed", low: "$3,575", median: "$3,975", high: "$4,410", comps: 17 },
-    { type: "3 bed", low: "$4,480", median: "$4,890", high: "$5,325", comps: 6 },
-];
+    {
+        rank: 2,
+        address: "845 Bellevue Ave",
+        facts: "$3,275/mo · 1 bd · 1.0 ba · 760 sqft · 0.4 mi",
+        grades: [
+            { label: "Condition", value: "5 / 6 ★" },
+            { label: "Quality", value: "4 / 6 ★" },
+            { label: "Location", value: "3 / 18" },
+        ],
+        why: "Renovated kitchen and in-unit laundry; sets the upper bracket.",
+        photo: "/mockups/listings/listing-2.webp",
+    },
+] as const;
 
-const TOP_RENT_STEPS = [
-    {
-        title: "Renovate the kitchen and bath",
-        detail: "All three top-rent comps have quartz counters and new baths.",
-        extra: "+$275 / mo",
-    },
-    {
-        title: "Add in-unit washer/dryer",
-        detail: "Every top-rent comp lists in-unit laundry.",
-        extra: "+$180 / mo",
-    },
-    {
-        title: "Add central air",
-        detail: "Two of three top-rent comps advertise central air.",
-        extra: "+$125 / mo",
-    },
-];
+const SUBJECT_GRADES = [
+    { label: "Condition", value: "4 / 6 ★" },
+    { label: "Quality", value: "4 / 6 ★" },
+    { label: "Location", value: "2 / 18" },
+] as const;
 
-function RentSurveyMockup() {
+function RentCompsMockup() {
     return (
         <>
-            <PageHeader title="Rent survey">
-                <OutlineButton icon={Download}>Rent Gap PDF</OutlineButton>
+            <PageHeader title="Rent comps">
+                <OutlineButton icon={Download}>Comps PDF</OutlineButton>
             </PageHeader>
-            <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-hidden p-3">
-                <div className="flex items-center gap-2">
-                    <div className="flex h-8 min-w-0 flex-1 items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 text-xs dark:border-gray-700 dark:bg-gray-800">
-                        <Search className="size-3.5 shrink-0 text-gray-400" />
-                        <span className="truncate">1450 Floribunda Ave, Burlingame, CA 94010</span>
-                    </div>
-                    <span className="inline-flex h-8 shrink-0 items-center rounded-md bg-blue-600 px-3 text-xs font-medium text-white">Run survey</span>
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-white p-3.5 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+                <div className="flex items-center justify-between border-b border-gray-200 pb-1.5 dark:border-gray-800">
+                    <span className="flex items-center gap-1.5 text-xs font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                        <span className="flex size-5 items-center justify-center rounded bg-blue-900 text-[9px] font-bold text-white dark:bg-blue-600">OM</span>
+                        OpenMidmarket
+                    </span>
+                    <span className="text-right text-[10px] leading-tight text-gray-500 dark:text-gray-400">
+                        Rent comps
+                        <br />
+                        Oct 23, 2026
+                    </span>
                 </div>
 
-                <div className={cn(PANEL, "overflow-hidden")}>
-                    <div className="flex items-baseline justify-between border-b border-gray-100 px-3 py-2 dark:border-gray-700">
-                        <p className="text-xs font-semibold">Survey by unit type</p>
-                        <p className="text-[10px] text-gray-500">57 comps · 1 mi radius</p>
-                    </div>
-                    <table className="w-full text-left text-[11px] tabular-nums">
-                        <thead>
-                            <tr className="border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-700/30">
-                                <th className={TH}>Unit</th>
-                                <th className={cn(TH, "text-right")}>Low</th>
-                                <th className={cn(TH, "text-right")}>Median</th>
-                                <th className={cn(TH, "text-right")}>High</th>
-                                <th className={cn(TH, "text-right")}>Comps</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {SURVEY_ROWS.map((row) => (
-                                <tr key={row.type} className="border-b border-gray-50 last:border-0 dark:border-gray-700/50">
-                                    <td className="px-2 py-1.5 font-medium">{row.type}</td>
-                                    <td className="px-2 py-1.5 text-right text-gray-700 dark:text-gray-300">{row.low}</td>
-                                    <td className="px-2 py-1.5 text-right font-medium">{row.median}</td>
-                                    <td className="px-2 py-1.5 text-right text-gray-700 dark:text-gray-300">{row.high}</td>
-                                    <td className="px-2 py-1.5 text-right text-gray-500">{row.comps}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div className="flex min-h-0 flex-1 flex-col gap-2.5 sm:flex-row">
-                    <div className={cn(PANEL, "min-h-0 flex-1 px-3 py-2.5")}>
-                        <div className="flex items-baseline justify-between gap-2">
-                            <p className="text-xs font-semibold">What it takes to hit top rent</p>
-                            <p className="text-[10px] text-gray-500">1 bed · top comps at $3,495</p>
+                <div className={cn(PANEL, "mt-2 px-3 py-1.5")}>
+                    <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                            <p className="text-base leading-tight font-semibold tracking-tight text-gray-900 dark:text-gray-100">1450 Floribunda Ave</p>
+                            <p className="mt-0.5 text-[11px] text-gray-600 dark:text-gray-300">1 bd · 1.0 ba · 720 sqft · 24 units</p>
                         </div>
-                        <ul className="mt-1 divide-y divide-gray-100 dark:divide-gray-700">
-                            {TOP_RENT_STEPS.map((step) => (
-                                <li key={step.title} className="flex items-start justify-between gap-3 py-1.5">
-                                    <div className="min-w-0">
-                                        <p className="text-[11px] font-medium text-gray-800 dark:text-gray-200">{step.title}</p>
-                                        <p className="text-[10px] text-gray-500 dark:text-gray-400">{step.detail}</p>
-                                    </div>
-                                    <span className={cn("shrink-0 text-[11px] font-medium tabular-nums", GREEN)}>{step.extra}</span>
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="shrink-0 text-right tabular-nums">
+                            <p className="text-[9px] font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">Est. market rent</p>
+                            <p className={cn("text-sm font-semibold", GREEN)}>$3,150/mo</p>
+                        </div>
                     </div>
-                    <RentGapPdfPreview />
-                </div>
-            </div>
-        </>
-    );
-}
-
-const PDF_ROWS = [
-    {
-        type: "Studio",
-        units: 4,
-        current: "$2,150",
-        market: "$2,695",
-        gap: "+$545",
-        annual: "+$26,160",
-    },
-    {
-        type: "1 bd / 1 ba",
-        units: 12,
-        current: "$2,475",
-        market: "$3,150",
-        gap: "+$675",
-        annual: "+$97,200",
-    },
-    {
-        type: "2 bd / 1 ba",
-        units: 8,
-        current: "$3,100",
-        market: "$3,975",
-        gap: "+$875",
-        annual: "+$84,000",
-    },
-];
-
-const PDF_KPIS = [
-    { label: "Current rent / mo", value: "$63,100" },
-    { label: "Market rent / mo", value: "$80,380" },
-    { label: "Loss to lease / unit", value: "+$720" },
-    { label: "Annual loss to lease", value: "+$207,360" },
-];
-
-// Thumbnail of the one-page owner export (rent-gap-owner-export in the app).
-// The page is laid out at letter proportions with readable type, then scaled
-// down, so it reads as a real document rather than a stylized card.
-function RentGapPdfPreview() {
-    return (
-        <div className="flex shrink-0 flex-col items-center gap-1.5">
-            <div className="h-[176px] w-[136px] overflow-hidden rounded-sm border border-gray-200 bg-white shadow-sm dark:border-gray-600">
-                <div className="w-[340px] origin-top-left scale-[0.4] p-6 text-[10px] text-gray-900">
-                    <div className="flex items-center justify-between border-b border-gray-200 pb-2">
-                        <span className="flex items-center gap-1.5 font-semibold">
-                            <span className="rounded bg-blue-900 px-1 py-0.5 text-[8px] font-bold text-white">OM</span>
-                            Openmidmarket
-                        </span>
-                        <span className="text-right text-[8px] leading-tight text-gray-500">
-                            Rent opportunity
-                            <br />
-                            Oct 23, 2026
-                        </span>
-                    </div>
-                    <p className="mt-3 text-[15px] font-semibold tracking-tight">1450 Floribunda Ave</p>
-                    <p className="mt-0.5 text-[8px] text-gray-500">Current rents are below the market · Market rents from Burlingame · 24 units</p>
-                    <p className="mt-2 text-[10px] leading-snug font-semibold">
-                        If rents were brought to market, that extra income would add about $3,912,453 of value at a 5.3% cap rate for San Mateo County.
-                    </p>
-                    <div className="mt-3 grid grid-cols-2 gap-1.5">
-                        {PDF_KPIS.map((kpi) => (
-                            <div key={kpi.label} className="rounded border border-gray-200 px-2 py-1.5">
-                                <p className="text-[7px] font-semibold tracking-wide text-gray-500 uppercase">{kpi.label}</p>
-                                <p className="mt-0.5 text-[13px] font-semibold tabular-nums">{kpi.value}</p>
+                    <div className="mt-1 space-y-0.5 text-[10px] text-gray-600 dark:text-gray-300">
+                        {SUBJECT_GRADES.map((g) => (
+                            <div key={g.label} className="flex gap-2 leading-tight">
+                                <span className="w-[68px] shrink-0 text-gray-500 dark:text-gray-400">{g.label}</span>
+                                <span>{g.value}</span>
                             </div>
                         ))}
                     </div>
-                    <p className="mt-3 text-[10px] font-semibold">By unit type</p>
-                    <table className="mt-1 w-full text-left text-[7.5px] tabular-nums">
-                        <thead className="text-gray-500">
-                            <tr className="border-b border-gray-200">
-                                <th className="py-1 font-medium">Unit type</th>
-                                <th className="py-1 font-medium">Units</th>
-                                <th className="py-1 font-medium">Current</th>
-                                <th className="py-1 font-medium">Market</th>
-                                <th className="py-1 font-medium">Gap / unit</th>
-                                <th className="py-1 text-right font-medium">Annual</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {PDF_ROWS.map((row) => (
-                                <tr key={row.type} className="border-b border-gray-100">
-                                    <td className="py-1">{row.type}</td>
-                                    <td className="py-1">{row.units}</td>
-                                    <td className="py-1">{row.current}</td>
-                                    <td className="py-1">{row.market}</td>
-                                    <td className="py-1">{row.gap}</td>
-                                    <td className="py-1 text-right">{row.annual}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <p className="mt-2 text-[7px] text-gray-500">Prepared for the property owner. Based on 57 nearby rentals across 3 unit types.</p>
                 </div>
+
+                <p className="mt-2 mb-1 text-xs font-semibold text-gray-900 dark:text-gray-100">Top 5 comps</p>
+
+                <ul className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-hidden">
+                    {COMP_CARDS.map((pick) => (
+                        <li key={pick.rank} className={cn(PANEL, "flex gap-3 px-3 py-1.5")}>
+                            <Image src={pick.photo} alt="" width={72} height={56} className="h-12 w-[68px] shrink-0 rounded-md bg-gray-100 object-cover dark:bg-gray-700" />
+                            <div className="min-w-0 flex-1">
+                                <p className="text-xs leading-tight font-semibold text-gray-900 dark:text-gray-100">
+                                    {pick.rank}. {pick.address}
+                                </p>
+                                <p className="mt-0.5 text-[10px] text-gray-500 tabular-nums dark:text-gray-400">{pick.facts}</p>
+                                <div className="mt-1 space-y-0.5 text-[10px] text-gray-600 dark:text-gray-300">
+                                    {pick.grades.map((g) => (
+                                        <div key={g.label} className="flex gap-2 leading-tight">
+                                            <span className="w-[68px] shrink-0 text-gray-500 dark:text-gray-400">{g.label}</span>
+                                            <span>{g.value}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <p className="mt-1 text-[11px] leading-snug text-gray-700 dark:text-gray-200">{pick.why}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
             </div>
-            <span className="flex items-center gap-1 text-[10px] text-gray-500">
-                <FileText className="size-3" />
-                Rent Gap · 1 page
-            </span>
-        </div>
+        </>
     );
 }
 
@@ -530,10 +487,74 @@ const LIKELY_BUYERS = [
     },
 ];
 
-function ListingAlertsMockup() {
+const INVESTOR_DEAL_SIGNALS = [
+    {
+        name: "Rent upside: +$415 / unit (+19%)",
+        reason: "In-place 1-beds average $2,540 vs. $2,955 market median from 18 nearby comps",
+        fit: "Strong fit",
+    },
+    {
+        name: "330 Hamilton Ave · $192K / door",
+        reason: "18 units, 1962 vintage — closed Jun 2026 at 5.1% cap, 2 blocks away",
+        fit: "Sales comp",
+    },
+    {
+        name: "610 Waverley St · $188K / door",
+        reason: "12 units, 1958 vintage — closed Mar 2026 at 5.2% cap, 3 blocks away",
+        fit: "Sales comp",
+    },
+];
+
+type AlertPanelRow = { name: string; reason: string; fit: string };
+
+function BrokerListingAlertsMockup() {
+    return (
+        <ListingAlertsMockup
+            headerTitle="Listing alerts"
+            alertHeading="New listing fits your Palo Alto watch"
+            summary="Matches all four rules. Three owners nearby have bought buildings like this in the last two years."
+            panelTitle="Likely buyers"
+            panelSubtitle="· from past sales within 1 mi"
+            ctaLabel="Draft outreach"
+            rows={LIKELY_BUYERS}
+        />
+    );
+}
+
+function InvestorDealAlertsMockup() {
+    return (
+        <ListingAlertsMockup
+            headerTitle="Deal alerts"
+            alertHeading="New deal fits your Palo Alto buy box"
+            summary="Matches all four rules. Asking $181K/door—6% below recent 1960s comps within 1 mi."
+            panelTitle="Comps & upside signals"
+            panelSubtitle="· within 1 mi"
+            ctaLabel="Run underwriting"
+            rows={INVESTOR_DEAL_SIGNALS}
+        />
+    );
+}
+
+function ListingAlertsMockup({
+    headerTitle,
+    alertHeading,
+    summary,
+    panelTitle,
+    panelSubtitle,
+    ctaLabel,
+    rows,
+}: {
+    headerTitle: string;
+    alertHeading: string;
+    summary: string;
+    panelTitle: string;
+    panelSubtitle: string;
+    ctaLabel: string;
+    rows: readonly AlertPanelRow[];
+}) {
     return (
         <>
-            <PageHeader title="Listing alerts">
+            <PageHeader title={headerTitle}>
                 <OutlineButton icon={Bell}>Edit watch</OutlineButton>
             </PageHeader>
             <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-hidden p-3">
@@ -551,7 +572,7 @@ function ListingAlertsMockup() {
                     <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2 dark:border-gray-700">
                         <LunaAvatar />
                         <p className="min-w-0 flex-1 truncate text-[11px]">
-                            <span className="font-semibold">New listing fits your Palo Alto watch</span>
+                            <span className="font-semibold">{alertHeading}</span>
                         </p>
                         <span className="shrink-0 text-[10px] text-gray-500">2m ago</span>
                     </div>
@@ -570,9 +591,7 @@ function ListingAlertsMockup() {
                                     </div>
                                 ))}
                             </dl>
-                            <p className="leading-snug text-gray-700 dark:text-gray-300">
-                                Matches all four rules. Three owners nearby have bought buildings like this in the last two years.
-                            </p>
+                            <p className="leading-snug text-gray-700 dark:text-gray-300">{summary}</p>
                         </div>
                     </div>
                 </div>
@@ -580,28 +599,28 @@ function ListingAlertsMockup() {
                 <div className={cn(PANEL, "min-h-0 flex-1 overflow-hidden")}>
                     <div className="flex items-center justify-between gap-2 border-b border-gray-100 px-3 py-2 dark:border-gray-700">
                         <p className="text-xs font-semibold">
-                            Likely buyers <span className="hidden font-normal text-gray-500 sm:inline">· from past sales within 1 mi</span>
+                            {panelTitle} <span className="hidden font-normal text-gray-500 sm:inline">{panelSubtitle}</span>
                         </p>
                         <span className="inline-flex h-6 shrink-0 items-center rounded-md bg-blue-600 px-2.5 text-[10px] font-medium whitespace-nowrap text-white">
-                            Draft outreach
+                            {ctaLabel}
                         </span>
                     </div>
                     <ul className="divide-y divide-gray-100 dark:divide-gray-700">
-                        {LIKELY_BUYERS.map((buyer) => (
-                            <li key={buyer.name} className="flex items-start justify-between gap-3 px-3 py-1.5">
+                        {rows.map((row) => (
+                            <li key={row.name} className="flex items-start justify-between gap-3 px-3 py-1.5">
                                 <div className="min-w-0">
-                                    <p className="text-[11px] font-medium text-blue-700 dark:text-blue-400">{buyer.name}</p>
-                                    <p className="truncate text-[10px] text-gray-500 dark:text-gray-400">{buyer.reason}</p>
+                                    <p className="text-[11px] font-medium text-blue-700 dark:text-blue-400">{row.name}</p>
+                                    <p className="truncate text-[10px] text-gray-500 dark:text-gray-400">{row.reason}</p>
                                 </div>
                                 <span
                                     className={cn(
                                         "shrink-0 rounded px-1.5 py-0.5 text-[9px] font-medium",
-                                        buyer.fit === "Strong fit"
+                                        row.fit === "Strong fit"
                                             ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300"
                                             : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300",
                                     )}
                                 >
-                                    {buyer.fit}
+                                    {row.fit}
                                 </span>
                             </li>
                         ))}
