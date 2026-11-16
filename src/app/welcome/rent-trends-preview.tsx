@@ -161,23 +161,13 @@ export function HeroRentChartFallback() {
 }
 
 export function HeroRentTrendsCard({ areaResults }: { areaResults: Record<string, TrendRow[]> }) {
-    const { areas, isDark } = usePreviewRentAreas();
-    const [activeAreaId, toggleArea] = usePreviewToggle<string>(null);
-    const chartAreas = activeAreaId ? areas.filter((area) => area.id === activeAreaId) : areas;
-
     return (
-        <div className={`${HERO_CARD_CLASS} ${HERO_CARD_MIN_HEIGHT}`}>
-            <PreviewRentChart
-                variant="hero"
-                areas={chartAreas}
-                chipAreas={areas}
-                activeAreaId={activeAreaId}
-                onAreaSelect={toggleArea}
-                areaResults={areaResults}
-                selectedBeds={PREVIEW_BEDS}
-                isDark={isDark}
-            />
-        </div>
+        <ShowcaseRentTrendsCard
+            defaultAreaType="City"
+            height={485}
+            areaResults={areaResults}
+            className={`${HERO_CARD_CLASS} ${HERO_CARD_MIN_HEIGHT}`}
+        />
     );
 }
 
@@ -185,16 +175,32 @@ export function ShowcaseRentTrendsCard({
     preset = "sf-neighborhoods",
     defaultAreaType,
     height = 360,
+    areaResults,
+    className = "flex min-h-0 flex-1 flex-col bg-white px-6 pt-6 pb-5 sm:px-8 dark:bg-gray-900",
 }: {
     preset?: "cities" | "sf-neighborhoods";
     defaultAreaType?: AnalyticsAreaType;
     height?: number;
+    areaResults?: Record<string, TrendRow[]>;
+    className?: string;
 }) {
     const { isDark, colors } = usePreviewThemeColors();
     const [areaType, setAreaType] = useState<AnalyticsAreaType>(defaultAreaType ?? (preset === "cities" ? "City" : "Neighborhood"));
     const [selectedBeds, setSelectedBeds] = useState<number[]>(PREVIEW_BEDS);
     const [selectedIdsByType, setSelectedIdsByType] = useState<Record<AnalyticsAreaType, string[]>>(buildInitialShowcaseSelection);
     const [activeAreaId, setActiveAreaId] = useState<string | null>(null);
+
+    const mergedResults = useMemo(() => {
+        if (!areaResults) return PREVIEW_SHOWCASE_RESULTS;
+        const next = { ...PREVIEW_SHOWCASE_RESULTS };
+        for (const [id, rows] of Object.entries(areaResults)) {
+            if (rows.length === 0) continue;
+            const liveBeds = new Set(rows.map((r) => r.beds));
+            const fallback = (PREVIEW_SHOWCASE_RESULTS[id] ?? []).filter((r) => !liveBeds.has(r.beds));
+            next[id] = [...rows, ...fallback];
+        }
+        return next;
+    }, [areaResults]);
 
     const availableAreas = useMemo<AreaSelection[]>(
         () =>
@@ -235,14 +241,14 @@ export function ShowcaseRentTrendsCard({
     };
 
     return (
-        <div className="flex min-h-0 flex-1 flex-col bg-white px-6 pt-6 pb-5 sm:px-8 dark:bg-gray-900">
+        <div className={className}>
             <PreviewRentChart
                 variant="hero"
                 areas={chartAreas.length > 0 ? chartAreas : chipAreas}
                 chipAreas={chipAreas}
                 activeAreaId={activeAreaId}
                 onAreaSelect={handleAreaSelect}
-                areaResults={PREVIEW_SHOWCASE_RESULTS}
+                areaResults={mergedResults}
                 selectedBeds={selectedBeds}
                 onBedsChange={setSelectedBeds}
                 areaType={areaType}
