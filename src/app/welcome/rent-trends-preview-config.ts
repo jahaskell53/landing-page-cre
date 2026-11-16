@@ -10,6 +10,12 @@ export const PREVIEW_CITIES = [
     { city: "San Mateo", state: "CA" },
 ];
 
+export const PREVIEW_SF_NEIGHBORHOODS = [
+    { name: "Mission", city: "San Francisco", state: "CA" },
+    { name: "Hayes Valley", city: "San Francisco", state: "CA" },
+    { name: "Pacific Heights", city: "San Francisco", state: "CA" },
+];
+
 // Default the mockup on 1BR; the series includes Studio–3BR so the bed chips can switch.
 export const PREVIEW_BEDS = [1];
 const PREVIEW_ALL_BEDS = [0, 1, 2, 3] as const;
@@ -17,6 +23,10 @@ const PREVIEW_BED_SCALE: Record<number, number> = { 0: 0.78, 1: 1, 2: 1.32, 3: 1
 
 export function previewAreaId(city: string, state: string): string {
     return `city:${city}:${state}`;
+}
+
+export function previewNeighborhoodId(name: string, city: string, state: string): string {
+    return `nh:${name}:${city}:${state}`;
 }
 
 // Static 1BR weekly series for the public mockup — no RPC. Ends near the
@@ -56,4 +66,10 @@ export const PREVIEW_RENT_RESULTS: Record<string, TrendRow[]> = {
     [previewAreaId("Burlingame", "CA")]: mockSeries(WEEKS, 2700, 2850, 0.2),
     [previewAreaId("Santa Clara", "CA")]: mockSeries(WEEKS, 2390, 2600, 1.1),
     [previewAreaId("San Mateo", "CA")]: mockSeries(WEEKS, 2570, 2948, 2.4),
+};
+
+export const PREVIEW_SF_NEIGHBORHOOD_RESULTS: Record<string, TrendRow[]> = {
+    [previewNeighborhoodId("Mission", "San Francisco", "CA")]: mockSeries(WEEKS, 3405, 4045, 0.4),
+    [previewNeighborhoodId("Hayes Valley", "San Francisco", "CA")]: mockSeries(WEEKS, 4000, 4298, 1.5),
+    [previewNeighborhoodId("Pacific Heights", "San Francisco", "CA")]: mockSeries(WEEKS, 4990, 5195, 2.3),
 };

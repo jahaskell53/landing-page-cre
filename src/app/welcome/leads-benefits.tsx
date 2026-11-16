@@ -1,12 +1,12 @@
 "use client";
 
-import { Bell, ChevronDown, ChevronLeft, ChevronRight, Download, FileSpreadsheet, FileText } from "lucide-react";
+import { Bell, ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import Image from "next/image";
 import { type KeyboardEvent, type MouseEvent, type PointerEvent, useEffect, useRef, useState } from "react";
-import { SegmentedControl } from "@/components/analytics/filters/segmented-control";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { BrowserWindow } from "./browser-window";
+import { RentTrendsPreview } from "./rent-trends-preview";
 import { SignupCtaButton } from "./signup-cta";
 
 // Stripe Checkout-style scrollytelling: copy scrolls on the left while a sticky
@@ -50,7 +50,7 @@ const LEADS_BENEFITS: readonly Benefit[] = [
 const INVESTOR_BENEFITS: readonly Benefit[] = [
     {
         feature: "Rent comps",
-        title: "Know the true rent upside before you tour",
+        title: "Know the true rent upside before you buy",
         body: "Drop in any address to search 580,000+ rent comps and get an instant market rent estimate, with the top 5 comps scored on condition, finishes, amenities, and block-level location.",
         url: "app.openmidmarket.com/analytics/rent-comps",
         Mockup: RentCompsMockup,
@@ -72,8 +72,6 @@ const INVESTOR_BENEFITS: readonly Benefit[] = [
 ];
 
 const PANEL = "rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800";
-const GREEN = "text-green-700 dark:text-green-300";
-const noop = () => {};
 
 export function LeadsBenefits() {
     return (
@@ -201,17 +199,7 @@ function PageHeader({ title, children }: { title: string; children?: React.React
     );
 }
 
-function MockSelect({ label, value }: { label?: string; value: string }) {
-    return (
-        <span className="inline-flex h-7 items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 text-xs dark:border-gray-700 dark:bg-gray-800">
-            {label ? <span className="text-gray-500 dark:text-gray-400">{label}</span> : null}
-            <span className="font-medium">{value}</span>
-            <ChevronDown className="size-3.5 text-gray-400" />
-        </span>
-    );
-}
-
-function OutlineButton({ icon: Icon, children }: { icon: typeof Download; children: React.ReactNode }) {
+function OutlineButton({ icon: Icon, children }: { icon: typeof Bell; children: React.ReactNode }) {
     return (
         <span className="inline-flex h-7 items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2.5 text-xs font-medium dark:border-gray-700 dark:bg-gray-800">
             <Icon className="size-3.5" />
@@ -509,138 +497,16 @@ function RentCompsMockup() {
     );
 }
 
-/* 2. Market updates: rent charts by area with export */
-
-const TREND_1BR = [2980, 3010, 2995, 3040, 3075, 3060, 3095, 3120, 3110, 3140, 3165, 3150];
-const TREND_2BR = [3720, 3745, 3780, 3760, 3810, 3850, 3835, 3880, 3905, 3930, 3955, 3975];
-const MONTH_TICKS = ["Nov '25", "Jan", "Mar", "May", "Jul", "Sep '26"];
-const CHART = { w: 400, h: 160, min: 2800, max: 4200 };
-const HOVER_INDEX = 8;
-
-function chartY(v: number) {
-    return CHART.h - ((v - CHART.min) / (CHART.max - CHART.min)) * CHART.h;
-}
-
-function linePath(values: readonly number[]) {
-    return values.map((v, i) => `${i === 0 ? "M" : "L"}${((i / (values.length - 1)) * CHART.w).toFixed(1)},${chartY(v).toFixed(1)}`).join(" ");
-}
+/* 2. Market updates: interactive RentTrendsPreview from the product mockup */
 
 function MarketUpdateMockup() {
-    const hoverX = (HOVER_INDEX / (TREND_2BR.length - 1)) * 100;
-
     return (
         <>
-            <PageHeader title="Rent charts">
-                <OutlineButton icon={Download}>Export</OutlineButton>
-            </PageHeader>
-            <div className="relative flex min-h-0 flex-1 flex-col gap-2.5 p-3">
-                <div className="flex flex-wrap items-center gap-2">
-                    <MockSelect label="Area" value="Burlingame" />
-                    <MockSelect label="Beds" value="1, 2" />
-                    <SegmentedControl
-                        size="sm"
-                        ariaLabel="Interval"
-                        options={[
-                            { value: "monthly", label: "Monthly" },
-                            { value: "quarterly", label: "Quarterly" },
-                        ]}
-                        value="monthly"
-                        onChange={noop}
-                    />
-                </div>
-
-                <div className={cn(PANEL, "flex min-h-0 flex-1 flex-col p-3")}>
-                    <div className="flex items-start justify-between gap-3">
-                        <div>
-                            <p className="text-xs font-semibold">Median asking rent</p>
-                            <p className="text-[10px] text-gray-500">Burlingame, CA · 142 active listings</p>
-                        </div>
-                        <div className="flex gap-3 text-[10px] text-gray-600 dark:text-gray-300">
-                            <span className="flex items-center gap-1">
-                                <span className="h-0.5 w-3 rounded bg-blue-600" />2 bed
-                            </span>
-                            <span className="flex items-center gap-1">
-                                <span className="h-0.5 w-3 rounded bg-teal-500" />1 bed
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="mt-3 flex min-h-40 flex-1 gap-2 lg:min-h-0">
-                        <div className="flex flex-col justify-between pb-4 text-[9px] text-gray-400 tabular-nums">
-                            <span>$4,200</span>
-                            <span>$3,500</span>
-                            <span>$2,800</span>
-                        </div>
-                        <div className="flex min-w-0 flex-1 flex-col">
-                            <div className="relative min-h-0 flex-1">
-                                <svg viewBox={`0 0 ${CHART.w} ${CHART.h}`} className="absolute inset-0 size-full" preserveAspectRatio="none" aria-hidden>
-                                    {[0, 0.5, 1].map((t) => (
-                                        <line
-                                            key={t}
-                                            x1={0}
-                                            x2={CHART.w}
-                                            y1={t * CHART.h}
-                                            y2={t * CHART.h}
-                                            strokeDasharray="3 3"
-                                            className="stroke-gray-200 dark:stroke-gray-700"
-                                            vectorEffect="non-scaling-stroke"
-                                        />
-                                    ))}
-                                    <path d={linePath(TREND_2BR)} fill="none" strokeWidth={2} className="stroke-blue-600" vectorEffect="non-scaling-stroke" />
-                                    <path d={linePath(TREND_1BR)} fill="none" strokeWidth={2} className="stroke-teal-500" vectorEffect="non-scaling-stroke" />
-                                </svg>
-                                {/* Hover cursor + tooltip, like the real chart mid-interaction */}
-                                <div className="absolute inset-y-0 w-px bg-gray-300 dark:bg-gray-600" style={{ left: `${hoverX}%` }} />
-                                <div
-                                    className="absolute top-1 -translate-x-[calc(100%+8px)] rounded-md whitespace-nowrap border border-gray-200 bg-white px-2 py-1.5 text-[10px] shadow-sm dark:border-gray-700 dark:bg-gray-900"
-                                    style={{ left: `${hoverX}%` }}
-                                >
-                                    <p className="font-medium">Jul 2026</p>
-                                    <p className="mt-0.5 flex justify-between gap-3 tabular-nums">
-                                        <span className="text-gray-500">2 bed</span>$3,905
-                                    </p>
-                                    <p className="flex justify-between gap-3 tabular-nums">
-                                        <span className="text-gray-500">1 bed</span>$3,110
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="mt-1 flex justify-between text-[9px] text-gray-400">
-                                {MONTH_TICKS.map((m) => (
-                                    <span key={m}>{m}</span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-3 grid grid-cols-3 gap-2 border-t border-gray-100 pt-2.5 dark:border-gray-700">
-                        <MiniStat label="2 bed median" value="$3,975" />
-                        <MiniStat label="12-mo change" value="+6.9%" positive />
-                        <MiniStat label="Median days listed" value="21" />
-                    </div>
-                </div>
-
-                {/* Export menu, open under the header button */}
-                <div className="absolute -top-1 right-3 z-10 hidden w-48 lg:block rounded-md border border-gray-200 bg-white p-1 shadow-md dark:border-gray-700 dark:bg-gray-800">
-                    <div className="flex items-center gap-2 rounded px-2 py-1.5 text-xs">
-                        <FileText className="size-3.5 text-gray-500" />
-                        Market update (PDF)
-                    </div>
-                    <div className="flex items-center gap-2 rounded bg-gray-100 px-2 py-1.5 text-xs dark:bg-gray-700">
-                        <FileSpreadsheet className="size-3.5 text-gray-500" />
-                        Rent comps (Excel)
-                    </div>
-                </div>
+            <PageHeader title="Rent charts" />
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-4">
+                <RentTrendsPreview compact preset="sf-neighborhoods" />
             </div>
         </>
-    );
-}
-
-function MiniStat({ label, value, positive }: { label: string; value: string; positive?: boolean }) {
-    return (
-        <div>
-            <p className="text-[10px] text-gray-500">{label}</p>
-            <p className={cn("text-sm font-semibold tabular-nums", positive && GREEN)}>{value}</p>
-        </div>
     );
 }
 

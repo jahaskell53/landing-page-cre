@@ -5,12 +5,20 @@ import { useTheme } from "next-themes";
 import { type AreaSelection, type TrendRow } from "@/app/(app)/analytics/rent-trends/trends-utils";
 import { AreaTypeSelect } from "@/components/analytics/filters/area-type-select";
 import { BedsSelect } from "@/components/analytics/filters/beds-select";
-import { ANALYTICS_AREA_TYPES, RENT_TREND_BED_OPTIONS } from "@/lib/analytics/filters";
+import { ANALYTICS_AREA_TYPES, type AnalyticsAreaType, RENT_TREND_BED_OPTIONS } from "@/lib/analytics/filters";
 import { MAP_ZOOM_EVENT } from "./market-map";
 import { PreviewChip, PreviewFadeStack, usePreviewToggle } from "./preview-interaction";
 import { PreviewNativeSelect } from "./preview-native-select";
 import { PreviewRentChart } from "./preview-rent-chart";
-import { PREVIEW_BEDS, PREVIEW_CITIES, PREVIEW_RENT_RESULTS, previewAreaId } from "./rent-trends-preview-config";
+import {
+    PREVIEW_BEDS,
+    PREVIEW_CITIES,
+    PREVIEW_RENT_RESULTS,
+    PREVIEW_SF_NEIGHBORHOOD_RESULTS,
+    PREVIEW_SF_NEIGHBORHOODS,
+    previewAreaId,
+    previewNeighborhoodId,
+} from "./rent-trends-preview-config";
 
 // Landing-page series palette. The shared analytics `AREA_COLORS`
 // (blue/orange/violet/green/red) mixes warm hues that clash with this page's
@@ -31,31 +39,35 @@ const PREVIEW_COLORS_REST = ["#0d9488", "#8b5cf6"]; // teal, violet
 const noop = () => {};
 
 function MockFilterPanel({
+    areaType = "City",
     areas,
     activeAreaId,
     onAreaSelect,
     selectedBeds,
     onBedsChange,
+    compact = false,
 }: {
+    areaType?: AnalyticsAreaType;
     areas: AreaSelection[];
     activeAreaId: string | null;
     onAreaSelect: (id: string) => void;
     selectedBeds: number[];
     onBedsChange: (beds: number[]) => void;
+    compact?: boolean;
 }) {
     return (
-        <div className="mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
+        <div className={compact ? "mb-3.5 space-y-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800" : "mb-6 space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800"}>
             <div className="pointer-events-none flex min-w-0 items-center justify-between gap-3 select-none sm:justify-start sm:gap-4">
                 <span className="shrink-0 text-[15px] text-gray-500 sm:w-24 sm:text-sm dark:text-gray-400">Area type</span>
                 <PreviewNativeSelect
                     aria-label="Area type"
-                    value="City"
+                    value={areaType}
                     onChange={noop}
                     align="end"
                     options={ANALYTICS_AREA_TYPES.map((type) => ({ value: type, label: type }))}
                 />
                 <div className="hidden min-w-0 sm:block">
-                    <AreaTypeSelect value="City" onChange={noop} />
+                    <AreaTypeSelect value={areaType} onChange={noop} />
                 </div>
             </div>
 
@@ -96,7 +108,7 @@ function MockFilterPanel({
 
 const subscribe = () => () => {};
 
-function usePreviewRentAreas() {
+function usePreviewRentAreas(preset: "cities" | "sf-neighborhoods" = "cities") {
     // Resolve the lead-series color against the active theme. Guard on `mounted`
     // so SSR and the first client paint both use the light navy (avoids a
     // hydration mismatch); after hydration it flips to blue-400 if dark.
@@ -108,14 +120,22 @@ function usePreviewRentAreas() {
 
     const areas = useMemo<AreaSelection[]>(
         () =>
-            PREVIEW_CITIES.map((c, i) => ({
-                id: previewAreaId(c.city, c.state),
-                label: c.city,
-                color: colors[i % colors.length],
-                cityName: c.city,
-                cityState: c.state,
-            })),
-        [colors],
+            preset === "sf-neighborhoods"
+                ? PREVIEW_SF_NEIGHBORHOODS.map((nh, i) => ({
+                      id: previewNeighborhoodId(nh.name, nh.city, nh.state),
+                      label: nh.name,
+                      color: colors[i % colors.length],
+                      cityName: nh.city,
+                      cityState: nh.state,
+                  }))
+                : PREVIEW_CITIES.map((c, i) => ({
+                      id: previewAreaId(c.city, c.state),
+                      label: c.city,
+                      color: colors[i % colors.length],
+                      cityName: c.city,
+                      cityState: c.state,
+                  })),
+        [colors, preset],
     );
 
     return { areas, isDark };
@@ -149,10 +169,19 @@ export function HeroRentTrendsCard({ areaResults }: { areaResults: Record<string
     );
 }
 
-export function RentTrendsPreview({ showAreaStats: _showAreaStats = true }: { showAreaStats?: boolean }) {
-    const { areas, isDark } = usePreviewRentAreas();
+export function RentTrendsPreview({
+    showAreaStats: _showAreaStats = true,
+    compact = false,
+    preset = "cities",
+}: {
+    showAreaStats?: boolean;
+    compact?: boolean;
+    preset?: "cities" | "sf-neighborhoods";
+}) {
+    const { areas, isDark } = usePreviewRentAreas(preset);
     const [activeAreaId, toggleArea] = usePreviewToggle<string>(null);
     const [selectedBeds, setSelectedBeds] = useState<number[]>(PREVIEW_BEDS);
+    const areaResults = preset === "sf-neighborhoods" ? PREVIEW_SF_NEIGHBORHOOD_RESULTS : PREVIEW_RENT_RESULTS;
 
     useEffect(() => {
         window.dispatchEvent(new CustomEvent(MAP_ZOOM_EVENT));
@@ -167,15 +196,23 @@ export function RentTrendsPreview({ showAreaStats: _showAreaStats = true }: { sh
     return (
         <>
             <MockFilterPanel
+                areaType={preset === "sf-neighborhoods" ? "Neighborhood" : "City"}
                 areas={areas}
                 activeAreaId={activeAreaId}
                 onAreaSelect={toggleArea}
                 selectedBeds={selectedBeds}
                 onBedsChange={setSelectedBeds}
+                compact={compact}
             />
             <PreviewFadeStack items={views} activeId={activeViewId}>
                 {(view) => (
-                    <PreviewRentChart areas={view.areas} areaResults={PREVIEW_RENT_RESULTS} selectedBeds={selectedBeds} isDark={isDark} />
+                    <PreviewRentChart
+                        areas={view.areas}
+                        areaResults={areaResults}
+                        selectedBeds={selectedBeds}
+                        isDark={isDark}
+                        height={compact ? 235 : undefined}
+                    />
                 )}
             </PreviewFadeStack>
         </>

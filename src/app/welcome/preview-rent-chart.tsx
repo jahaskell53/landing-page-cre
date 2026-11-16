@@ -183,6 +183,7 @@ export function PreviewRentChart({
     selectedBeds,
     isDark = false,
     variant = "embedded",
+    height,
     chipAreas,
     activeAreaId = null,
     onAreaSelect,
@@ -192,6 +193,7 @@ export function PreviewRentChart({
     selectedBeds: number[];
     isDark?: boolean;
     variant?: PreviewRentChartVariant;
+    height?: number;
     chipAreas?: AreaSelection[];
     activeAreaId?: string | null;
     onAreaSelect?: (id: string) => void;
@@ -388,7 +390,7 @@ export function PreviewRentChart({
         <div className="min-w-0">
             {header}
 
-            <AnalyticsChartContainer height={isHero ? 485 : 280}>
+            <AnalyticsChartContainer height={height ?? (isHero ? 485 : 280)}>
                 <LineChart data={chartData} margin={{ top: 8, right: 118, left: 4, bottom: 4 }}>
                     <CartesianGrid vertical={false} stroke={isDark ? "#1f2937" : "#f1f3f5"} strokeWidth={1} />
                     <XAxis
