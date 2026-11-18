@@ -39,7 +39,7 @@ const NAV_LINKS: NavLink[] = [
 
 export function SiteHeader() {
     return (
-        <header className="sticky top-0 z-20 border-b border-gray-200/80 bg-gray-50/90 backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
+        <header className="sticky top-0 z-40 border-b border-gray-200/80 bg-gray-50/90 backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
             <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
                 <Link href="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight">
                     <span className="flex size-6 items-center justify-center rounded bg-blue-900 text-[11px] font-bold text-white dark:bg-blue-600 dark:text-white">

@@ -355,7 +355,7 @@ function GradeRowWithTooltip({ item, subjectLabel }: { item: GradeRowItem; subje
 }
 
 const GALLERY_NAV_BUTTON =
-    "pointer-events-auto absolute top-1/2 z-30 flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-sm ring-1 ring-gray-900/5 backdrop-blur-md transition-[background-color,transform,opacity] duration-200 hover:bg-white active:scale-95";
+    "pointer-events-auto absolute top-1/2 z-20 flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-sm ring-1 ring-gray-900/5 backdrop-blur-md transition-[background-color,transform,opacity] duration-200 hover:bg-white active:scale-95";
 
 const GALLERY_NAV_REVEAL =
     "opacity-0 pointer-events-none group-hover/gallery:pointer-events-auto group-hover/gallery:opacity-100 group-focus-within/gallery:pointer-events-auto group-focus-within/gallery:opacity-100 group-hover/card:pointer-events-auto group-hover/card:opacity-100 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:opacity-100";
@@ -386,7 +386,7 @@ function CompPhotoCarousel({ photos, label }: { photos: readonly string[]; label
 
     return (
         <div
-            className="group/gallery relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100 outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-gray-700"
+            className="group/gallery relative isolate h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100 outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-gray-700"
             tabIndex={0}
             role="group"
             aria-label={`Photos of ${label}`}
@@ -417,7 +417,7 @@ function CompPhotoCarousel({ photos, label }: { photos: readonly string[]; label
             >
                 <ChevronRight className="size-3" />
             </button>
-            <div className="pointer-events-none absolute right-1 bottom-1 z-20 rounded-full bg-gray-950/60 px-1.5 py-px text-[9px] font-medium text-white tabular-nums backdrop-blur-md">
+            <div className="pointer-events-none absolute right-1 bottom-1 z-10 rounded-full bg-gray-950/60 px-1.5 py-px text-[9px] font-medium text-white tabular-nums backdrop-blur-md">
                 {index + 1} / {count}
             </div>
         </div>
@@ -434,9 +434,9 @@ function RentCompsMockup() {
                     <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
-                                <div className="flex items-center gap-1.5">
+                                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
                                     <p className="text-sm leading-tight font-semibold tracking-tight text-gray-900 dark:text-gray-100">1450 Floribunda Ave</p>
-                                    <span className="rounded bg-blue-50 px-1.5 py-px text-[9px] font-semibold text-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
+                                    <span className="shrink-0 rounded bg-blue-50 px-1.5 py-px text-[9px] font-semibold text-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
                                         Subject
                                     </span>
                                 </div>
@@ -532,7 +532,7 @@ const LIKELY_BUYERS = [
 
 function ListingAlertsWorkspace({ metrics, children }: { metrics: readonly PropertyMetric[]; children: React.ReactNode }) {
     return (
-        <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-hidden bg-white p-6 text-gray-900 dark:bg-[#14181e] dark:text-[#f2f4f7]">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden bg-white p-4 text-gray-900 sm:gap-5 sm:p-6 dark:bg-[#14181e] dark:text-[#f2f4f7]">
             <div className="flex items-center justify-between gap-3">
                 <p className="text-base leading-[23px] font-semibold text-gray-900 dark:text-[#f2f4f7]">Listing alerts</p>
                 <button
@@ -558,21 +558,27 @@ function ListingAlertsWorkspace({ metrics, children }: { metrics: readonly Prope
                     <p className="shrink-0 text-gray-400 dark:text-[#838e9d]">2m ago</p>
                 </div>
 
-                <div className="flex items-start gap-[22px]">
-                    <OmCoverPreview />
-                    <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                        <p className="text-[26px] leading-[34px] font-semibold tracking-tight text-gray-900 dark:text-[#f2f4f7]">441 S. 5th Street</p>
-                        <p className="text-xs leading-[17px] text-gray-500 dark:text-[#9aa3b0]">San Jose, CA · listed by Bayline Realty</p>
-
-                        <dl className="grid grid-cols-4 gap-4 pt-3 tabular-nums">
-                            {metrics.map((metric) => (
-                                <div key={metric.label} className="flex min-w-0 flex-col gap-0.5">
-                                    <dd className="text-lg leading-[26px] font-medium text-gray-900 dark:text-[#f2f4f7]">{metric.value}</dd>
-                                    <dt className="text-[11px] leading-4 text-gray-500 dark:text-[#838e9d]">{metric.label}</dt>
-                                </div>
-                            ))}
-                        </dl>
+                <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-3.5 gap-y-4 sm:grid-rows-[auto_1fr] sm:gap-x-[22px] sm:gap-y-3">
+                    <div className="sm:row-span-2">
+                        <OmCoverPreview />
                     </div>
+                    <div className="flex min-w-0 flex-col gap-1 sm:gap-1.5">
+                        <p className="text-xl leading-7 font-semibold tracking-tight text-gray-900 sm:text-[26px] sm:leading-[34px] dark:text-[#f2f4f7]">
+                            441 S. 5th Street
+                        </p>
+                        <p className="text-xs leading-[17px] text-gray-500 dark:text-[#9aa3b0]">San Jose, CA · listed by Bayline Realty</p>
+                    </div>
+
+                    <dl className="col-span-2 grid grid-cols-4 gap-3 tabular-nums sm:col-span-1 sm:col-start-2 sm:gap-4 sm:pt-1.5">
+                        {metrics.map((metric) => (
+                            <div key={metric.label} className="flex min-w-0 flex-col gap-0.5">
+                                <dd className="text-base leading-6 font-medium text-gray-900 sm:text-lg sm:leading-[26px] dark:text-[#f2f4f7]">
+                                    {metric.value}
+                                </dd>
+                                <dt className="text-[11px] leading-4 text-gray-500 dark:text-[#838e9d]">{metric.label}</dt>
+                            </div>
+                        ))}
+                    </dl>
                 </div>
             </div>
 
@@ -635,17 +641,17 @@ function InvestorDealAlertsMockup() {
     );
 }
 
-const OM_THUMB_WIDTH = 144;
-const OM_THUMB_HEIGHT = 100;
-
 function OmCoverPreview() {
     return (
         <div className="flex shrink-0 flex-col items-center gap-1">
-            <div
-                className="relative overflow-hidden rounded-[6px] border border-gray-200 bg-white shadow-sm dark:border-[#61656c]"
-                style={{ width: OM_THUMB_WIDTH, height: OM_THUMB_HEIGHT }}
-            >
-                <Image src="/mockups/veridian.jpg" alt="Veridian on 5th offering memorandum cover" fill sizes="144px" className="object-cover" />
+            <div className="relative h-20 w-28 overflow-hidden rounded-[6px] border border-gray-200 bg-white shadow-sm sm:h-[100px] sm:w-36 dark:border-[#61656c]">
+                <Image
+                    src="/mockups/veridian.jpg"
+                    alt="Veridian on 5th offering memorandum cover"
+                    fill
+                    sizes="(min-width: 640px) 144px, 112px"
+                    className="object-cover"
+                />
             </div>
             <span className="flex items-center gap-1 text-[9px] text-gray-500">
                 <FileText className="size-2.5" />

@@ -384,6 +384,18 @@ export function PreviewRentChart({
     const [yView, setYView] = useState<YView>(defaultYView);
     const [hoverAreaId, setHoverAreaId] = useState<string | null>(null);
     const [pointerY, setPointerY] = useState<number | null>(null);
+    const [chartWidth, setChartWidth] = useState<number | null>(null);
+    const chartContainerRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const el = chartContainerRef.current;
+        if (!el || typeof ResizeObserver === "undefined") return;
+        const observer = new ResizeObserver((entries) => {
+            const width = entries[0]?.contentRect.width;
+            if (width != null) setChartWidth(width);
+        });
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
     const chartAnimation = useChartAnimation();
     const available = useMemo(() => getAvailableGranularities(areaResults), [areaResults]);
     const buckets = BUCKET_LABELS.filter(
@@ -413,7 +425,10 @@ export function PreviewRentChart({
                 : dollarAxisScale(values)
             : { domain: [0, 1] as [number, number], ticks: undefined };
     const weekLabels = chartData.map((point) => point.weekLabel).filter((label): label is string => typeof label === "string");
-    const shownXTicks = xTicks(weekLabels);
+    const yAxisWidth = yView === "pct" ? 40 : 48;
+    const plotWidth = chartWidth == null ? 400 : chartWidth - yAxisWidth - 4 - 118;
+    const xTickCount = plotWidth < 165 ? 2 : plotWidth < 260 ? 3 : 4;
+    const shownXTicks = xTicks(weekLabels, xTickCount);
 
     const firstWeek = typeof absData[0]?.week === "string" ? absData[0].week : "";
     const sinceLabel = firstWeek ? sinceMonth(firstWeek) : "March";
@@ -627,10 +642,11 @@ export function PreviewRentChart({
     const chartHeight = height ?? (isHero ? 485 : 280);
 
     return (
-        <div className="min-w-0">
+        <div className="relative isolate min-w-0">
             {header}
 
             <div
+                ref={chartContainerRef}
                 onMouseMove={(event) => {
                     const rect = event.currentTarget.getBoundingClientRect();
                     setPointerY(event.clientY - rect.top);
@@ -656,7 +672,7 @@ export function PreviewRentChart({
                         tickFormatter={yFormatter}
                         axisLine={false}
                         tickLine={false}
-                        width={yView === "pct" ? 40 : 48}
+                        width={yAxisWidth}
                         tickMargin={4}
                     />
                     <Tooltip
