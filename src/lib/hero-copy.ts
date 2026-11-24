@@ -9,23 +9,8 @@ export const HERO_VARIANT_STORAGE_KEY = "om_hero_variant";
 export const HERO_VARIANT_KEYS = ["control", "bov", "leads", "investor"] as const;
 export type HeroVariant = (typeof HERO_VARIANT_KEYS)[number];
 
-/** Control, BOV, and Investor share one stacked hero grid. Leads is a separate block. */
-export const STACKED_HERO_VARIANT_KEYS = ["control", "bov", "investor"] as const;
-export type StackedHeroVariant = (typeof STACKED_HERO_VARIANT_KEYS)[number];
-
 /** Silent legacy alias for the old `?hero=bov` override. */
 export const HERO_VARIANT_LEGACY_QUERY = "hero";
-
-export const BOV_HIDDEN_SECTION_CLASS = "js-hide-on-bov-hero";
-export const LEADS_SHOW_CLASS = "js-show-on-leads-hero";
-export const LEADS_HIDE_CLASS = "js-hide-on-leads-hero";
-export const INVESTOR_SHOW_CLASS = "js-show-on-investor-hero";
-export const TAGGED_SHOW_CLASS = "js-show-on-tagged-hero";
-
-/** Runs before first paint so BOV/leads/investor URL visitors never see the hidden sections. */
-export const BOV_HERO_PREPAINT_SCRIPT = `(function(){var p=new URLSearchParams(location.search);var tag=p.get(${JSON.stringify(HERO_VARIANT_QUERY)});if(tag===${JSON.stringify(HERO_VARIANT_TAG_BROKER)}||p.get(${JSON.stringify(HERO_VARIANT_LEGACY_QUERY)})==="bov"){document.documentElement.dataset.heroVariant="bov";}else if(tag===${JSON.stringify(HERO_VARIANT_TAG_LEADS)}){document.documentElement.dataset.heroVariant="leads";}else if(tag===${JSON.stringify(HERO_VARIANT_TAG_INVESTOR)}){document.documentElement.dataset.heroVariant="investor";}})();`;
-
-export const BOV_HERO_PREPAINT_STYLE = `html[data-hero-variant="bov"] .${BOV_HIDDEN_SECTION_CLASS},html[data-hero-variant="leads"] .${BOV_HIDDEN_SECTION_CLASS},html[data-hero-variant="investor"] .${BOV_HIDDEN_SECTION_CLASS}{display:none!important}html[data-hero-variant="leads"] .${LEADS_HIDE_CLASS}{display:none!important}html:not([data-hero-variant="leads"]) .${LEADS_SHOW_CLASS}{display:none!important}html:not([data-hero-variant="investor"]) .${INVESTOR_SHOW_CLASS}{display:none!important}html:not([data-hero-variant="bov"]):not([data-hero-variant="leads"]) .${TAGGED_SHOW_CLASS}{display:none!important}`;
 
 export type HeroCopy = {
     /** Headline lines. A single line is one block; two lines match the current stacked hero. */
@@ -67,7 +52,7 @@ export const HERO_COPY = {
 } as const satisfies Record<HeroVariant, HeroCopy>;
 
 export const HERO_PAGE_TITLES: Record<HeroVariant, string> = {
-    control: "OpenMidmarket - Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
+    control: "OpenMidmarket | Multifamily Rent Comps & CRE Platform",
     bov: "Multifamily Rent Comps & BOVs for Brokers | OpenMidmarket",
     leads: "Win More Multifamily Listings | OpenMidmarket",
     investor: "Underwrite Multifamily Deals in Seconds | OpenMidmarket",

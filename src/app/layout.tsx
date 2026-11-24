@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { HERO_PAGE_TITLES } from "@/lib/hero-copy";
+import { SITE_ORIGIN } from "@/lib/organization";
+import { DEFAULT_LANDING_DESCRIPTION, DEFAULT_OG_IMAGE, ORGANIZATION_NAME } from "@/lib/seo";
 import { cn as cx } from "@/lib/utils";
 import { RouteProvider } from "@/providers/router-provider";
 import { Theme } from "@/providers/theme";
@@ -23,14 +26,21 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-    title: "OpenMidmarket - Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
-    description:
-        "A unified ecosystem for mid-market multifamily: predictive AI, real-time data, rent comps, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
+    metadataBase: new URL(SITE_ORIGIN),
+    title: HERO_PAGE_TITLES.control,
+    description: DEFAULT_LANDING_DESCRIPTION,
     openGraph: {
-        title: "Institutional-grade CRE platform. Multifamily rent comps for the mid-market.",
-        description:
-            "A unified ecosystem for mid-market multifamily: predictive AI, real-time data, rent comps, and a dedicated CRE professional network. Gain an edge with institutional power tailored for your speed.",
-        images: "/og-preview.jpeg",
+        siteName: ORGANIZATION_NAME,
+        type: "website",
+        title: HERO_PAGE_TITLES.control,
+        description: DEFAULT_LANDING_DESCRIPTION,
+        images: [DEFAULT_OG_IMAGE],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: HERO_PAGE_TITLES.control,
+        description: DEFAULT_LANDING_DESCRIPTION,
+        images: [DEFAULT_OG_IMAGE.url],
     },
 };
 

@@ -1,103 +1,53 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import posthog from "posthog-js";
-import { isPostHogEnabled } from "@/lib/posthog-config";
-import { cn } from "@/lib/utils";
-import { HeroHighlight } from "./hero-highlight";
-import { SignupCtaButton, SignupCtaOutlineButton } from "./signup-cta";
 import {
     HERO_COPY,
     HERO_COPY_TEST_FLAG,
-    INVESTOR_SHOW_CLASS,
-    LEADS_HIDE_CLASS,
-    LEADS_SHOW_CLASS,
-    TAGGED_SHOW_CLASS,
-    STACKED_HERO_VARIANT_KEYS,
     type HeroCopy,
     type HeroVariant,
     heroVariantToTag,
     hidesHomepageSections,
     parseHeroVariant,
     persistHeroVariant,
-    readHeroOverride,
 } from "@/lib/hero-copy";
+import { isPostHogEnabled } from "@/lib/posthog-config";
+import { cn } from "@/lib/utils";
+import { decorateHeroSubtitle, HERO_HEADING_CLASS, renderHeroHeadline } from "./hero-block";
+import { SignupCtaButton, SignupCtaOutlineButton } from "./signup-cta";
 
 function heroAnalyticsProps(variant: HeroVariant) {
     const tag = heroVariantToTag(variant);
     return { hero_variant: variant, ...(tag ? { tag } : {}) };
 }
 
-const EMPHASIS = "font-semibold text-blue-900 dark:text-blue-400";
-const HIGHLIGHT_CLASS = "bg-blue-900 text-white dark:bg-blue-600 dark:text-white";
-const HERO_HEADING_CLASS =
-    "text-4xl leading-[1.1] font-semibold tracking-tight text-gray-900 sm:text-5xl sm:leading-[1.1] lg:text-6xl lg:leading-[1.1] dark:text-gray-100";
-const subscribe = () => () => {};
+type HeroVariantContextValue = {
+    variant: HeroVariant;
+};
 
-function escapeRegExp(value: string): string {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
+const HeroVariantContext = createContext<HeroVariantContextValue>({ variant: "control" });
 
-function decorateSubtitle(text: string, emphasis: readonly string[] = [], italic: readonly string[] = []): ReactNode {
-    const marks = [...emphasis, ...italic];
-    if (marks.length === 0) return text;
-    const pattern = new RegExp(`(${marks.map(escapeRegExp).join("|")})`, "g");
-    return text.split(pattern).map((part, index) => {
-        if (italic.includes(part)) {
-            return (
-                <em key={index} className="italic">
-                    {part}
-                </em>
-            );
-        }
-        if (emphasis.includes(part)) {
-            return (
-                <span key={index} className={EMPHASIS}>
-                    {part}
-                </span>
-            );
-        }
-        return part;
-    });
-}
-
-function renderHeadline(copy: HeroCopy): ReactNode {
-    return copy.lines.map((line, index) => {
-        let content: ReactNode = line;
-        if (copy.highlight && line.includes(copy.highlight)) {
-            const before = line.slice(0, line.indexOf(copy.highlight));
-            content = (
-                <>
-                    {before}
-                    <HeroHighlight className={HIGHLIGHT_CLASS}>{copy.highlight}</HeroHighlight>
-                </>
-            );
-        } else if (copy.accent && line.includes(copy.accent)) {
-            const start = line.indexOf(copy.accent);
-            content = (
-                <>
-                    {line.slice(0, start)}
-                    <span className={cn(EMPHASIS, copy.accent === "mid-market" && "whitespace-nowrap")}>{copy.accent}</span>
-                    {line.slice(start + copy.accent.length)}
-                </>
-            );
-        }
-        return (
-            <span key={line} className={index === 0 && copy.lines.length > 1 ? "mb-3 block" : "block"}>
-                {content}
-            </span>
-        );
-    });
-}
-
-export function useHeroVariant(): HeroVariant {
-    const override = useSyncExternalStore(subscribe, readHeroOverride, (): HeroVariant | null => null);
+/**
+ * Provides the active hero variant from server-resolved `searchParams` (`?tag=`),
+ * falling back to the PostHog feature flag on the client only when no URL tag
+ * was explicitly passed. This keeps SSR HTML clean (one H1, no hidden variants).
+ */
+export function HeroVariantProvider({
+    initialVariant = "control",
+    hasUrlOverride = false,
+    children,
+}: {
+    initialVariant?: HeroVariant;
+    hasUrlOverride?: boolean;
+    children: ReactNode;
+}) {
     const [flagVariant, setFlagVariant] = useState<HeroVariant | null>(null);
 
     useEffect(() => {
-        if (override) {
-            persistHeroVariant(override);
-            if (isPostHogEnabled) posthog.register(heroAnalyticsProps(override));
+        if (hasUrlOverride) {
+            persistHeroVariant(initialVariant);
+            if (isPostHogEnabled) posthog.register(heroAnalyticsProps(initialVariant));
             return;
         }
         if (!isPostHogEnabled) return;
@@ -112,24 +62,30 @@ export function useHeroVariant(): HeroVariant {
 
         apply();
         return posthog.onFeatureFlags(apply);
-    }, [override]);
+    }, [hasUrlOverride, initialVariant]);
 
-    return override ?? flagVariant ?? "control";
+    const variant = hasUrlOverride ? initialVariant : (flagVariant ?? initialVariant);
+    return <HeroVariantContext.Provider value={{ variant }}>{children}</HeroVariantContext.Provider>;
 }
 
-function HeroVariantView({ variant }: { variant: HeroVariant }) {
+export function useHeroVariant(): HeroVariant {
+    return useContext(HeroVariantContext).variant;
+}
+
+export function HeroCopy() {
+    const variant = useHeroVariant();
     const copy: HeroCopy = HERO_COPY[variant];
-    const Heading = variant === "control" ? "h1" : "h2";
+
     return (
         <>
-            <Heading className={HERO_HEADING_CLASS}>{renderHeadline(copy)}</Heading>
+            <h1 className={HERO_HEADING_CLASS}>{renderHeroHeadline(copy)}</h1>
             <p
                 className={cn(
                     "mt-6 text-xl leading-relaxed text-gray-600 dark:text-gray-400",
                     variant === "leads" ? "max-w-5xl lg:whitespace-nowrap" : variant === "bov" || variant === "investor" ? "max-w-4xl" : "max-w-2xl",
                 )}
             >
-                {decorateSubtitle(copy.subtitle, copy.emphasis, copy.italic)}
+                {decorateHeroSubtitle(copy.subtitle, copy.emphasis, copy.italic)}
             </p>
             {variant === "leads" && (
                 <div className="mt-8 flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
@@ -141,66 +97,35 @@ function HeroVariantView({ variant }: { variant: HeroVariant }) {
     );
 }
 
-export function HeroCopy() {
-    const variant = useHeroVariant();
-    const override = useSyncExternalStore(subscribe, readHeroOverride, (): HeroVariant | null => null);
-
-    return (
-        <>
-            <HideOnLeadsHero>
-                <div className="grid">
-                    {STACKED_HERO_VARIANT_KEYS.map((key) => (
-                        <div
-                            key={key}
-                            className={cn("col-start-1 row-start-1", key !== variant && (override ? "hidden" : "invisible"))}
-                            aria-hidden={key !== variant}
-                        >
-                            <HeroVariantView variant={key} />
-                        </div>
-                    ))}
-                </div>
-            </HideOnLeadsHero>
-            <LeadsOnly>
-                <HeroVariantView variant="leads" />
-            </LeadsOnly>
-        </>
-    );
-}
-
-/** Hide homepage-only sections when the resolved hero variant is `bov` or `leads`. */
+/** Hide homepage-only sections when the active hero variant is `bov`, `leads`, or `investor`. */
 export function HideOnBovHero({ children }: { children: ReactNode }) {
     const variant = useHeroVariant();
     if (hidesHomepageSections(variant)) return null;
     return children;
 }
 
-export function HideOnLeadsHero({ children, as: Comp = "div" }: { children: ReactNode; as?: "div" | "span" }) {
+export function HideOnLeadsHero({ children, as: Comp }: { children: ReactNode; as?: "div" | "span" }) {
     const variant = useHeroVariant();
-    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
-    if (mounted && variant === "leads") return null;
-    return <Comp className={LEADS_HIDE_CLASS}>{children}</Comp>;
+    if (variant === "leads") return null;
+    return Comp ? <Comp>{children}</Comp> : <>{children}</>;
 }
 
-export function LeadsOnly({ children, as: Comp = "div" }: { children: ReactNode; as?: "div" | "span" }) {
+export function LeadsOnly({ children, as: Comp }: { children: ReactNode; as?: "div" | "span" }) {
     const variant = useHeroVariant();
-    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
-    if (mounted && variant !== "leads") return null;
-    return <Comp className={LEADS_SHOW_CLASS}>{children}</Comp>;
+    if (variant !== "leads") return null;
+    return Comp ? <Comp>{children}</Comp> : <>{children}</>;
 }
 
 /** Show on `?tag=broker` (bov) and `?tag=leads`. Hidden on the default homepage and `?tag=investor`. */
-export function BrokerOrLeadsOnly({ children, as: Comp = "div" }: { children: ReactNode; as?: "div" | "span" }) {
+export function BrokerOrLeadsOnly({ children, as: Comp }: { children: ReactNode; as?: "div" | "span" }) {
     const variant = useHeroVariant();
-    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
-    if (mounted && variant !== "bov" && variant !== "leads") return null;
-    return <Comp className={TAGGED_SHOW_CLASS}>{children}</Comp>;
+    if (variant !== "bov" && variant !== "leads") return null;
+    return Comp ? <Comp>{children}</Comp> : <>{children}</>;
 }
 
 /** Show on `?tag=investor`. Hidden on all other variants. */
-export function InvestorOnly({ children, as: Comp = "div" }: { children: ReactNode; as?: "div" | "span" }) {
+export function InvestorOnly({ children, as: Comp }: { children: ReactNode; as?: "div" | "span" }) {
     const variant = useHeroVariant();
-    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
-    if (mounted && variant !== "investor") return null;
-    return <Comp className={INVESTOR_SHOW_CLASS}>{children}</Comp>;
+    if (variant !== "investor") return null;
+    return Comp ? <Comp>{children}</Comp> : <>{children}</>;
 }
-

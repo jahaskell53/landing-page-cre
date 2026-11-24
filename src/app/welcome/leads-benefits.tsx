@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import Image from "next/image";
 import { type KeyboardEvent, type MouseEvent, type PointerEvent, useEffect, useRef, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import type { ShowcaseMockupId, ShowcaseStep } from "@/lib/audience-pages";
 import { cn } from "@/lib/utils";
 import { BrowserWindow } from "./browser-window";
 import { ShowcaseRentTrendsCard } from "./rent-trends-preview";
@@ -21,6 +22,13 @@ type Benefit = {
     body: string;
     url: string;
     Mockup: React.ComponentType;
+};
+
+const SHOWCASE_MOCKUPS: Record<ShowcaseMockupId, React.ComponentType> = {
+    "rent-comps": RentCompsMockup,
+    "market-trends": MarketUpdateMockup,
+    "broker-alerts": BrokerListingAlertsMockup,
+    "investor-alerts": InvestorDealAlertsMockup,
 };
 
 const LEADS_BENEFITS: readonly Benefit[] = [
@@ -93,14 +101,37 @@ export function InvestorBenefits() {
     );
 }
 
+export function AudienceBenefitsShowcase({
+    eyebrow,
+    heading,
+    steps,
+    audience,
+}: {
+    eyebrow: string;
+    heading: string;
+    steps: readonly ShowcaseStep[];
+    audience?: string;
+}) {
+    const benefits: Benefit[] = steps.map((step) => ({
+        feature: step.feature,
+        title: step.title,
+        body: step.body,
+        url: step.url,
+        Mockup: SHOWCASE_MOCKUPS[step.mockup],
+    }));
+    return <BenefitsShowcase eyebrow={eyebrow} heading={heading} benefits={benefits} audience={audience} />;
+}
+
 function BenefitsShowcase({
     eyebrow,
     heading,
     benefits,
+    audience,
 }: {
     eyebrow: string;
     heading: string;
     benefits: readonly Benefit[];
+    audience?: string;
 }) {
     const [active, setActive] = useState(0);
     const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -173,7 +204,7 @@ function BenefitsShowcase({
                 </div>
 
                 <div className="mt-20 flex justify-center">
-                    <SignupCtaButton trackingLocation="value_pillars_get_started" />
+                    <SignupCtaButton trackingLocation="value_pillars_get_started" audience={audience} />
                 </div>
             </div>
         </section>

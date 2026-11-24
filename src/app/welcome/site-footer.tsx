@@ -1,7 +1,14 @@
 import { APP_ORIGIN } from "@/lib/app-origin";
 import { cn } from "@/lib/utils";
 
-const FOOTER_LINKS = [
+type FooterLink = {
+    label: string;
+    href: string;
+    /** Set on links pointing at routes disallowed in robots.txt so crawlers skip them. */
+    noFollow?: boolean;
+};
+
+const FOOTER_LINKS: readonly FooterLink[] = [
     { label: "Home", href: "/" },
     { label: "Features", href: "/#features" },
     { label: "Property owners", href: "/owners" },
@@ -12,7 +19,7 @@ const FOOTER_LINKS = [
     { label: "Insurance agents", href: "/insurance-agents" },
     { label: "1031 advisors", href: "/1031-advisors" },
     { label: "SF rent by neighborhood", href: `${APP_ORIGIN}/rent/sf` },
-    { label: "Free rent comps tool", href: `${APP_ORIGIN}/analytics/rent-comps` },
+    { label: "Free rent comps tool", href: `${APP_ORIGIN}/analytics/rent-comps`, noFollow: true },
     { label: "Rent prices by city", href: `${APP_ORIGIN}/rent` },
     { label: "Parking costs by city", href: `${APP_ORIGIN}/parking` },
     { label: "Privacy Policy", href: "/privacy" },
@@ -31,7 +38,7 @@ export function SiteFooter({ variant = "page" }: { variant?: "page" | "overlay" 
         <div className="space-y-6">
             <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
                 {FOOTER_LINKS.map((link) => (
-                    <a key={link.label} href={link.href} className={linkClass}>
+                    <a key={link.label} href={link.href} rel={link.noFollow ? "nofollow" : undefined} className={linkClass}>
                         {link.label}
                     </a>
                 ))}
