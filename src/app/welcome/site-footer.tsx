@@ -11,8 +11,9 @@ type FooterLink = {
 const FOOTER_LINKS: readonly FooterLink[] = [
     { label: "Home", href: "/" },
     { label: "Features", href: "/#features" },
-    { label: "Property owners", href: "/owners" },
     { label: "CRE brokers", href: "/brokers" },
+    { label: "Multifamily investors", href: "/investors" },
+    { label: "Property owners", href: "/owners" },
     { label: "CRE lenders", href: "/lenders" },
     { label: "Property managers", href: "/property-managers" },
     { label: "Appraisers", href: "/appraisers" },

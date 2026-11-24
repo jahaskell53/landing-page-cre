@@ -2,8 +2,9 @@ import type { PreviewPanelId } from "@/app/welcome/preview-app-shell";
 import type { HeroCopy } from "./hero-copy";
 
 export const AUDIENCE_SLUGS = [
-    "owners",
     "brokers",
+    "investors",
+    "owners",
     "lenders",
     "property-managers",
     "appraisers",
@@ -57,45 +58,179 @@ export type AudiencePageConfig = {
 };
 
 export const AUDIENCE_PAGES: Record<AudienceSlug, AudiencePageConfig> = {
-    owners: {
-        slug: "owners",
-        label: "Property owners",
-        cardHeadline: "Smarter decisions. Better returns.",
-        cardBody: "Real-time rent and sales data, plus a network of owners like you, so you can spot deals and grow your portfolio.",
+    brokers: {
+        slug: "brokers",
+        label: "CRE brokers",
+        cardHeadline: "Win more Bay Area listings. Close faster.",
+        cardBody: "Build multifamily BOVs in seconds, show owners real rent upside, and match new listings with active Bay Area buyers.",
         seo: {
-            title: "Multifamily Rent Comps for Property Owners | OpenMidmarket",
+            title: "Bay Area Multifamily BOV & Rent Comps | OpenMidmarket",
             description:
-                "Underwrite multifamily acquisitions and benchmark in-place rents in seconds. AI-scored rent comps, live submarket trends, and deal alerts for owners.",
+                "Build Bay Area multifamily BOVs and rent surveys in seconds. Pull photo-scored rent comps, neighborhood rent trends, and likely-buyer listing alerts.",
+        },
+        hero: {
+            lines: ["Build a BOV in seconds, not weeks."],
+            accent: "seconds",
+            subtitle:
+                "Let AI pull Bay Area multifamily comps, run the rent upside, and surface likely buyers, so you can win listings and focus on the deal.",
+            italic: ["AI", "deal"],
+        },
+        showcase: {
+            eyebrow: "FOR BAY AREA MULTIFAMILY BROKERS",
+            heading: "From first call to closed deal",
+            steps: [
+                {
+                    feature: "Rent comps",
+                    title: "Open the conversation with vetted rent comps for their building",
+                    body: "Enter any San Francisco, Peninsula, South Bay, or East Bay address to pull nearby comps ranked by condition, quality, amenities, and block-level location, plus a client-ready Comps PDF.",
+                    url: "app.openmidmarket.com/analytics/rent-comps",
+                    mockup: "rent-comps",
+                },
+                {
+                    feature: "Rent charts",
+                    title: "Stay top of mind with live Bay Area submarket updates",
+                    body: "Send neighborhood rent trends by bedroom size in PDF or Excel, or pull them up live during an owner pitch or pricing call.",
+                    url: "app.openmidmarket.com/analytics/rent-trends",
+                    mockup: "market-trends",
+                },
+                {
+                    feature: "Listing alerts",
+                    title: "Match new listings with the buyers most likely to transact",
+                    body: "Agents monitor your Bay Area submarkets for new 5–100 unit listings by price, unit count, or vintage, then name the local buyers most likely to want them based on past purchases.",
+                    url: "app.openmidmarket.com/alerts",
+                    mockup: "broker-alerts",
+                },
+            ],
+        },
+        appPreview: {
+            panel: "listings",
+            browserUrl: "app.openmidmarket.com/analytics/listings",
+        },
+        faqs: [
+            {
+                question: "Can I export rent surveys directly into a Bay Area Broker Opinion of Value (BOV)?",
+                answer: "Yes. Every rent comp run exports cleanly to branded PDF and Excel workbooks with listing photo thumbnails, condition and finish-quality grades, and side-by-side unit adjustments ready for owner pitches.",
+            },
+            {
+                question: "Which Bay Area multifamily markets does OpenMidmarket cover?",
+                answer: "OpenMidmarket covers mid-market 5 to 100+ unit multifamily across San Francisco, San Mateo County and the Peninsula, San Jose and Silicon Valley, and the East Bay including Oakland, Berkeley, Alameda, Fremont, and Hayward.",
+            },
+            {
+                question: "How do broker listing alerts identify likely buyers?",
+                answer: "When a multifamily listing hits your watched submarket, OpenMidmarket cross-references recent closed trades, nearby portfolio holdings, and unit-size preferences to surface active local buyers.",
+            },
+        ],
+        footerCta: {
+            leadLine: "Win your next listing",
+            brandPrefix: "with",
+        },
+    },
+    investors: {
+        slug: "investors",
+        label: "Multifamily investors",
+        cardHeadline: "Underwrite Bay Area deals in seconds.",
+        cardBody: "Quantify value-add rent upside, verify submarket trends, and catch mispriced 5–100 unit Bay Area apartments before the market does.",
+        seo: {
+            title: "Bay Area Multifamily Underwriting & Comps | OpenMidmarket",
+            description:
+                "Underwrite Bay Area multifamily acquisitions in seconds. Pull photo-scored rent comps, quantify value-add rent upside, and get buy-box deal alerts.",
         },
         hero: {
             lines: ["Underwrite deals in seconds, not weeks."],
             accent: "seconds",
             subtitle:
-                "Let AI pull the comps, quantify the rent upside, and stress-test returns, so you can price renewals and bid with conviction.",
+                "Let AI pull Bay Area rent comps, quantify the value-add upside, and stress-test returns, so you can bid with conviction before anyone else.",
             italic: ["AI", "conviction"],
         },
         showcase: {
-            eyebrow: "FOR MULTIFAMILY OWNERS & INVESTORS",
-            heading: "From rent roll to closed acquisition",
+            eyebrow: "FOR BAY AREA MULTIFAMILY INVESTORS",
+            heading: "From first look to closed acquisition",
             steps: [
                 {
                     feature: "Rent comps",
-                    title: "Know the true rent upside before you buy or renew",
-                    body: "Drop in any address to search 580,000+ rent comps and get an instant market rent estimate, with the top 5 comps scored on condition, finishes, amenities, and block-level location.",
+                    title: "Know the true rent upside before you bid",
+                    body: "Drop in any Bay Area address to search 580,000+ rent comps and get an instant market rent estimate, with the top 5 comps scored on condition, finishes, amenities, and block-level location.",
                     url: "app.openmidmarket.com/analytics/rent-comps",
                     mockup: "rent-comps",
                 },
                 {
                     feature: "Market trends",
-                    title: "Back every underwriting model with live submarket data",
-                    body: "Track rent growth, concessions, and comp velocity across neighborhoods, then export clean PDF or Excel decks straight into your underwriting and partner updates.",
+                    title: "Back every IC memo with live Bay Area submarket data",
+                    body: "Track weekly rent movement and comp velocity across San Francisco, Peninsula, South Bay, and East Bay neighborhoods, then export clean PDF or Excel decks straight into your underwriting and LP updates.",
                     url: "app.openmidmarket.com/analytics/rent-trends",
                     mockup: "market-trends",
                 },
                 {
                     feature: "Deal alerts",
                     title: "See mispriced multifamily deals before the market does",
-                    body: "Agents monitor your target submarkets 24/7 for new listings and price cuts matching your exact buy box, from unit count and vintage to basis and rent-upside spread.",
+                    body: "Agents monitor your target Bay Area submarkets 24/7 for new listings and price cuts matching your buy box, from unit count and vintage to basis per door and rent-upside spread.",
+                    url: "app.openmidmarket.com/alerts",
+                    mockup: "investor-alerts",
+                },
+            ],
+        },
+        appPreview: {
+            panel: "listings",
+            browserUrl: "app.openmidmarket.com/analytics/listings",
+        },
+        faqs: [
+            {
+                question: "How does OpenMidmarket quantify value-add rent upside on Bay Area multifamily deals?",
+                answer: "Enter a subject property and unit mix to compare in-place rents against nearby active comps scored on interior condition, renovation finishes, amenities, and micro-location, giving you a defensible market rent range in seconds.",
+            },
+            {
+                question: "What Bay Area multifamily asset sizes are supported?",
+                answer: "OpenMidmarket is purpose-built for mid-market multifamily investors targeting 5 to 100+ unit buildings across San Francisco, the Peninsula, Silicon Valley, and the East Bay.",
+            },
+            {
+                question: "Can I get alerted when undervalued listings hit my exact buy box?",
+                answer: "Yes. Set watches by Bay Area city or neighborhood, price range, unit count, and vintage to get real-time alerts with offering memorandum summaries and rent-upside analysis.",
+            },
+        ],
+        footerCta: {
+            leadLine: "Bid with conviction",
+            brandPrefix: "with",
+        },
+    },
+    owners: {
+        slug: "owners",
+        label: "Property owners",
+        cardHeadline: "Benchmark rents. Grow your portfolio.",
+        cardBody: "Live Bay Area rent and sales comps, plus a network of local owners, so you can price renewals accurately and spot acquisitions.",
+        seo: {
+            title: "Bay Area Multifamily Rent Comps for Owners | OpenMidmarket",
+            description:
+                "Benchmark in-place rents and track Bay Area multifamily submarkets in seconds. Photo-scored rent comps, weekly rent trends, and local market alerts.",
+        },
+        hero: {
+            lines: ["Know your building's true market rent in seconds."],
+            accent: "seconds",
+            subtitle:
+                "Benchmark in-place rents against photo-scored Bay Area comps, track neighborhood trends, and spot nearby opportunities in one workspace.",
+            italic: ["photo-scored"],
+        },
+        showcase: {
+            eyebrow: "FOR BAY AREA PROPERTY OWNERS",
+            heading: "From rent roll to portfolio growth",
+            steps: [
+                {
+                    feature: "Rent comps",
+                    title: "Compare every unit against photo-scored nearby comps",
+                    body: "Drop in your building address to see top comparable units scored on interior condition, finishes, amenities, and block-level location before setting asking or renewal rents.",
+                    url: "app.openmidmarket.com/analytics/rent-comps",
+                    mockup: "rent-comps",
+                },
+                {
+                    feature: "Market trends",
+                    title: "Track neighborhood rent movement week by week",
+                    body: "Watch studio, 1BR, and 2BR rent medians across San Francisco, Peninsula, South Bay, and East Bay neighborhoods so you never leave rent on the table.",
+                    url: "app.openmidmarket.com/analytics/rent-trends",
+                    mockup: "market-trends",
+                },
+                {
+                    feature: "Deal alerts",
+                    title: "See nearby multifamily trades and acquisitions early",
+                    body: "Monitor new listings, asking price per door, and rent-upside spreads in the neighborhoods where you already own so you can expand your footprint first.",
                     url: "app.openmidmarket.com/alerts",
                     mockup: "investor-alerts",
                 },
@@ -108,85 +243,19 @@ export const AUDIENCE_PAGES: Record<AudienceSlug, AudiencePageConfig> = {
         faqs: [
             {
                 question: "How does OpenMidmarket calculate market rent for my building?",
-                answer: "Enter a property address and bedroom mix to pull nearby active rental comps scored on interior condition, finish quality, amenities, and block-level location, producing a market rent range backed by photo evidence.",
+                answer: "Enter your Bay Area property address and bedroom mix to pull nearby active rental comps scored on interior condition, finish quality, amenities, and block-level location, backed by listing photos.",
             },
             {
                 question: "What property sizes is OpenMidmarket built for?",
-                answer: "OpenMidmarket is built specifically for mid-market multifamily owners and investors operating 5 to 100+ unit buildings who need institutional-grade comps without enterprise subscriptions.",
+                answer: "OpenMidmarket is built for mid-market multifamily owners operating 5 to 100+ unit buildings across the San Francisco Bay Area who want institutional-grade comps without enterprise subscriptions.",
             },
             {
-                question: "Can I track submarket rent trends and new listings in one place?",
-                answer: "Yes. You can monitor weekly neighborhood rent trends by bedroom count, compare asking rents against in-place rent rolls, and receive automated alerts when new listings match your buy box.",
+                question: "Can I track submarket rent trends and nearby sales in one place?",
+                answer: "Yes. Monitor weekly neighborhood rent trends by bedroom count, compare asking rents against your in-place rent roll, and receive automated alerts when comparable buildings list nearby.",
             },
         ],
         footerCta: {
             leadLine: "Uncover rent upside",
-            brandPrefix: "with",
-        },
-    },
-    brokers: {
-        slug: "brokers",
-        label: "CRE brokers",
-        cardHeadline: "Close more deals. Earn more.",
-        cardBody: "Underwrite faster, stay in touch with owners, and track your market, all in one place.",
-        seo: {
-            title: "Multifamily Rent Comps & BOVs for Brokers | OpenMidmarket",
-            description:
-                "Build multifamily BOVs and rent surveys in seconds. Pull AI-scored rent comps, live rent trends, and likely-buyer listing alerts built for CRE brokers.",
-        },
-        hero: {
-            lines: ["Build a BOV in seconds, not weeks."],
-            accent: "seconds",
-            subtitle: "Let AI pull the comps and run the numbers, so you can win listings and focus on the deal.",
-            italic: ["AI", "deal"],
-        },
-        showcase: {
-            eyebrow: "FOR CRE BROKERS",
-            heading: "From first call to closed deal",
-            steps: [
-                {
-                    feature: "Rent comps",
-                    title: "Open the conversation with vetted rent comps for their building",
-                    body: "Enter an address to pull nearby comps ranked by condition, quality, amenities, and location, plus a market rent estimate and a client-ready Comps PDF.",
-                    url: "app.openmidmarket.com/analytics/rent-comps",
-                    mockup: "rent-comps",
-                },
-                {
-                    feature: "Rent charts",
-                    title: "Stay top of mind with live submarket updates",
-                    body: "Send rent trends by neighborhood and unit type in PDF or Excel, or pull them up live during an owner pitch or pricing call.",
-                    url: "app.openmidmarket.com/analytics/rent-trends",
-                    mockup: "market-trends",
-                },
-                {
-                    feature: "Listing alerts",
-                    title: "Match new listings with the buyers most likely to transact",
-                    body: "Agents monitor your submarkets for new listings that fit a price range, unit count, or vintage, then surface the buyers most likely to want them based on past purchases.",
-                    url: "app.openmidmarket.com/alerts",
-                    mockup: "broker-alerts",
-                },
-            ],
-        },
-        appPreview: {
-            panel: "listings",
-            browserUrl: "app.openmidmarket.com/analytics/listings",
-        },
-        faqs: [
-            {
-                question: "Can I export rent surveys directly into a Broker Opinion of Value (BOV)?",
-                answer: "Yes. Every rent comp run exports cleanly to branded PDF and Excel workbooks with photo thumbnails, condition and quality scores, and side-by-side unit adjustments ready for owner decks.",
-            },
-            {
-                question: "How do broker listing alerts identify likely buyers?",
-                answer: "When a multifamily listing hits your watched submarket, OpenMidmarket cross-references recent closed trades, portfolio footprints, and unit-size preferences to highlight nearby owners and repeat buyers.",
-            },
-            {
-                question: "How fresh is the rental and sales comp data?",
-                answer: "Rental listings are scraped and deduplicated continuously on a rolling 90-day window so BOVs reflect live asking rents rather than stale quarterly averages.",
-            },
-        ],
-        footerCta: {
-            leadLine: "Win your next listing",
             brandPrefix: "with",
         },
     },

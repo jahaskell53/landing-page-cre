@@ -52,10 +52,10 @@ export const HERO_COPY = {
 } as const satisfies Record<HeroVariant, HeroCopy>;
 
 export const HERO_PAGE_TITLES: Record<HeroVariant, string> = {
-    control: "OpenMidmarket | Multifamily Rent Comps & CRE Platform",
-    bov: "Multifamily Rent Comps & BOVs for Brokers | OpenMidmarket",
-    leads: "Win More Multifamily Listings | OpenMidmarket",
-    investor: "Underwrite Multifamily Deals in Seconds | OpenMidmarket",
+    control: "Bay Area Multifamily Rent Comps & BOVs | OpenMidmarket",
+    bov: "Bay Area Multifamily BOV & Rent Comps | OpenMidmarket",
+    leads: "Win More Bay Area Multifamily Listings | OpenMidmarket",
+    investor: "Bay Area Multifamily Underwriting & Comps | OpenMidmarket",
 };
 
 export function parseHeroVariant(value: string | null | undefined): HeroVariant | null {

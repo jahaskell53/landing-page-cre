@@ -13,7 +13,12 @@ export const DEFAULT_OG_IMAGE = {
 } as const;
 
 export const DEFAULT_LANDING_DESCRIPTION =
-    "AI-powered multifamily rent comps, submarket rent trends, and deal alerts built for mid-market commercial real estate owners, brokers, and lenders.";
+    "Bay Area multifamily rent comps, BOV tools, and submarket rent trends built for apartment brokers and investors. Pull photo-scored comps in seconds.";
+
+const BAY_AREA_PLACE = {
+    "@type": "Place",
+    name: "San Francisco Bay Area, CA",
+} as const;
 
 /** Absolute canonical URL on `www.openmidmarket.com`. Keeps `/` with trailing slash and subpaths without. */
 export function canonicalUrl(pathname: string): string {
@@ -72,6 +77,7 @@ export function homepageJsonLd(): Record<string, unknown> {
                 alternateName: [...ALTERNATE_NAMES],
                 url: SITE_ORIGIN,
                 logo: ORGANIZATION_LOGO_URL,
+                areaServed: BAY_AREA_PLACE,
             },
             {
                 "@type": "WebSite",
@@ -89,6 +95,7 @@ export function homepageJsonLd(): Record<string, unknown> {
                 operatingSystem: "Web",
                 url: SITE_ORIGIN,
                 description: DEFAULT_LANDING_DESCRIPTION,
+                areaServed: BAY_AREA_PLACE,
                 publisher: { "@id": ORGANIZATION_ID },
             },
         ],

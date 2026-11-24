@@ -43,9 +43,9 @@ const NAV_LINKS: NavLink[] = [
             { label: "Parking costs by city", href: `${APP_ORIGIN}/parking` },
         ],
     },
-    { label: "Property owners", href: "/owners", audience: true },
     { label: "CRE brokers", href: "/brokers", audience: true },
-    { label: "CRE lenders", href: "/lenders", audience: true },
+    { label: "Investors", href: "/investors", audience: true },
+    { label: "Property owners", href: "/owners", audience: true },
 ];
 
 export function SiteHeader() {
