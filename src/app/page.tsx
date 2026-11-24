@@ -15,11 +15,14 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     return getHomepageMetadata(variant ?? "control");
 }
 
-export default function HomePage() {
+export default async function HomePage({ searchParams }: { searchParams: Promise<HomePageSearchParams> }) {
+    const params = await searchParams;
+    const variant = resolveHeroVariantFromParams(firstParam(params[HERO_VARIANT_QUERY]), firstParam(params[HERO_VARIANT_LEGACY_QUERY]));
+
     return (
         <>
             <HomepageJsonLd />
-            <LandingHome />
+            <LandingHome initialVariant={variant ?? "control"} hasUrlOverride={variant != null} />
         </>
     );
 }

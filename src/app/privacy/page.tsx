@@ -1,12 +1,14 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import { LegalPage } from "../legal-page";
 
-export const metadata: Metadata = {
-    title: "Privacy Policy - OpenMidmarket",
+export const metadata: Metadata = buildPageMetadata({
+    title: "Privacy Policy | OpenMidmarket",
     description: "How OpenMidmarket collects, uses, and shares information when you use our website, web application, and related services.",
-};
+    pathname: "/privacy",
+});
 
 export default function PrivacyPage() {
     const markdown = readFileSync(join(process.cwd(), "src/content/privacy-policy.md"), "utf8");
