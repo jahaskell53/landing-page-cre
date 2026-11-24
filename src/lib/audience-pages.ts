@@ -64,7 +64,7 @@ export const AUDIENCE_PAGES: Record<AudienceSlug, AudiencePageConfig> = {
         cardHeadline: "Win more Bay Area listings. Close faster.",
         cardBody: "Build multifamily BOVs in seconds, show owners real rent upside, and match new listings with active Bay Area buyers.",
         seo: {
-            title: "Bay Area Multifamily BOV & Rent Comps | OpenMidmarket",
+            title: "Multifamily BOV & Rent Comps for CRE Brokers | OpenMidmarket",
             description:
                 "Build Bay Area multifamily BOVs and rent surveys in seconds. Pull photo-scored rent comps, neighborhood rent trends, and likely-buyer listing alerts.",
         },
@@ -131,7 +131,7 @@ export const AUDIENCE_PAGES: Record<AudienceSlug, AudiencePageConfig> = {
         cardHeadline: "Underwrite Bay Area deals in seconds.",
         cardBody: "Quantify value-add rent upside, verify submarket trends, and catch mispriced 5–100 unit Bay Area apartments before the market does.",
         seo: {
-            title: "Bay Area Multifamily Underwriting & Comps | OpenMidmarket",
+            title: "Multifamily Underwriting & Rent Comps | OpenMidmarket",
             description:
                 "Underwrite Bay Area multifamily acquisitions in seconds. Pull photo-scored rent comps, quantify value-add rent upside, and get buy-box deal alerts.",
         },
