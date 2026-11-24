@@ -32,7 +32,6 @@ export function AudienceLanding({ page }: { page: AudiencePageConfig }) {
             <main>
                 <section className={SECTION_WHITE}>
                     <div className="mx-auto w-full max-w-6xl px-4 pt-10 pb-6 sm:px-6 lg:px-8 lg:pt-16 lg:pb-8">
-                        <p className="mb-3 text-sm font-semibold tracking-[0.08em] text-blue-900 uppercase dark:text-blue-400">{page.label}</p>
                         <h1 className={HERO_HEADING_CLASS}>{renderHeroHeadline(page.hero)}</h1>
                         <p className="mt-6 max-w-4xl text-xl leading-relaxed text-gray-600 dark:text-gray-400">
                             {decorateHeroSubtitle(page.hero.subtitle, page.hero.emphasis, page.hero.italic)}
