@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getMarketBySlug, getRelatedMarkets, MARKET_SLUGS, marketPath, marketPlaceName, marketRentPageUrl } from "@/lib/markets/catalog";
-import { marketDetailJsonLd, marketDocumentTitle, marketFaqItems, marketInsightHighlights, marketMetaDescription } from "@/lib/markets/copy";
+import { marketDetailJsonLd, marketDocumentTitle, marketFaqItems, marketInsightSentences, marketMetaDescription } from "@/lib/markets/copy";
 import { getMarketSnapshot } from "@/lib/markets/server";
 import { buildPageMetadata } from "@/lib/seo";
 import { formatCompact, formatCurrency, formatNumber, formatPercent } from "@/utils/format";
@@ -36,7 +36,7 @@ export default async function MarketDetailPage({ params }: { params: Promise<{ s
 
     const snapshot = await getMarketSnapshot(market);
     const place = marketPlaceName(market);
-    const highlights = marketInsightHighlights(snapshot);
+    const highlights = marketInsightSentences(snapshot);
     const faqs = marketFaqItems(snapshot);
     const relatedMarkets = getRelatedMarkets(market);
     const rentUrl = marketRentPageUrl(market);
