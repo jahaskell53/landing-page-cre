@@ -61,7 +61,7 @@ function MarketCardGrid({
                                     </p>
                                     <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                                         {snapshot.market.region}
-                                        {snapshot.salesCount12Mo > 0 ? ` · ${formatNumber(snapshot.salesCount12Mo)} T12 sales` : ""}
+                                        {snapshot.salesCount12Mo > 0 ? ` · ${formatNumber(snapshot.salesCount12Mo)} sales` : ""}
                                     </p>
                                 </div>
                                 <ArrowRight className="mt-0.5 size-4 shrink-0 text-gray-400/70 transition-transform group-hover:translate-x-0.5 group-hover:text-blue-900 dark:group-hover:text-blue-400" />

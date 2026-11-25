@@ -72,40 +72,23 @@ export default async function MarketDetailPage({ params }: { params: Promise<{ s
 
             <div className="mt-8 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
                 <section className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-5 transition-colors hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900/50">
-                    <h2 className="text-xs font-medium text-gray-500 dark:text-gray-400">Median cap rate (T12)</h2>
+                    <h2 className="text-xs font-medium text-gray-500 dark:text-gray-400">Median cap rate</h2>
                     <p className="mt-2 text-3xl font-semibold tracking-tight text-blue-900 tabular-nums sm:text-4xl dark:text-blue-400">
                         {snapshot.medianCapRate != null ? formatPercent(snapshot.medianCapRate, 2) : "—"}
                     </p>
-                    <p className="mt-2 text-xs text-gray-500 tabular-nums dark:text-gray-400">
-                        {snapshot.capRateSampleCount > 0 ? `${formatNumber(snapshot.capRateSampleCount)} sales w/ cap rate` : "Trailing 4 quarters"}
-                    </p>
                 </section>
 
                 <section className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-5 transition-colors hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900/50">
-                    <h2 className="text-xs font-medium text-gray-500 dark:text-gray-400">Median price / door (T12)</h2>
+                    <h2 className="text-xs font-medium text-gray-500 dark:text-gray-400">Median price / door</h2>
                     <p className="mt-2 text-3xl font-semibold tracking-tight text-blue-900 tabular-nums sm:text-4xl dark:text-blue-400">
                         {snapshot.medianPricePerDoor != null ? formatCompact(snapshot.medianPricePerDoor) : "—"}
                     </p>
-                    <p className="mt-2 text-xs text-gray-500 tabular-nums dark:text-gray-400">
-                        {snapshot.p25PricePerDoor != null && snapshot.p75PricePerDoor != null
-                            ? `P25-P75: ${formatCompact(snapshot.p25PricePerDoor)}-${formatCompact(snapshot.p75PricePerDoor)}`
-                            : snapshot.pricePerDoorYoYPct != null
-                              ? `${formatPercent(snapshot.pricePerDoorYoYPct, 1, { showSign: true })} YoY`
-                              : "Closed multifamily trades"}
-                    </p>
                 </section>
 
                 <section className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-5 transition-colors hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900/50">
-                    <h2 className="text-xs font-medium text-gray-500 dark:text-gray-400">Closed sales (T12)</h2>
+                    <h2 className="text-xs font-medium text-gray-500 dark:text-gray-400">Closed sales</h2>
                     <p className="mt-2 text-3xl font-semibold tracking-tight text-gray-900 tabular-nums sm:text-4xl dark:text-gray-100">
                         {snapshot.salesCount12Mo > 0 ? formatNumber(snapshot.salesCount12Mo) : "—"}
-                    </p>
-                    <p className="mt-2 text-xs text-gray-500 tabular-nums dark:text-gray-400">
-                        {snapshot.pricePerDoorYoYPct != null
-                            ? `${formatPercent(snapshot.pricePerDoorYoYPct, 1, { showSign: true })} $/door YoY`
-                            : snapshot.latestQuarterLabel
-                              ? `Latest ${snapshot.latestQuarterLabel}`
-                              : "Quarterly closed comps"}
                     </p>
                 </section>
 
@@ -114,9 +97,6 @@ export default async function MarketDetailPage({ params }: { params: Promise<{ s
                     <p className="mt-2 text-3xl font-semibold tracking-tight text-gray-900 tabular-nums sm:text-4xl dark:text-gray-100">
                         {snapshot.medianRent1Br != null ? formatCurrency(snapshot.medianRent1Br) : "—"}
                         {snapshot.medianRent1Br != null ? <span className="ml-0.5 text-sm font-normal text-gray-500">/mo</span> : null}
-                    </p>
-                    <p className="mt-2 text-xs text-gray-500 tabular-nums dark:text-gray-400">
-                        {snapshot.medianRent2Br != null ? `2BR median ${formatCurrency(snapshot.medianRent2Br)}/mo` : "Latest weekly median"}
                     </p>
                 </section>
             </div>
