@@ -76,7 +76,12 @@ export function homepageJsonLd(): Record<string, unknown> {
                 name: ORGANIZATION_NAME,
                 alternateName: [...ALTERNATE_NAMES],
                 url: SITE_ORIGIN,
-                logo: ORGANIZATION_LOGO_URL,
+                logo: {
+                    "@type": "ImageObject",
+                    url: ORGANIZATION_LOGO_URL,
+                    width: 512,
+                    height: 512,
+                },
                 areaServed: BAY_AREA_PLACE,
             },
             {

@@ -17,6 +17,8 @@ export type LandingCtaLocation =
     | "value_pillars_get_started"
     | "footer_get_started"
     | "audience_get_started"
+    | "market_page_cta"
+    | "workflow_page_cta"
     | "hero_join_waitlist"
     | "hero_rent_survey";
 

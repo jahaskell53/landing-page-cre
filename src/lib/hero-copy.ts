@@ -28,9 +28,9 @@ export type HeroCopy = {
 
 export const HERO_COPY = {
     control: {
-        lines: ["Institutional-grade CRE.", "Built for the mid-market."],
+        lines: ["Multifamily rent comps & BOVs.", "Built for the mid-market."],
         accent: "mid-market",
-        subtitle: "Predictive AI, real-time data, and a dedicated CRE professional network.",
+        subtitle: "Photo-scored rent comps, closed cap rate trends, and AI underwriting built for Bay Area apartment brokers and investors.",
     },
     bov: {
         lines: ["Build a BOV in seconds, not weeks."],
@@ -52,10 +52,10 @@ export const HERO_COPY = {
 } as const satisfies Record<HeroVariant, HeroCopy>;
 
 export const HERO_PAGE_TITLES: Record<HeroVariant, string> = {
-    control: "Bay Area Multifamily Rent Comps & BOVs | OpenMidmarket",
-    bov: "Bay Area Multifamily BOV & Rent Comps | OpenMidmarket",
-    leads: "Win More Bay Area Multifamily Listings | OpenMidmarket",
-    investor: "Bay Area Multifamily Underwriting & Comps | OpenMidmarket",
+    control: "Multifamily Rent Comps, BOVs & Cap Rates | OpenMidmarket",
+    bov: "Multifamily BOV & Rent Comps for CRE Brokers | OpenMidmarket",
+    leads: "Win More Multifamily Listings | OpenMidmarket",
+    investor: "Multifamily Underwriting & Rent Comps | OpenMidmarket",
 };
 
 export function parseHeroVariant(value: string | null | undefined): HeroVariant | null {
