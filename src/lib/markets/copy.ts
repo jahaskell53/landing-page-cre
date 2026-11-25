@@ -64,29 +64,25 @@ export function marketInsightSentences(snapshot: MarketSnapshot): string[] {
     if (medianPricePerDoor != null && salesCount12Mo > 0) {
         const rangeBit =
             p25PricePerDoor != null && p75PricePerDoor != null
-                ? `, with the middle half of trades closing between ${formatCompact(p25PricePerDoor)} and ${formatCompact(p75PricePerDoor)} per unit`
+                ? ` (middle 50%: ${formatCompact(p25PricePerDoor)}-${formatCompact(p75PricePerDoor)})`
                 : "";
         sentences.push(
-            `Over the trailing four quarters, closed multifamily sales in ${market.name} traded at a ${formatCurrency(medianPricePerDoor)} median price per door across ${formatNumber(salesCount12Mo)} transactions${rangeBit}.`,
+            `${market.name} closed sales average ${formatCurrency(medianPricePerDoor)}/door across ${formatNumber(salesCount12Mo)} trades${rangeBit}.`,
         );
     }
 
     if (medianCapRate != null) {
         const yoyBit =
-            pricePerDoorYoYPct != null
-                ? ` Per-door pricing is ${formatPercent(pricePerDoorYoYPct, 1, { showSign: true })} compared to the prior 4-quarter period.`
-                : "";
-        sentences.push(
-            `Reported closed-sale cap rates in ${market.name} averaged ${formatPercent(medianCapRate, 2)} over the trailing 12 months.${yoyBit}`,
-        );
+            pricePerDoorYoYPct != null ? `, with $/door ${formatPercent(pricePerDoorYoYPct, 1, { showSign: true })} YoY` : "";
+        sentences.push(`Reported closed cap rates average ${formatPercent(medianCapRate, 2)}${yoyBit}.`);
+    } else if (pricePerDoorYoYPct != null) {
+        sentences.push(`Median price per door is ${formatPercent(pricePerDoorYoYPct, 1, { showSign: true })} YoY.`);
     }
 
     if (medianRent1Br != null && medianRent2Br != null) {
-        sentences.push(
-            `On the leasing side, active apartment listings in ${market.name} show a ${formatCurrency(medianRent1Br)} median asking rent for 1-bedrooms and ${formatCurrency(medianRent2Br)} for 2-bedrooms.`,
-        );
+        sentences.push(`Active asking rents are ${formatCurrency(medianRent1Br)} for 1BRs and ${formatCurrency(medianRent2Br)} for 2BRs.`);
     } else if (medianRent1Br != null) {
-        sentences.push(`Active apartment listings in ${market.name} currently sit at a ${formatCurrency(medianRent1Br)} median 1-bedroom asking rent.`);
+        sentences.push(`Active 1-bedroom asking rent is ${formatCurrency(medianRent1Br)}.`);
     }
 
     return sentences;

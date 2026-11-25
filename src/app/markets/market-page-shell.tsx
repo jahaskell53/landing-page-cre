@@ -58,13 +58,13 @@ export function MarketPageShell({
     );
 }
 
-/** Compact two-column executive takeaway card replacing stacked prose paragraphs above the fold. */
+/** Compact executive takeaway card replacing stacked prose paragraphs above the fold. */
 export function MarketHighlights({ items }: { items: readonly string[] }) {
     if (items.length === 0) return null;
     return (
         <section aria-label="Market highlights" className="rounded-xl border border-gray-200/80 bg-white p-5 sm:p-6 dark:border-gray-800 dark:bg-gray-900/50">
             <p className="text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">Market snapshot</p>
-            <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+            <ul className={`mt-3 grid gap-4 ${items.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
                 {items.map((sentence) => (
                     <li key={sentence} className="flex gap-2.5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                         <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-blue-900 dark:bg-blue-400" />
