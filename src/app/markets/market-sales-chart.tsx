@@ -1,144 +1,184 @@
-"use client";
-
-import { useState } from "react";
-import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+/**
+ * Quarterly closed-sales trend charts for public `/markets/[slug]` pages.
+ *
+ * Matches the redesigned `/rent/[city]` static SSR SVG chart style: zero client
+ * JS, instant first paint with full SVG in the initial HTML, navy accent line
+ * with soft vertical area fill, and a headline latest-value + delta pill.
+ */
 import type { QuarterlySalesPoint } from "@/lib/markets/server";
-import { formatCompact, formatCurrency, formatNumber, formatPercent } from "@/utils/format";
+import { formatCompact, formatPercent } from "@/utils/format";
 
-type ChartMetric = "price_per_door" | "cap_rate";
+const GRID_STROKE = "#e5e7eb";
+const TICK_FILL = "#6b7280";
+const LINE_COLOR = "#1e3a8a";
 
-type Props = {
-    marketName: string;
-    quarters: readonly QuarterlySalesPoint[];
+const WIDTH = 440;
+const HEIGHT = 172;
+const PAD = { top: 14, right: 14, bottom: 26, left: 60 };
+const FONT = "ui-sans-serif, system-ui, sans-serif";
+
+type SeriesPoint = {
+    label: string;
+    value: number;
 };
 
-export function MarketSalesChart({ marketName, quarters }: Props) {
-    const hasCapRate = quarters.some((q) => q.medianCapRate != null);
-    const [metric, setMetric] = useState<ChartMetric>(hasCapRate ? "cap_rate" : "price_per_door");
+function yTicks(min: number, max: number, count: number): number[] {
+    if (min === max) return [min];
+    const step = (max - min) / (count - 1);
+    return Array.from({ length: count }, (_, i) => min + step * i);
+}
 
-    const data = quarters.map((q) => ({
-        quarterLabel: q.quarterLabel,
-        medianPricePerDoor: q.medianPricePerDoor,
-        medianCapRate: q.medianCapRate,
-        salesCount: q.salesCount,
-        capRateCount: q.capRateCount,
-    }));
+function QuarterlyMetricChart({
+    id,
+    eyebrow,
+    title,
+    desc,
+    points,
+    formatValue,
+    formatAxis,
+    formatDelta,
+}: {
+    id: string;
+    eyebrow: string;
+    title: string;
+    desc: string;
+    points: readonly SeriesPoint[];
+    formatValue: (value: number) => string;
+    formatAxis: (value: number) => string;
+    formatDelta: (delta: number) => string;
+}) {
+    if (points.length === 0) return null;
 
-    if (data.length === 0) {
-        return null;
-    }
+    const values = points.map((p) => p.value);
+    const rawMin = Math.min(...values);
+    const rawMax = Math.max(...values);
+    const pad = (rawMax - rawMin) * 0.14 || Math.max(Math.abs(rawMin) * 0.05, 0.5);
+    const yMin = rawMin - pad;
+    const yMax = rawMax + pad;
+    const innerWidth = WIDTH - PAD.left - PAD.right;
+    const innerHeight = HEIGHT - PAD.top - PAD.bottom;
 
-    const activeMetric: ChartMetric = metric === "cap_rate" && !hasCapRate ? "price_per_door" : metric;
+    const xAt = (index: number) => PAD.left + (points.length === 1 ? innerWidth / 2 : (index / (points.length - 1)) * innerWidth);
+    const yAt = (value: number) => PAD.top + (1 - (value - yMin) / (yMax - yMin)) * innerHeight;
+    const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"}${xAt(i).toFixed(1)} ${yAt(p.value).toFixed(1)}`).join(" ");
+    const baseY = (PAD.top + innerHeight).toFixed(1);
+    const areaPath =
+        points.length > 1 ? `${linePath} L${xAt(points.length - 1).toFixed(1)} ${baseY} L${xAt(0).toFixed(1)} ${baseY} Z` : null;
+
+    const ticks = yTicks(rawMin, rawMax, 3);
+    const first = points[0]!;
+    const latest = points[points.length - 1]!;
+    const delta = points.length > 1 ? latest.value - first.value : null;
+    const gradientId = `market-sales-fill-${id}`;
 
     return (
-        <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 dark:border-gray-800 dark:bg-gray-900/60">
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <figure className="rounded-xl border border-gray-200/80 bg-white p-5 shadow-2xs dark:border-gray-800 dark:bg-gray-900/50">
+            <div className="mb-3 flex items-baseline justify-between gap-2">
                 <div>
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                        {marketName} quarterly {activeMetric === "cap_rate" ? "median cap rate" : "median price per door"}
-                    </h2>
-                    <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-                        Closed multifamily transactions by quarter (bars show closed sales volume).
+                    <figcaption className="text-xs font-medium text-gray-500 dark:text-gray-400">{eyebrow}</figcaption>
+                    <p className="mt-0.5 text-xl font-semibold tracking-tight text-gray-900 tabular-nums dark:text-gray-100">
+                        {formatValue(latest.value)}
                     </p>
                 </div>
-                <div className="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-1 text-xs font-medium dark:border-gray-800 dark:bg-gray-950">
-                    {hasCapRate ? (
-                        <button
-                            type="button"
-                            onClick={() => setMetric("cap_rate")}
-                            className={`rounded-md px-3 py-1.5 transition-colors ${
-                                activeMetric === "cap_rate"
-                                    ? "bg-white text-blue-900 shadow-xs dark:bg-gray-800 dark:text-blue-400"
-                                    : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-                            }`}
-                        >
-                            Cap rate (%)
-                        </button>
-                    ) : null}
-                    <button
-                        type="button"
-                        onClick={() => setMetric("price_per_door")}
-                        className={`rounded-md px-3 py-1.5 transition-colors ${
-                            activeMetric === "price_per_door"
-                                ? "bg-white text-blue-900 shadow-xs dark:bg-gray-800 dark:text-blue-400"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-                        }`}
+                {delta != null ? (
+                    <span
+                        className={
+                            delta > 0
+                                ? "rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 tabular-nums dark:bg-emerald-500/15 dark:text-emerald-300"
+                                : delta < 0
+                                  ? "rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 tabular-nums dark:bg-amber-500/15 dark:text-amber-300"
+                                  : "rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 tabular-nums dark:bg-gray-800 dark:text-gray-400"
+                        }
                     >
-                        Price / door ($)
-                    </button>
-                </div>
+                        {formatDelta(delta)}
+                    </span>
+                ) : null}
             </div>
+            <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="h-auto w-full" role="img" aria-labelledby={`market-chart-${id}-title`}>
+                <title id={`market-chart-${id}-title`}>{title}</title>
+                <desc>{desc}</desc>
+                <defs>
+                    <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={LINE_COLOR} stopOpacity="0.16" />
+                        <stop offset="100%" stopColor={LINE_COLOR} stopOpacity="0" />
+                    </linearGradient>
+                </defs>
+                {ticks.map((tick, idx) => {
+                    const y = yAt(tick).toFixed(1);
+                    return (
+                        <g key={idx}>
+                            <line x1={PAD.left} x2={WIDTH - PAD.right} y1={y} y2={y} stroke={GRID_STROKE} strokeDasharray="3 3" />
+                            <text x={PAD.left - 8} y={y} textAnchor="end" dominantBaseline="middle" fill={TICK_FILL} fontSize="11" fontFamily={FONT}>
+                                {formatAxis(tick)}
+                            </text>
+                        </g>
+                    );
+                })}
+                {areaPath ? <path d={areaPath} fill={`url(#${gradientId})`} /> : null}
+                <path d={linePath} fill="none" stroke={LINE_COLOR} strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" />
+                <circle
+                    cx={xAt(points.length - 1).toFixed(1)}
+                    cy={yAt(latest.value).toFixed(1)}
+                    r="3.5"
+                    fill={LINE_COLOR}
+                    stroke="#ffffff"
+                    strokeWidth="1.5"
+                />
+                <text x={xAt(0).toFixed(1)} y={HEIGHT - 6} textAnchor="start" fill={TICK_FILL} fontSize="11" fontFamily={FONT}>
+                    {first.label}
+                </text>
+                {points.length > 1 ? (
+                    <text x={xAt(points.length - 1).toFixed(1)} y={HEIGHT - 6} textAnchor="end" fill={TICK_FILL} fontSize="11" fontFamily={FONT}>
+                        {latest.label}
+                    </text>
+                ) : null}
+            </svg>
+        </figure>
+    );
+}
 
-            <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={data} margin={{ top: 10, right: 12, bottom: 4, left: 4 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-gray-800" vertical={false} />
-                        <XAxis
-                            dataKey="quarterLabel"
-                            tick={{ fontSize: 12, fill: "currentColor" }}
-                            className="text-gray-500 dark:text-gray-400"
-                            tickLine={false}
-                            axisLine={false}
-                            minTickGap={24}
-                        />
-                        <YAxis
-                            yAxisId="metric"
-                            tick={{ fontSize: 12, fill: "currentColor" }}
-                            className="text-gray-500 dark:text-gray-400"
-                            tickLine={false}
-                            axisLine={false}
-                            width={56}
-                            domain={activeMetric === "cap_rate" ? ["auto", "auto"] : ["auto", "auto"]}
-                            tickFormatter={(val: number) =>
-                                activeMetric === "cap_rate" ? formatPercent(val, 1) : formatCompact(val)
-                            }
-                        />
-                        <YAxis yAxisId="volume" orientation="right" hide domain={[0, (max: number) => Math.max(max * 4, 10)]} />
-                        <Tooltip
-                            content={({ active, payload, label }) => {
-                                if (!active || !payload?.length) return null;
-                                const row = payload[0]?.payload as (typeof data)[number] | undefined;
-                                if (!row) return null;
-                                return (
-                                    <div className="rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-xs shadow-lg dark:border-gray-700 dark:bg-gray-900">
-                                        <p className="font-semibold text-gray-900 dark:text-gray-100">{label}</p>
-                                        <div className="mt-1.5 space-y-1 text-gray-600 dark:text-gray-300">
-                                            {row.medianCapRate != null ? (
-                                                <p className="flex justify-between gap-4">
-                                                    <span>Median cap rate</span>
-                                                    <span className="font-semibold text-gray-900 tabular-nums dark:text-gray-100">
-                                                        {formatPercent(row.medianCapRate, 2)}
-                                                    </span>
-                                                </p>
-                                            ) : null}
-                                            <p className="flex justify-between gap-4">
-                                                <span>Median $/door</span>
-                                                <span className="font-semibold text-gray-900 tabular-nums dark:text-gray-100">
-                                                    {formatCurrency(row.medianPricePerDoor)}
-                                                </span>
-                                            </p>
-                                            <p className="flex justify-between gap-4">
-                                                <span>Closed sales</span>
-                                                <span className="font-medium tabular-nums">{formatNumber(row.salesCount)}</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                );
-                            }}
-                        />
-                        <Bar yAxisId="volume" dataKey="salesCount" fill="#cbd5e1" fillOpacity={0.45} radius={[3, 3, 0, 0]} maxBarSize={26} />
-                        <Line
-                            yAxisId="metric"
-                            type="monotone"
-                            dataKey={activeMetric === "cap_rate" ? "medianCapRate" : "medianPricePerDoor"}
-                            stroke="#1e3a8a"
-                            strokeWidth={2.5}
-                            dot={{ r: 3, fill: "#1e3a8a", strokeWidth: 0 }}
-                            activeDot={{ r: 5, fill: "#2563eb" }}
-                            connectNulls
-                        />
-                    </ComposedChart>
-                </ResponsiveContainer>
+export function MarketSalesChart({ marketName, quarters }: { marketName: string; quarters: readonly QuarterlySalesPoint[] }) {
+    if (quarters.length === 0) return null;
+
+    const capRatePoints: SeriesPoint[] = quarters.flatMap((q) =>
+        q.medianCapRate != null ? [{ label: q.quarterLabel, value: q.medianCapRate }] : [],
+    );
+    const pricePoints: SeriesPoint[] = quarters.map((q) => ({
+        label: q.quarterLabel,
+        value: q.medianPricePerDoor,
+    }));
+
+    return (
+        <div>
+            <div className="mb-4 flex items-baseline justify-between gap-2">
+                <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl dark:text-gray-100">Quarterly sales trends</h2>
+                <span className="text-xs text-gray-500 dark:text-gray-400">Closed multifamily transactions</span>
+            </div>
+            <div className={`grid grid-cols-1 gap-4 ${capRatePoints.length > 0 ? "md:grid-cols-2" : ""}`}>
+                {capRatePoints.length > 0 ? (
+                    <QuarterlyMetricChart
+                        id="cap-rate"
+                        eyebrow="Median cap rate"
+                        title={`${marketName} quarterly median cap rate`}
+                        desc="Quarterly median closed-sale multifamily cap rate percentage."
+                        points={capRatePoints}
+                        formatValue={(v) => formatPercent(v, 2)}
+                        formatAxis={(v) => formatPercent(v, 1)}
+                        formatDelta={(d) => (Math.abs(d) < 0.005 ? "Flat" : `${d > 0 ? "+" : ""}${Math.round(d * 100)} bps`)}
+                    />
+                ) : null}
+                <QuarterlyMetricChart
+                    id="price-per-door"
+                    eyebrow="Median price / door"
+                    title={`${marketName} quarterly median price per door`}
+                    desc="Quarterly median closed-sale multifamily price per unit."
+                    points={pricePoints}
+                    formatValue={(v) => formatCompact(v)}
+                    formatAxis={(v) => formatCompact(v)}
+                    formatDelta={(d) =>
+                        Math.abs(d) < 1000 ? "Flat" : `${d > 0 ? "+" : "-"}${formatCompact(Math.abs(d))}`
+                    }
+                />
             </div>
         </div>
     );

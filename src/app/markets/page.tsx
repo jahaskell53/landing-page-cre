@@ -1,15 +1,13 @@
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SignupCtaButton } from "@/app/welcome/signup-cta";
-import { SiteFooter } from "@/app/welcome/site-footer";
-import { SiteHeader } from "@/app/welcome/site-header";
 import { APP_ORIGIN } from "@/lib/app-origin";
 import { BAY_AREA_MARKETS, marketPath } from "@/lib/markets/catalog";
 import { marketsHubJsonLd } from "@/lib/markets/copy";
 import { getAllMarketSnapshots, type MarketSnapshot } from "@/lib/markets/server";
 import { buildPageMetadata } from "@/lib/seo";
 import { formatCompact, formatCurrency, formatNumber, formatPercent } from "@/utils/format";
+import { MarketIcpCta, MarketMethodology, MarketPageShell } from "./market-page-shell";
 
 export const revalidate = 3600;
 
@@ -20,63 +18,72 @@ export const metadata: Metadata = buildPageMetadata({
     pathname: "/markets",
 });
 
-function MarketTable({ title, subtitle, rows }: { title: string; subtitle: string; rows: readonly MarketSnapshot[] }) {
+function MarketCardGrid({
+    title,
+    rightLink,
+    rows,
+}: {
+    title: string;
+    rightLink?: { label: string; href: string; external?: boolean };
+    rows: readonly MarketSnapshot[];
+}) {
     return (
-        <section className="mb-12">
-            <div className="mb-4">
-                <h2 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">{title}</h2>
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{subtitle}</p>
+        <section>
+            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+                <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl dark:text-gray-100">{title}</h2>
+                {rightLink ? (
+                    rightLink.external ? (
+                        <a
+                            href={rightLink.href}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-blue-900 hover:underline dark:text-blue-400"
+                        >
+                            {rightLink.label}
+                            <ArrowUpRight className="size-3.5" />
+                        </a>
+                    ) : (
+                        <Link href={rightLink.href} className="text-xs font-medium text-blue-900 hover:underline dark:text-blue-400">
+                            {rightLink.label}
+                        </Link>
+                    )
+                ) : null}
             </div>
-            <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50">
-                <table className="w-full min-w-[640px] text-left text-sm">
-                    <thead className="border-b border-gray-200 bg-gray-50/80 text-xs font-medium text-gray-500 uppercase dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400">
-                        <tr>
-                            <th className="px-4 py-3">Market</th>
-                            <th className="px-4 py-3 text-right">Median Cap Rate</th>
-                            <th className="px-4 py-3 text-right">Median $/Door</th>
-                            <th className="px-4 py-3 text-right">12-Mo Sales</th>
-                            <th className="px-4 py-3 text-right">1BR Rent</th>
-                            <th className="px-4 py-3 text-right">Details</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
-                        {rows.map((snapshot) => (
-                            <tr key={snapshot.market.slug} className="transition-colors hover:bg-gray-50/80 dark:hover:bg-gray-900/80">
-                                <td className="px-4 py-3.5">
-                                    <Link
-                                        href={marketPath(snapshot.market.slug)}
-                                        className="font-semibold text-gray-900 hover:text-blue-900 dark:text-gray-100 dark:hover:text-blue-400"
-                                    >
+            <ul className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+                {rows.map((snapshot) => (
+                    <li key={snapshot.market.slug}>
+                        <Link
+                            href={marketPath(snapshot.market.slug)}
+                            className="group flex h-full flex-col justify-between rounded-xl border border-gray-200/80 bg-white p-5 shadow-2xs transition-all hover:border-blue-900/40 hover:shadow-xs dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-blue-400/40"
+                        >
+                            <div className="flex items-start justify-between gap-3">
+                                <div>
+                                    <p className="text-base font-semibold tracking-tight text-gray-900 group-hover:text-blue-900 dark:text-gray-100 dark:group-hover:text-blue-400">
                                         {snapshot.market.name}
-                                    </Link>
-                                    <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{snapshot.market.region}</span>
-                                </td>
-                                <td className="px-4 py-3.5 text-right font-semibold text-gray-900 tabular-nums dark:text-gray-100">
-                                    {snapshot.medianCapRate != null ? formatPercent(snapshot.medianCapRate, 2) : "—"}
-                                </td>
-                                <td className="px-4 py-3.5 text-right font-semibold text-gray-900 tabular-nums dark:text-gray-100">
-                                    {snapshot.medianPricePerDoor != null ? formatCompact(snapshot.medianPricePerDoor) : "—"}
-                                </td>
-                                <td className="px-4 py-3.5 text-right text-gray-600 tabular-nums dark:text-gray-300">
-                                    {snapshot.salesCount12Mo > 0 ? formatNumber(snapshot.salesCount12Mo) : "—"}
-                                </td>
-                                <td className="px-4 py-3.5 text-right text-gray-600 tabular-nums dark:text-gray-300">
-                                    {snapshot.medianRent1Br != null ? formatCurrency(snapshot.medianRent1Br) : "—"}
-                                </td>
-                                <td className="px-4 py-3.5 text-right">
-                                    <Link
-                                        href={marketPath(snapshot.market.slug)}
-                                        className="inline-flex items-center gap-1 text-xs font-semibold text-blue-900 hover:underline dark:text-blue-400"
-                                    >
-                                        View
-                                        <ArrowRight className="size-3.5" />
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                                    </p>
+                                    <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                                        {snapshot.market.region}
+                                        {snapshot.salesCount12Mo > 0 ? ` · ${formatNumber(snapshot.salesCount12Mo)} T12 sales` : ""}
+                                    </p>
+                                </div>
+                                <ArrowRight className="mt-0.5 size-4 shrink-0 text-gray-400/70 transition-transform group-hover:translate-x-0.5 group-hover:text-blue-900 dark:group-hover:text-blue-400" />
+                            </div>
+                            <div className="mt-6 grid grid-cols-2 gap-3 border-t border-gray-200/70 pt-3 dark:border-gray-800">
+                                <div>
+                                    <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400">Cap rate</p>
+                                    <p className="mt-0.5 text-lg font-semibold tracking-tight text-blue-900 tabular-nums dark:text-blue-400">
+                                        {snapshot.medianCapRate != null ? formatPercent(snapshot.medianCapRate, 2) : "—"}
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400">Median $/door</p>
+                                    <p className="mt-0.5 text-lg font-semibold tracking-tight text-gray-900 tabular-nums dark:text-gray-100">
+                                        {snapshot.medianPricePerDoor != null ? formatCompact(snapshot.medianPricePerDoor) : "—"}
+                                    </p>
+                                </div>
+                            </div>
+                        </Link>
+                    </li>
+                ))}
+            </ul>
         </section>
     );
 }
@@ -87,109 +94,146 @@ export default async function MarketsHubPage() {
     const cities = snapshots.filter((s) => s.market.kind === "city");
     const jsonLd = marketsHubJsonLd(BAY_AREA_MARKETS);
 
-    return (
-        <div className="min-h-dvh bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-            <SiteHeader />
+    const citiesWithPrice = cities.filter((s): s is MarketSnapshot & { medianPricePerDoor: number } => s.medianPricePerDoor != null);
+    const highestPpd = [...citiesWithPrice].sort((a, b) => b.medianPricePerDoor - a.medianPricePerDoor)[0] ?? null;
 
-            <main className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-                <header className="mb-12 max-w-3xl">
-                    <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl dark:text-gray-100">
-                        Bay Area multifamily cap rates &amp; price per door
-                    </h1>
-                    <p className="mt-4 text-lg leading-relaxed text-gray-600 dark:text-gray-400">
-                        Closed multifamily transaction benchmarks across San Francisco, East Bay, Peninsula, and South Bay submarkets. Built for
-                        apartment brokers, investors, owners, and lenders underwriting 5 to 100+ unit deals.
+    const citiesWithCap = cities.filter((s): s is MarketSnapshot & { medianCapRate: number } => s.medianCapRate != null);
+    const highestCap = [...citiesWithCap].sort((a, b) => b.medianCapRate - a.medianCapRate)[0] ?? null;
+
+    const hero = (
+        <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl dark:text-gray-100">
+                Bay Area multifamily cap rates &amp; price per door
+            </h1>
+            <p className="mt-3 max-w-2xl text-base text-gray-600 sm:text-lg dark:text-gray-400">
+                Trailing 4-quarter closed multifamily cap rates, per-door pricing, and asking rent benchmarks across San Francisco, East Bay,
+                Peninsula, and South Bay submarkets.
+            </p>
+            <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-4 dark:border-gray-800 dark:bg-gray-900/50">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Published markets</p>
+                    <p className="mt-1 text-2xl font-semibold tracking-tight text-gray-900 tabular-nums sm:text-3xl dark:text-gray-100">
+                        {cities.length} cities · {counties.length} counties
                     </p>
-                </header>
-
-                <MarketTable
-                    title="Bay Area Cities"
-                    subtitle="Trailing 4-quarter closed multifamily cap rates, median price per door, and active 1-bedroom asking rents."
-                    rows={cities}
-                />
-
-                <MarketTable
-                    title="Bay Area Counties"
-                    subtitle="Countywide multifamily sales rollups for broader submarket underwriting and BOV benchmarks."
-                    rows={counties}
-                />
-
-                <section className="mb-12 rounded-2xl border border-gray-200 bg-gray-50 p-6 sm:p-8 dark:border-gray-800 dark:bg-gray-900/60">
-                    <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
-                        <div className="max-w-2xl">
-                            <h2 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-                                Underwriting a Bay Area apartment deal or building a BOV?
-                            </h2>
-                            <p className="mt-2 text-base leading-relaxed text-gray-600 dark:text-gray-400">
-                                Go beyond city averages. Pull photo-scored rent comps, quantify value-add rent upside, and export client-ready PDF
-                                and Excel packets for any Bay Area address in seconds.
-                            </p>
-                        </div>
-                        <div className="shrink-0">
-                            <SignupCtaButton trackingLocation="market_page_cta" audience="markets_hub" />
-                        </div>
+                    <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">Quarterly closed multifamily comps</p>
+                </div>
+                {highestCap ? (
+                    <div className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-4 dark:border-gray-800 dark:bg-gray-900/50">
+                        <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Highest median cap rate</p>
+                        <p className="mt-1 text-2xl font-semibold tracking-tight text-blue-900 tabular-nums sm:text-3xl dark:text-blue-400">
+                            {formatPercent(highestCap.medianCapRate, 2)}
+                        </p>
+                        <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{highestCap.market.name}</p>
                     </div>
-                </section>
-
-                <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    {[
-                        {
-                            title: "Multifamily rent comps",
-                            description: "Pull photo-scored rent surveys and export to Excel or PDF.",
-                            href: "/rent-comps",
-                            external: false,
-                        },
-                        {
-                            title: "Multifamily BOV software",
-                            description: "Build defensible Broker Opinions of Value in minutes.",
-                            href: "/bov",
-                            external: false,
-                        },
-                        {
-                            title: "CoStar alternative",
-                            description: "Purpose-built for mid-market 5-100 unit apartments.",
-                            href: "/costar-alternative",
-                            external: false,
-                        },
-                        {
-                            title: "Bay Area rent by city",
-                            description: "Daily studio, 1BR, and 2BR asking rent tables and trends.",
-                            href: `${APP_ORIGIN}/rent`,
-                            external: true,
-                        },
-                    ].map((card) => {
-                        const cardClass =
-                            "group flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-5 transition-colors hover:border-blue-900/40 hover:bg-gray-50/70 dark:border-gray-800 dark:bg-gray-900/40 dark:hover:border-blue-400/40";
-                        const inner = (
-                            <div>
-                                <div className="flex items-start justify-between gap-2">
-                                    <h3 className="text-base font-semibold text-gray-900 group-hover:text-blue-900 dark:text-gray-100 dark:group-hover:text-blue-400">
-                                        {card.title}
-                                    </h3>
-                                    {card.external ? (
-                                        <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-gray-400 group-hover:text-blue-900 dark:group-hover:text-blue-400" />
-                                    ) : (
-                                        <ArrowRight className="mt-0.5 size-4 shrink-0 text-gray-400 group-hover:text-blue-900 dark:group-hover:text-blue-400" />
-                                    )}
-                                </div>
-                                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{card.description}</p>
-                            </div>
-                        );
-                        return card.external ? (
-                            <a key={card.href} href={card.href} className={cardClass}>
-                                {inner}
-                            </a>
-                        ) : (
-                            <Link key={card.href} href={card.href} className={cardClass}>
-                                {inner}
-                            </Link>
-                        );
-                    })}
-                </section>
-            </main>
-
-            <SiteFooter />
+                ) : null}
+                {highestPpd ? (
+                    <div className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-4 dark:border-gray-800 dark:bg-gray-900/50">
+                        <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Highest median $/door</p>
+                        <p className="mt-1 text-2xl font-semibold tracking-tight text-gray-900 tabular-nums sm:text-3xl dark:text-gray-100">
+                            {formatCompact(highestPpd.medianPricePerDoor)}
+                        </p>
+                        <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{highestPpd.market.name}</p>
+                    </div>
+                ) : null}
+            </div>
         </div>
+    );
+
+    return (
+        <MarketPageShell jsonLd={jsonLd} hero={hero}>
+            <MarketCardGrid
+                title="Bay Area cities"
+                rightLink={{ label: "Compare Bay Area apartment rents", href: `${APP_ORIGIN}/rent`, external: true }}
+                rows={cities}
+            />
+
+            <MarketCardGrid title="Bay Area counties" rows={counties} />
+
+            <section>
+                <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+                    <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl dark:text-gray-100">Side-by-side comparison</h2>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Trailing 4-quarter closed sales &amp; latest 1BR rent</span>
+                </div>
+                <div className="overflow-x-auto rounded-xl border border-gray-200/80 bg-white dark:border-gray-800 dark:bg-gray-900/50">
+                    <table className="w-full min-w-[600px] text-left text-sm">
+                        <thead className="border-b border-gray-200/80 bg-gray-50/70 text-xs font-medium text-gray-500 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400">
+                            <tr>
+                                <th className="px-4 py-3 font-medium">Market</th>
+                                <th className="px-4 py-3 text-right font-medium">Cap rate</th>
+                                <th className="px-4 py-3 text-right font-medium">Median $/door</th>
+                                <th className="px-4 py-3 text-right font-medium">12-mo sales</th>
+                                <th className="px-4 py-3 text-right font-medium">1BR rent</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200/70 dark:divide-gray-800">
+                            {snapshots.map((snapshot) => (
+                                <tr key={snapshot.market.slug} className="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-900/80">
+                                    <td className="px-4 py-3">
+                                        <Link
+                                            href={marketPath(snapshot.market.slug)}
+                                            className="font-medium text-gray-900 hover:text-blue-900 hover:underline dark:text-gray-100 dark:hover:text-blue-400"
+                                        >
+                                            {snapshot.market.name}
+                                        </Link>
+                                        <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{snapshot.market.region}</span>
+                                    </td>
+                                    <td className="px-4 py-3 text-right font-medium text-gray-900 tabular-nums dark:text-gray-100">
+                                        {snapshot.medianCapRate != null ? formatPercent(snapshot.medianCapRate, 2) : "—"}
+                                    </td>
+                                    <td className="px-4 py-3 text-right font-medium text-gray-900 tabular-nums dark:text-gray-100">
+                                        {snapshot.medianPricePerDoor != null ? formatCompact(snapshot.medianPricePerDoor) : "—"}
+                                    </td>
+                                    <td className="px-4 py-3 text-right text-gray-600 tabular-nums dark:text-gray-400">
+                                        {snapshot.salesCount12Mo > 0 ? formatNumber(snapshot.salesCount12Mo) : "—"}
+                                    </td>
+                                    <td className="px-4 py-3 text-right text-gray-600 tabular-nums dark:text-gray-400">
+                                        {snapshot.medianRent1Br != null ? formatCurrency(snapshot.medianRent1Br) : "—"}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section>
+                <h2 className="mb-3 text-sm font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">Workflows &amp; benchmarks</h2>
+                <ul className="flex flex-wrap gap-2">
+                    {[
+                        { label: "Multifamily rent comps", href: "/rent-comps", external: false },
+                        { label: "Multifamily BOV software", href: "/bov", external: false },
+                        { label: "CoStar alternative", href: "/costar-alternative", external: false },
+                        { label: "Bay Area rent by city", href: `${APP_ORIGIN}/rent`, external: true },
+                        { label: "Bay Area parking fees", href: `${APP_ORIGIN}/parking`, external: true },
+                    ].map((item) => (
+                        <li key={item.href}>
+                            {item.external ? (
+                                <a
+                                    href={item.href}
+                                    className="inline-block rounded-full border border-gray-200/80 bg-white px-3.5 py-1.5 text-xs font-medium text-gray-900 transition-colors hover:border-blue-900/40 hover:text-blue-900 dark:border-gray-800 dark:bg-gray-900/60 dark:text-gray-100 dark:hover:border-blue-400/40 dark:hover:text-blue-400"
+                                >
+                                    {item.label} →
+                                </a>
+                            ) : (
+                                <Link
+                                    href={item.href}
+                                    className="inline-block rounded-full border border-gray-200/80 bg-white px-3.5 py-1.5 text-xs font-medium text-gray-900 transition-colors hover:border-blue-900/40 hover:text-blue-900 dark:border-gray-800 dark:bg-gray-900/60 dark:text-gray-100 dark:hover:border-blue-400/40 dark:hover:text-blue-400"
+                                >
+                                    {item.label}
+                                </Link>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </section>
+
+            <MarketIcpCta placeLabel="Bay Area" audience="markets_hub" />
+
+            <MarketMethodology>
+                Closed multifamily transactions are aggregated into quarterly buckets over a 5-year lookback. Price per door equals total sale
+                price divided by unit count, excluding non-market outliers below $20,000/door. Reported cap rates are bounded at 12% to filter
+                reporting errors. Trailing 12-month headline figures weight the four most recent quarters by transaction count.
+            </MarketMethodology>
+        </MarketPageShell>
     );
 }
