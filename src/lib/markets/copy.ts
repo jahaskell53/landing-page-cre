@@ -56,36 +56,81 @@ export function marketMetaDescription(snapshot: MarketSnapshot): string {
     return parts.join(" ");
 }
 
-export function marketInsightSentences(snapshot: MarketSnapshot): string[] {
+export type MarketHighlightPart = {
+    text: string;
+    strong?: boolean;
+};
+
+export type MarketHighlight = readonly MarketHighlightPart[];
+
+export function marketInsightHighlights(snapshot: MarketSnapshot): MarketHighlight[] {
     const { market, medianCapRate, medianPricePerDoor, p25PricePerDoor, p75PricePerDoor, salesCount12Mo, pricePerDoorYoYPct, medianRent1Br, medianRent2Br } =
         snapshot;
-    const sentences: string[] = [];
+    const highlights: MarketHighlight[] = [];
 
     if (medianPricePerDoor != null && salesCount12Mo > 0) {
-        const rangeBit =
-            p25PricePerDoor != null && p75PricePerDoor != null
-                ? ` (middle 50%: ${formatCompact(p25PricePerDoor)}-${formatCompact(p75PricePerDoor)})`
-                : "";
-        sentences.push(
-            `${market.name} closed sales average ${formatCurrency(medianPricePerDoor)}/door across ${formatNumber(salesCount12Mo)} trades${rangeBit}.`,
-        );
+        const parts: MarketHighlightPart[] = [
+            { text: `${market.name} closed sales average ` },
+            { text: `${formatCurrency(medianPricePerDoor)}/door`, strong: true },
+            { text: " across " },
+            { text: `${formatNumber(salesCount12Mo)} trades`, strong: true },
+        ];
+        if (p25PricePerDoor != null && p75PricePerDoor != null) {
+            parts.push(
+                { text: " (middle 50%: " },
+                { text: `${formatCompact(p25PricePerDoor)}-${formatCompact(p75PricePerDoor)}`, strong: true },
+                { text: ")." },
+            );
+        } else {
+            parts.push({ text: "." });
+        }
+        highlights.push(parts);
     }
 
     if (medianCapRate != null) {
-        const yoyBit =
-            pricePerDoorYoYPct != null ? `, with $/door ${formatPercent(pricePerDoorYoYPct, 1, { showSign: true })} YoY` : "";
-        sentences.push(`Reported closed cap rates average ${formatPercent(medianCapRate, 2)}${yoyBit}.`);
+        const parts: MarketHighlightPart[] = [
+            { text: "Reported closed cap rates average " },
+            { text: formatPercent(medianCapRate, 2), strong: true },
+        ];
+        if (pricePerDoorYoYPct != null) {
+            parts.push(
+                { text: ", with $/door " },
+                { text: `${formatPercent(pricePerDoorYoYPct, 1, { showSign: true })} YoY`, strong: true },
+                { text: "." },
+            );
+        } else {
+            parts.push({ text: "." });
+        }
+        highlights.push(parts);
     } else if (pricePerDoorYoYPct != null) {
-        sentences.push(`Median price per door is ${formatPercent(pricePerDoorYoYPct, 1, { showSign: true })} YoY.`);
+        highlights.push([
+            { text: "Median price per door is " },
+            { text: `${formatPercent(pricePerDoorYoYPct, 1, { showSign: true })} YoY`, strong: true },
+            { text: "." },
+        ]);
     }
 
     if (medianRent1Br != null && medianRent2Br != null) {
-        sentences.push(`Active asking rents are ${formatCurrency(medianRent1Br)} for 1BRs and ${formatCurrency(medianRent2Br)} for 2BRs.`);
+        highlights.push([
+            { text: "Active asking rents are " },
+            { text: formatCurrency(medianRent1Br), strong: true },
+            { text: " for 1BRs and " },
+            { text: formatCurrency(medianRent2Br), strong: true },
+            { text: " for 2BRs." },
+        ]);
     } else if (medianRent1Br != null) {
-        sentences.push(`Active 1-bedroom asking rent is ${formatCurrency(medianRent1Br)}.`);
+        highlights.push([
+            { text: "Active 1-bedroom asking rent is " },
+            { text: formatCurrency(medianRent1Br), strong: true },
+            { text: "." },
+        ]);
     }
 
-    return sentences;
+    return highlights;
+}
+
+export function marketInsightSentences(snapshot: MarketSnapshot): string[] {
+    return marketInsightHighlights(snapshot).map((parts) => parts.map((p) => p.text).join(""));
 }
 
 export function marketFaqItems(snapshot: MarketSnapshot): MarketFaq[] {

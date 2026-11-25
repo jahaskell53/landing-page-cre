@@ -4,7 +4,7 @@ import Link from "next/link";
 import { SignupCta } from "@/app/welcome/signup-cta";
 import { SiteFooter } from "@/app/welcome/site-footer";
 import { SiteHeader } from "@/app/welcome/site-header";
-import type { MarketFaq } from "@/lib/markets/copy";
+import type { MarketFaq, MarketHighlight } from "@/lib/markets/copy";
 import { SITE_ORIGIN } from "@/lib/organization";
 
 export type MarketBreadcrumbItem = {
@@ -59,16 +59,26 @@ export function MarketPageShell({
 }
 
 /** Compact executive takeaway card replacing stacked prose paragraphs above the fold. */
-export function MarketHighlights({ items }: { items: readonly string[] }) {
+export function MarketHighlights({ items }: { items: readonly MarketHighlight[] }) {
     if (items.length === 0) return null;
     return (
         <section aria-label="Market highlights" className="rounded-xl border border-gray-200/80 bg-white p-5 sm:p-6 dark:border-gray-800 dark:bg-gray-900/50">
             <p className="text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">Market snapshot</p>
             <ul className={`mt-3 grid gap-4 ${items.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
-                {items.map((sentence) => (
-                    <li key={sentence} className="flex gap-2.5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                {items.map((parts, idx) => (
+                    <li key={idx} className="flex gap-2.5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                         <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-blue-900 dark:bg-blue-400" />
-                        <span>{sentence}</span>
+                        <span>
+                            {parts.map((part, partIdx) =>
+                                part.strong ? (
+                                    <strong key={partIdx} className="font-semibold text-gray-900 tabular-nums dark:text-gray-100">
+                                        {part.text}
+                                    </strong>
+                                ) : (
+                                    <span key={partIdx}>{part.text}</span>
+                                ),
+                            )}
+                        </span>
                     </li>
                 ))}
             </ul>

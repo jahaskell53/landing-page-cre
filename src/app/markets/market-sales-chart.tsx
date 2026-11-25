@@ -137,16 +137,55 @@ function QuarterlyMetricChart({
     );
 }
 
+type WeightedSeriesPoint = SeriesPoint & {
+    sampleCount: number;
+};
+
+function quantile(sorted: readonly number[], q: number): number {
+    if (sorted.length === 0) return 0;
+    const pos = (sorted.length - 1) * q;
+    const base = Math.floor(pos);
+    const rest = pos - base;
+    const next = sorted[base + 1];
+    return next !== undefined ? sorted[base]! + rest * (next - sorted[base]!) : sorted[base]!;
+}
+
+/**
+ * Exclude tiny small-sample quarters and statistical outlier spikes so a single
+ * misclassified or 1-sale quarter does not flatten the rest of the chart.
+ */
+function filterChartSeries(points: readonly WeightedSeriesPoint[], minSample: number): readonly SeriesPoint[] {
+    const withEnoughSamples = points.filter((p) => p.sampleCount >= minSample);
+    const base = withEnoughSamples.length >= 4 ? withEnoughSamples : points;
+    if (base.length < 4) return base;
+
+    const sorted = base.map((p) => p.value).sort((a, b) => a - b);
+    const q1 = quantile(sorted, 0.25);
+    const median = quantile(sorted, 0.5);
+    const q3 = quantile(sorted, 0.75);
+    const spread = Math.max(q3 - q1, Math.abs(median) * 0.15);
+
+    const lower = Math.max(median * 0.45, q1 - 1.5 * spread);
+    const upper = Math.min(median * 1.85, q3 + 1.5 * spread);
+
+    const cleaned = base.filter((p) => p.value >= lower && p.value <= upper);
+    return cleaned.length >= 3 ? cleaned : base;
+}
+
 export function MarketSalesChart({ marketName, quarters }: { marketName: string; quarters: readonly QuarterlySalesPoint[] }) {
     if (quarters.length === 0) return null;
 
-    const capRatePoints: SeriesPoint[] = quarters.flatMap((q) =>
-        q.medianCapRate != null ? [{ label: q.quarterLabel, value: q.medianCapRate }] : [],
+    const rawCapRatePoints: WeightedSeriesPoint[] = quarters.flatMap((q) =>
+        q.medianCapRate != null ? [{ label: q.quarterLabel, value: q.medianCapRate, sampleCount: q.capRateCount }] : [],
     );
-    const pricePoints: SeriesPoint[] = quarters.map((q) => ({
+    const rawPricePoints: WeightedSeriesPoint[] = quarters.map((q) => ({
         label: q.quarterLabel,
         value: q.medianPricePerDoor,
+        sampleCount: q.salesCount,
     }));
+
+    const capRatePoints = filterChartSeries(rawCapRatePoints, 2);
+    const pricePoints = filterChartSeries(rawPricePoints, 3);
 
     return (
         <div>
